@@ -658,6 +658,7 @@ function commit() {
   store.set("group", group); store.set("round", round);
   const has = group.some(p => p.i.length);
   history.replaceState(null, "", has ? baseUrl() + hashOf() : baseUrl());
+  store.set("lastHash", location.hash);
   render();
 }
 const mine = () => { let p = group.find(p => p.n === me); if (!p) { p = { n: me, i: [], ts: Date.now() }; group.push(p); } return p; };
@@ -1192,11 +1193,16 @@ $("#routeBtn").href = "https://www.google.com/maps/dir/?api=1&destination=" + en
 $("#alList").innerHTML = Object.entries(ALG).map(([k, v]) => `<b>${esc(k)}</b><span>${esc(v)}</span>`).join("");
 renderInfos(); setInterval(renderInfos, 60000);
 const fromLink = !!fromHash;
-if (fromLink) { store.set("group", group); store.set("round", round); }
+// Nur beim ERSTEN Öffnen eines neuen Links springen, beim Neuladen auf dem letzten Tab bleiben
+const newLink = fromLink && store.get("lastHash", "") !== location.hash;
+const newGroup = liveCapable && !!QS.get("g") && store.get("gid", "") !== gid;
+if (fromLink) { store.set("group", group); store.set("round", round); store.set("lastHash", location.hash); }
 if (liveCapable && gid) { group = []; connectLive(); }
 render();
-show(fromLink || QS.get("g") ? "bestellung" : (store.get("tab", "karte") === "anrufen" && !countAll() ? "karte" : store.get("tab", "karte")));
-if (fromLink) toast(`Bestellung von ${people().map(p => p.n).join(", ") || "der Gruppe"} geladen 👥`);
+const lastTab = store.get("tab", "karte");
+show(newLink ? "bestellung" : newGroup ? "karte" : (lastTab === "anrufen" && !countAll() && !(liveCapable && gid) ? "karte" : lastTab));
+if (newLink) toast(`Bestellung von ${people().map(p => p.n).join(", ") || "der Gruppe"} geladen 👥`);
+if (newGroup) setTimeout(() => toast("👥 Willkommen in der Live-Gruppe!"), 300);
 if (!me) setTimeout(() => openName(), fromLink ? 900 : 600);
 if ("serviceWorker" in navigator) {
   const hadSW = !!navigator.serviceWorker.controller;
