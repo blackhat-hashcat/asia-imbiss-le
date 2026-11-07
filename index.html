@@ -394,8 +394,8 @@ body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infin
 .bat.rev{left:auto;right:-80px;animation-name:batflyrev}
 .batbox{background:radial-gradient(ellipse at 50% 30%,transparent 40%,rgba(0,0,0,.35));animation:batdim 8.6s ease both}
 @keyframes batdim{0%,100%{background-color:transparent}10%,85%{background-color:rgba(0,0,0,.18)}}
-@keyframes batflyrev{0%{transform:translate(0,0) scaleX(-1)}25%{transform:translate(-30vw,40px) rotate(-12deg)}50%{transform:translate(-60vw,-30px) rotate(14deg) scaleX(-1)}75%{transform:translate(-85vw,30px) rotate(-10deg)}100%{transform:translate(-120vw,-10px) scaleX(-1)}}
-@keyframes batfly{0%{transform:translate(0,0) rotate(-10deg)}25%{transform:translate(30vw,-40px) rotate(12deg) scaleX(-1)}50%{transform:translate(60vw,30px) rotate(-14deg)}75%{transform:translate(85vw,-30px) rotate(10deg) scaleX(-1)}100%{transform:translate(115vw,10px) rotate(-8deg)}}
+@keyframes batflyrev{0%{transform:translate(0,0) scaleX(-1)}25%{transform:translate(-32vw,40px) rotate(-12deg)}50%{transform:translate(-62vw,-30px) rotate(14deg) scaleX(-1)}75%{transform:translate(-90vw,30px) rotate(-10deg)}99%{opacity:1}100%{transform:translate(calc(-100vw - 220px),-10px) scaleX(-1);opacity:0}}
+@keyframes batfly{0%{transform:translate(0,0) rotate(-10deg)}25%{transform:translate(32vw,-40px) rotate(12deg) scaleX(-1)}50%{transform:translate(62vw,30px) rotate(-14deg)}75%{transform:translate(90vw,-30px) rotate(10deg) scaleX(-1)}99%{opacity:1}100%{transform:translate(calc(100vw + 220px),10px) rotate(-8deg);opacity:0}}
 .carpet{position:fixed;inset:-10%;z-index:255;pointer-events:none;mix-blend-mode:difference;opacity:.75;background:repeating-conic-gradient(from 0deg,#ff2d6f 0 15deg,#ffb627 15deg 30deg,#1fd1a1 30deg 45deg,#6b2dff 45deg 60deg);background-size:80px 80px;animation:carpet 7s ease-in-out both}
 @keyframes carpet{0%{opacity:0;transform:scale(1) rotate(0)}12%{opacity:.75}35%{transform:scale(1.25) rotate(12deg);background-size:120px 120px}60%{transform:scale(.95) rotate(-10deg);background-size:60px 60px}85%{opacity:.7}100%{opacity:0;transform:scale(1.1) rotate(0)}}
 body.trip main,body.trip .top,body.trip .tabs{animation:trip 7s ease-in-out}
@@ -418,7 +418,7 @@ body.casino .flizard{display:inline-block}
 .flizard.flick{animation:flick .6s}
 @keyframes flick{30%{transform:rotate(-25deg) translateX(-3px);opacity:.8}60%{transform:rotate(15deg)}}
 .lonebat{position:fixed;left:-40px;z-index:240;pointer-events:none;font-style:normal;font-size:1.1rem;opacity:.35;animation:lonebat 6.5s linear forwards}
-@keyframes lonebat{0%{transform:translate(0,0)}20%{transform:translate(22vw,-14px) scaleX(-1)}45%{transform:translate(50vw,10px)}70%{transform:translate(78vw,-10px) scaleX(-1)}100%{transform:translate(110vw,4px)}}
+@keyframes lonebat{0%{transform:translate(0,0)}20%{transform:translate(22vw,-14px) scaleX(-1)}45%{transform:translate(50vw,10px)}70%{transform:translate(78vw,-10px) scaleX(-1)}99%{opacity:.35}100%{transform:translate(calc(100vw + 120px),4px);opacity:0}}
 .hero.melt,#list.melt{animation:melt 7s ease-in-out}
 @keyframes melt{0%,100%{filter:none;transform:none}20%{filter:saturate(1.8) hue-rotate(25deg);transform:scale(1.02) skewX(1.5deg)}45%{filter:saturate(2.2) hue-rotate(-30deg) blur(.6px);transform:scale(.985) skewY(-1.5deg)}70%{filter:saturate(1.6) hue-rotate(60deg);transform:scale(1.015) skewX(-1deg)}}
 body.ether main,body.ether .top,body.ether .tabs{animation:ether 7.5s ease-in-out}
