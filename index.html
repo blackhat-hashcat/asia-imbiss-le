@@ -338,6 +338,86 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 #lightbox .hint{white-space:nowrap;position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#fff;padding:6px 12px;border-radius:999px;font-size:.8rem}
 .toast{position:fixed;left:50%;bottom:calc(var(--dock,140px) + 12px);top:auto;transform:translate(-50%,20px);font-size:.92rem;box-shadow:0 8px 24px rgba(0,0,0,.4);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;z-index:100;max-width:90vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ================= CASINO-DESIGN ================= */
+body.casino{--bg:#04110a;--s1:#0b2417;--s2:#10301f;--s3:#173d29;--line:#24533a;--muted:#a9c6b2;--dim:#6e917b}
+body.casino::before{background:radial-gradient(700px 500px at 50% -10%,rgba(24,110,62,.55),transparent 65%),radial-gradient(500px 400px at 110% 40%,rgba(239,51,64,.15),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 6px)}
+body.casino .top{background:rgba(4,17,10,.85);border-bottom:1px solid rgba(255,182,39,.35)}
+body.casino .ctag{font-family:var(--body);font-weight:800;font-size:.55rem;letter-spacing:.2em;color:#2b1b00;background:linear-gradient(180deg,#ffe08a,#ffb627);padding:2px 6px;border-radius:5px;vertical-align:middle;margin-left:4px}
+body.casino .card,body.casino .item{border-color:rgba(255,182,39,.22);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25),0 6px 18px rgba(0,0,0,.25)}
+body.casino .item{background:linear-gradient(180deg,#0e2b1c,#0a2115)}
+body.casino .item.in{border-color:#ffb627;background:linear-gradient(90deg,rgba(255,182,39,.14),#0b2417 60%)}
+/* Nummern als Spielkarten */
+body.casino .nr{background:linear-gradient(180deg,#fffdf6,#f1e8d6);color:#b81d2a;border:1px solid #d9c9a8;box-shadow:0 3px 8px rgba(0,0,0,.45);position:relative;border-radius:10px;min-width:50px;height:58px}
+body.casino .nr::before,body.casino .nr::after{content:"♦";position:absolute;font-size:.6rem;color:#b81d2a;line-height:1;font-family:var(--body)}
+body.casino .nr::before{top:4px;left:5px}
+body.casino .nr::after{bottom:4px;right:5px;transform:rotate(180deg)}
+body.casino .item:nth-child(even) .nr{color:#14100c}
+body.casino .item:nth-child(even) .nr::before,body.casino .item:nth-child(even) .nr::after{content:"♠";color:#14100c}
+/* Plus/Minus als Pokerchips */
+body.casino .qb{border-radius:50%;width:42px;height:42px;background:radial-gradient(circle,#c8102e 0 46%,#fff 47% 50%,#c8102e 51% 62%,transparent 63%),repeating-conic-gradient(#c8102e 0 22.5deg,#fff 22.5deg 45deg);box-shadow:0 3px 0 #6d0010,0 6px 14px rgba(0,0,0,.45);font-weight:900;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+body.casino .qb:active{transform:translateY(2px);box-shadow:0 1px 0 #6d0010}
+body.casino .qb.minus{background:radial-gradient(circle,#1d1d1d 0 46%,#fff 47% 50%,#1d1d1d 51% 62%,transparent 63%),repeating-conic-gradient(#1d1d1d 0 22.5deg,#fff 22.5deg 45deg);box-shadow:0 3px 0 #000,0 6px 14px rgba(0,0,0,.45);color:#fff}
+body.casino .mini:not(.del){border-radius:50%;background:radial-gradient(circle,#173d29 0 58%,transparent 60%),repeating-conic-gradient(#173d29 0 22.5deg,#e8d9b0 22.5deg 45deg)}
+/* Buttons */
+body.casino .btn.red{background:linear-gradient(180deg,#e0283a,#a50d1e);border:1px solid #ffb627;box-shadow:0 4px 0 #5e0610,0 8px 20px rgba(224,40,58,.3)}
+body.casino .btn.red:active{transform:translateY(3px);box-shadow:0 1px 0 #5e0610}
+body.casino .btn.gold{background:linear-gradient(180deg,#ffe08a,#ffb627 55%,#d98a00);box-shadow:0 4px 0 #8a5400;border:0}
+body.casino .btn.jade{background:linear-gradient(180deg,#38e0b0,#1fa47e);box-shadow:0 4px 0 #0c5c45}
+body.casino .chip.on,body.casino .tog.on,body.casino .seg button.on{background:linear-gradient(180deg,#ffe08a,#ffb627);color:#2b1b00;border-color:#ffb627}
+body.casino .chip.cat.on{box-shadow:0 0 12px rgba(255,182,39,.45)}
+body.casino .hero{border-color:rgba(255,182,39,.5);box-shadow:0 0 0 3px rgba(255,182,39,.12),0 10px 30px rgba(0,0,0,.45)}
+body.casino .hero h1 span{background:linear-gradient(180deg,#fff3c4,#ffb627 60%,#d98a00);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.casino .sech h3{background:linear-gradient(180deg,#fff,#e8d9b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.casino .tabs{background:rgba(4,17,10,.94);border-top:1px solid rgba(255,182,39,.4)}
+body.casino .tabs button.on::before{width:34px;background:linear-gradient(90deg,#c8102e,#ffb627,#c8102e)}
+body.casino .cart .in{background:linear-gradient(135deg,#123622,#0b2417);border-color:#ffb627}
+body.casino .toast{background:linear-gradient(180deg,#ffe08a,#ffb627);color:#2b1b00}
+body.casino .callbtn{font-family:var(--display);letter-spacing:.5px}
+body.casino .total span:last-child{text-shadow:0 0 14px rgba(255,182,39,.5)}
+/* Chips im Header */
+.pchip{display:inline-block;width:18px;height:18px;border-radius:50%;vertical-align:-4px;margin-right:5px;background:radial-gradient(circle,#ffb627 0 44%,#fff 45% 49%,#ffb627 50% 60%,transparent 61%),repeating-conic-gradient(#d98a00 0 30deg,#fff8e1 30deg 60deg);box-shadow:0 1px 3px rgba(0,0,0,.5)}
+body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:var(--num);font-weight:700}
+.chipbank{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,rgba(255,182,39,.16),rgba(255,182,39,.04));border:1px solid rgba(255,182,39,.4)}
+.chipbank .pchip{width:40px;height:40px;margin:0}
+.chipbank b{display:block;font-family:var(--num);font-size:1.6rem;color:var(--gold);line-height:1}
+.chipbank small{color:var(--muted);font-size:.78rem}
+/* Profil / Trophäen */
+.badge-s.new{background:rgba(255,182,39,.14);color:var(--gold)}
+.badge-s.tried{background:rgba(47,211,167,.12);color:var(--jade)}
+.phead{display:flex;align-items:center;gap:12px}
+.phead h3{margin:0;font-size:1.3rem}
+.avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:1.4rem;color:#fff;flex:none;background:radial-gradient(circle,#c8102e 0 55%,#fff 56% 59%,#c8102e 60%),repeating-conic-gradient(#c8102e 0 22.5deg,#fff 22.5deg 45deg);box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.lvl{color:var(--gold);font-weight:700;font-size:.9rem}
+.bar{height:10px;border-radius:999px;background:var(--s3);overflow:hidden;margin:14px 0 4px}
+.bar.thin{height:6px;margin-top:12px}
+.bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--gold),var(--red));transition:width .6s}
+.barlbl{color:var(--muted);font-size:.82rem}
+.linkb{color:var(--gold);font-weight:700;font-size:.82rem;padding:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.stats div{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:10px 4px;text-align:center}
+.stats b{display:block;font-family:var(--display);font-size:1.2rem;color:var(--ink);font-weight:400}
+.stats b small{font-size:.7rem;color:var(--dim)}
+.stats span{font-size:.68rem;color:var(--muted)}
+.favline{margin-top:12px;font-size:.92rem;color:var(--muted)}
+.favline b{color:var(--ink)}
+.psec{display:flex;justify-content:space-between;margin:20px 0 8px;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.psec span{color:var(--gold)}
+.achs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.ach{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:10px;opacity:.5}
+.ach.on{opacity:1;border-color:rgba(255,182,39,.5);background:linear-gradient(135deg,rgba(255,182,39,.14),var(--s2))}
+.ach span{font-size:1.4rem;display:block}
+.ach b{display:block;font-size:.86rem;margin-top:2px}
+.ach small{display:block;color:var(--muted);font-size:.72rem;line-height:1.25}
+.board{display:grid;gap:8px}
+.board>div{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.bt{font-weight:800;font-size:.85rem;margin-bottom:4px}
+.rk{display:flex;gap:8px;align-items:center;font-size:.9rem;padding:2px 0}
+.rk b{flex:1}
+.rk span:last-child{color:var(--muted)}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
+.confetti i{position:absolute;top:-40px;font-style:normal;font-size:1.5rem;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.8}}
 @media (min-width:720px){.hero{min-height:210px}.hero h1{font-size:2.2rem}}
 @media (max-width:400px){.fbtn{padding:0 12px}.fbtn span:not(.n){display:none}.hero{min-height:150px}.hero .in{padding:14px}.hero h1{font-size:1.5rem}.hero p{font-size:.85rem;max-width:210px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -347,7 +427,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 
 <header class="top">
   <div class="wrap">
-    <div class="brand"><img class="logo" src="icon.svg?v=5" alt="" width="34" height="34"><span>Asia Le</span></div>
+    <div class="brand"><img class="logo" src="icon.svg?v=5" alt="" width="34" height="34"><span id="brandTxt">Asia Le</span></div>
     <span class="pill" id="statusPill"><i></i><span>…</span></span>
     <button class="who" id="whoBtn">👤 Name</button>
   </div>
@@ -538,6 +618,11 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
   <form method="dialog" class="box" id="itemBox"></form>
 </dialog>
 
+<!-- Profil -->
+<dialog id="profDlg" class="sheet">
+  <div class="box" id="profBox"></div>
+</dialog>
+
 <!-- Filter -->
 <dialog id="filterDlg" class="sheet">
   <form method="dialog" class="box" id="filterBox"></form>
@@ -609,7 +694,7 @@ const optOk = (m, codes) => !m.opts || !m.optAl || m.opts.some(o => !(m.optAl[o]
 const NO = NO_ALL.filter(n => n.g === "al").filter(n => MENU.some(m => hasAl(m, n.codes) || Object.values(m.optAl || {}).flat().some(c => n.codes.includes(c))))
   .map(n => ({ ...n, test: m => !hasAl(m, n.codes) && optOk(m, n.codes) }));
 const MAXP = Math.ceil(Math.max(...MENU.map(m => m.price)));
-const F0 = () => ({ fav: false, veg: false, spice: "any", no: [], max: 0 });
+const F0 = () => ({ fav: false, veg: false, untried: false, spice: "any", no: [], max: 0 });
 function passes(m, F) {
   if (F.fav && !favs.has(m.nr)) return false;
   if (F.veg && !m.veg) return false;
@@ -617,7 +702,7 @@ function passes(m, F) {
   if (F.spice === "hot" && m.hot < 1) return false;
   if (F.spice === "fire" && m.hot < 3) return false;
   for (const id of F.no) { const n = NO.find(x => x.id === id); if (n && !n.test(m)) return false; }
-  if (F.max && m.price > F.max) return false;
+  if (F.untried && triedCount(m.nr)) return false;
   return true;
 }
 function activeFilters(F) {
@@ -626,11 +711,11 @@ function activeFilters(F) {
   if (F.veg) a.push(["veg", "🌱 Vegetarisch"]);
   if (F.spice !== "any") a.push(["spice", SPICE.find(x => x[0] === F.spice)[1]]);
   for (const id of F.no) { const n = NO.find(x => x.id === id); if (n) a.push(["no:" + id, "ohne " + n.label.split(" / ")[0]]); }
-  if (F.max) a.push(["max", "bis " + eur(F.max)]);
+  if (F.untried) a.push(["untried", "✨ Noch nie probiert"]);
   return a;
 }
 function removeFilter(key) {
-  if (key === "fav") F.fav = false; else if (key === "veg") F.veg = false; else if (key === "spice") F.spice = "any";
+  if (key === "untried") F.untried = false; else if (key === "fav") F.fav = false; else if (key === "veg") F.veg = false; else if (key === "spice") F.spice = "any";
   else if (key === "max") F.max = 0; else if (key.startsWith("no:")) F.no = F.no.filter(x => x !== key.slice(3));
   saveF(); renderChips(); renderMenu(); renderHits();
 }
@@ -669,7 +754,7 @@ const CFG = window.FIREBASE_CONFIG, QS = new URLSearchParams(location.search), M
 const liveCapable = !!(CFG || MOCK);
 if (MOCK && QS.get("as")) me = QS.get("as").slice(0, 20);   // nur Testmodus: Person simulieren
 let gid = (QS.get("g") || (fromHash ? "" : store.get("gid", "")) || "").replace(/[^a-z0-9-]/gi, "").slice(0, 40);
-let live = null, liveOnline = false, liveReady = false, lastRaw = null;
+let live = null, liveOnline = false, liveReady = false, lastRaw = null, histSynced = false;
 const keyOf = n => n.replace(/[.#$\[\]\/]/g, "_").slice(0, 40) || "_";
 const myPP = () => cleanPP(store.get("pp", ""));
 const STALE = 10 * 3600e3;
@@ -682,7 +767,8 @@ async function firebaseAdapter(cfg, g) {
   const db = D.getDatabase(initializeApp(cfg));
   const P = x => D.ref(db, `groups/${g}${x ? "/" + x : ""}`);
   return {
-    listen(cb) { D.onValue(P("round"), s => cb(s.val() || {})); D.onValue(D.ref(db, ".info/connected"), s => setOnline(!!s.val())); },
+    listen(cb) { D.onValue(P("round"), s => cb(s.val() || {})); D.onValue(D.ref(db, ".info/connected"), s => setOnline(!!s.val())); D.onValue(P("hist"), s => { groupHist = s.val() || {}; }); },
+    putHist: (d, k, v) => D.set(P(`hist/${d}/${k}`), v),
     put: (k, v) => D.set(P(`round/people/${k}`), v),
     patch: o => D.update(P("round"), o),
     newRound: prev => D.update(P(""), Object.assign({ round: { started: Date.now() } }, prev ? { last: prev } : {})),
@@ -696,7 +782,8 @@ function mockAdapter(g) {   // Testmodus (?mock): simuliert die Datenbank im loc
   const setPath = (o, path, v) => { const ks = path.split("/"); let t = o; ks.slice(0, -1).forEach(k => t = t[k] = t[k] || {}); v === null ? delete t[ks.at(-1)] : t[ks.at(-1)] = v; };
   addEventListener("storage", e => { if (e.key === K) emit(read()); });
   return {
-    listen(cb) { cbs.push(cb); setOnline(true); setTimeout(() => cb(read().round || {}), 0); },
+    listen(cb) { cbs.push(cb); setOnline(true); setTimeout(() => { groupHist = read().hist || {}; cb(read().round || {}); }, 0); addEventListener("storage", e => { if (e.key === K) groupHist = read().hist || {}; }); },
+    putHist(d, k, v) { const x = read(); setPath(x, `hist/${d}/${k}`, v); localStorage.setItem(K, JSON.stringify(x)); groupHist = x.hist || {}; },
     put(k, v) { const d = read(); setPath(d, `round/people/${k}`, v); write(d); },
     patch(o) { const d = read(); d.round = d.round || {}; for (const k in o) setPath(d.round, k, o[k]); write(d); },
     newRound(prev) { const d = read(); if (prev) d.last = prev; d.round = { started: Date.now() }; write(d); },
@@ -714,6 +801,7 @@ async function connectLive() {
       group = cleanPeople(Object.values(r.people || {})).sort((a, b) => a.ts - b.ts);
       round = cleanRound(r);
       if (!round.started) live.patch({ started: Date.now() });
+      if (!histSynced && me && live.putHist) { histSynced = true; const h = getHist(); for (const d of Object.keys(h)) if ((h[d] || []).length && !(groupHist[d] && groupHist[d][keyOf(me)])) live.putHist(d, keyOf(me), { n: me, i: h[d] }); }
       render();
     });
   } catch (e) { live = null; console.warn("Live-Gruppe nicht verfügbar", e); toast("Live-Gruppe gerade nicht erreichbar"); render(); }
@@ -744,6 +832,7 @@ function newRound() {
 function commit() {
   group = group.filter(p => p.i.length || p.n === me);
   { const p = myP(); if (p && p.i.length) store.set("last", p.i.map(x => [...x])); }
+  recordHist();
   if (live) { pushMine(); render(); return; }
   store.set("group", group); store.set("round", round);
   const has = group.some(p => p.i.length);
@@ -856,7 +945,7 @@ function itemHTML(m) {
     <div class="info" data-open="${esc(m.nr)}">
       <div class="iname">${esc(m.name)}</div>
       ${m.desc ? `<div class="idesc">${esc(m.desc)}</div>` : ""}
-      <div class="meta"><span class="price">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">veggie</span>` : ""}${hotHTML(m.hot)}${o.length ? `<span class="whohas">👥 ${esc(o.slice(0, 2).join(", "))}${o.length > 2 ? " +" + (o.length - 2) : ""}</span>` : ""}</div>
+      <div class="meta"><span class="price">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">veggie</span>` : ""}${hotHTML(m.hot)}${CASINO && HAS_HIST ? (triedCount(m.nr) ? `<span class="badge-s tried">✓ ${triedCount(m.nr)}×</span>` : `<span class="badge-s new">✨ neu</span>`) : ""}${o.length ? `<span class="whohas">👥 ${esc(o.slice(0, 2).join(", "))}${o.length > 2 ? " +" + (o.length - 2) : ""}</span>` : ""}</div>
     </div>
     <div class="act">
       <div class="step">${q ? `<button class="qb minus" data-sub="${esc(m.nr)}" aria-label="Eins weniger">−</button><span class="qn">${q}</span>` : ""}<button class="qb" data-add="${esc(m.nr)}" aria-label="Hinzufügen">+</button></div>
@@ -865,7 +954,9 @@ function itemHTML(m) {
   </div>`;
 }
 
+let HAS_HIST = false;
 function renderMenu() {
+  TRIED = triedMap(); HAS_HIST = visitDays().length > 0;
   const items = filtered();
   $("#hero").classList.toggle("hidden", !!query);
   if (!items.length) {
@@ -902,7 +993,8 @@ function openFilters() {
       <div class="fhead"><h3>Filter</h3><button type="button" id="fReset">Zurücksetzen</button></div>
       <div class="fsec"><h4>Was magst du?</h4><div class="fgrid">
         <button type="button" class="tog ${F.veg ? "on" : ""}" data-t="veg">🌱 Vegetarisch</button>
-        <button type="button" class="tog ${F.fav ? "on" : ""}" data-t="fav">⭐ Meine Favoriten</button></div></div>
+        <button type="button" class="tog ${F.fav ? "on" : ""}" data-t="fav">⭐ Meine Favoriten</button>
+        ${CASINO && visitDays().length ? `<button type="button" class="tog ${F.untried ? "on" : ""}" data-t="untried">✨ Noch nie probiert</button>` : ""}</div></div>
       <div class="fsec"><h4>Schärfe</h4><div class="seg">${SPICE.map(([k, l]) => `<button type="button" class="${F.spice === k ? "on" : ""}" data-sp="${k}">${l}</button>`).join("")}</div></div>
       <div class="fsec"><h4>Allergien &amp; Unverträglichkeiten: ohne …</h4><div class="fgrid">${NO.filter(x => x.g === "al").map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div></div>
       <button type="button" class="btn red block" id="fApply" style="margin-top:18px">${n ? `${n} ${n === 1 ? "Gericht" : "Gerichte"} anzeigen` : "Keine Treffer – Filter lockern"}</button>`;
@@ -1141,6 +1233,129 @@ function orderText() {
     + `\n${round.mode === "mit" ? "🥡 Zum Mitnehmen" : "🍽️ Vor Ort essen"}` + (pn ? `\nName: ${pn}` : "") + `\nGesamt: ${$("#roTotal").textContent}\n\n💶 ${round.payer ? round.payer + " legt aus" + (round.payer === me && myPP() ? ` (paypal.me/${myPP()})` : "") : "Wer zahlt was"}:\n` + people().filter(p => p.n !== round.payer).map(p => `• ${p.n}: ${eur(sumP(p))}`).join("\n");
 }
 
+
+// ---------- Casino-Gamification: Verlauf, Chips, Trophäen, Rangliste ----------
+const today = () => new Date().toLocaleDateString("sv-SE");          // YYYY-MM-DD
+const getHist = () => store.get("hist", {});
+const visitDays = () => Object.keys(getHist()).filter(d => (getHist()[d] || []).length).sort();
+function triedMap() { const t = {}; for (const items of Object.values(getHist())) for (const [nr, q] of items) t[nr] = (t[nr] || 0) + q; return t; }
+let TRIED = {}, groupHist = {};
+const triedCount = nr => TRIED[nr] || 0;
+const flags = () => store.get("flags", {});
+function bumpFlag(k, perDay) {
+  const f = flags();
+  if (perDay) { f[k + "Days"] = f[k + "Days"] || []; if (!f[k + "Days"].includes(today())) f[k + "Days"].push(today()); f[k] = f[k + "Days"].length; }
+  else f[k] = (f[k] || 0) + 1;
+  store.set("flags", f); checkAchievements();
+}
+function recordHist() {
+  if (!me) return;
+  const p = myP(), h = getHist(), d = today();
+  const items = p && p.i.length ? p.i.map(x => [x[0], x[1]]) : null;
+  if (items) h[d] = items; else delete h[d];
+  store.set("hist", h); TRIED = triedMap();
+  if (live && live.putHist) live.putHist(d, keyOf(me), items ? { n: me, i: items } : null);
+  checkAchievements();
+}
+function weekKey(ds) { const d = new Date(ds + "T12:00:00"); const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return t.getUTCFullYear() * 100 + Math.ceil(((t - y0) / 864e5 + 1) / 7); }
+function statsFrom(days) {
+  const all = days.flatMap(([, it]) => it).filter(([nr]) => byNr[nr]);
+  const qty = all.reduce((a, [, q]) => a + q, 0) || 1;
+  const per = {}; all.forEach(([nr, q]) => per[nr] = (per[nr] || 0) + q);
+  const fav = Object.entries(per).sort((a, b) => b[1] - a[1])[0];
+  let sameRun = 0, run = 0, prev = "";
+  for (const [, it] of days) { const k = it.map(x => x[0]).sort().join(","); run = k && k === prev ? run + 1 : 1; prev = k; sameRun = Math.max(sameRun, run); }
+  const weeks = [...new Set(days.map(([d]) => weekKey(d)))].sort((a, b) => b - a);
+  const prevW = x => { const yr = Math.floor(x / 100), wk = x % 100; return wk > 1 ? x - 1 : (yr - 1) * 100 + 52; };
+  let streak = 0; if (weeks.length) { const cur = weekKey(today()); let w = weeks[0] === cur || weeks[0] === prevW(cur) ? weeks[0] : null; for (const x of weeks) { if (w === null) break; if (x === w) { streak++; w = prevW(w); } else if (x < w) break; } }
+  const st = {
+    visits: days.length, unique: Object.keys(per).length, maxHot: Math.max(0, ...all.map(([nr]) => byNr[nr].hot)),
+    avgHot: all.reduce((a, [nr, q]) => a + byNr[nr].hot * q, 0) / qty,
+    duck: all.filter(([nr]) => /Ente/.test(byNr[nr].name) || byNr[nr].cat === "Ente").reduce((a, [, q]) => a + q, 0),
+    veg: all.filter(([nr]) => byNr[nr].veg && !["Beilagen", "Desserts"].includes(byNr[nr].cat)).reduce((a, [, q]) => a + q, 0),
+    dessert: all.filter(([nr]) => byNr[nr].cat === "Desserts").length,
+    fav: fav ? fav[0] : "", favN: fav ? fav[1] : 0, sameRun, streak,
+  };
+  st.chips = 1000 + st.visits * 100 + st.unique * 50 + st.streak * 75;   // virtuelle Chips, nur zum Spaß
+  return st;
+}
+const myStats = () => Object.assign(statsFrom(visitDays().map(d => [d, getHist()[d]])), { dice: flags().dice || 0, payer: flags().payer || 0 });
+const fmtChips = n => n.toLocaleString("de-DE");
+const MAINS = MENU.filter(m => !["Beilagen", "Desserts"].includes(m.cat));
+const ACH = [
+  { id: "first", icon: "🃏", name: "Erster Einsatz", desc: "Zum ersten Mal über die App bestellt", t: s => s.visits >= 1 },
+  { id: "v5", icon: "🎩", name: "Stammspieler", desc: "5 Besuche", t: s => s.visits >= 5 },
+  { id: "v20", icon: "👑", name: "Casino-Legende", desc: "20 Besuche", t: s => s.visits >= 20 },
+  { id: "streak3", icon: "📅", name: "Glückssträhne", desc: "3 Wochen in Folge da gewesen", t: s => s.streak >= 3 },
+  { id: "fire", icon: "🔥", name: "Risikospieler", desc: "Ein Gericht mit 6 Chilis bestellt", t: s => s.maxHot >= 6 },
+  { id: "exp10", icon: "🧭", name: "Entdecker", desc: "10 verschiedene Gerichte probiert", t: s => s.unique >= 10 },
+  { id: "exp30", icon: "🗺️", name: "Weltenbummler", desc: "30 verschiedene Gerichte probiert", t: s => s.unique >= 30 },
+  { id: "all", icon: "🏯", name: "Das Haus gehört dir", desc: `Alle ${MAINS.length} Hauptgerichte probiert`, t: () => MAINS.every(m => TRIED[m.nr]) },
+  { id: "duck", icon: "🦆", name: "Entenflüsterer", desc: "5× Ente bestellt", t: s => s.duck >= 5 },
+  { id: "veg3", icon: "🟢", name: "Grüne Zahl", desc: "3× vegetarisch bestellt", t: s => s.veg >= 3 },
+  { id: "sweet", icon: "🍌", name: "Süßer Gewinn", desc: "Einen Nachtisch bestellt", t: s => s.dessert >= 1 },
+  { id: "habit", icon: "🔁", name: "Systemspieler", desc: "3 Besuche hintereinander dasselbe", t: s => s.sameRun >= 3 },
+  { id: "dice", icon: "🎰", name: "Einarmiger Bandit", desc: "Ein Gericht vom Automaten genommen", t: s => s.dice >= 1 },
+  { id: "payer", icon: "🏦", name: "Die Bank", desc: "Für die Gruppe ausgelegt", t: s => s.payer >= 1 },
+];
+const LEVELS = [[0, "Tourist"], [1, "Gelegenheitsspieler"], [3, "Stammspieler"], [5, "High Roller"], [10, "VIP"], [20, "Casino-Legende"], [40, "Hausherr"]];
+function level(v) { let i = 0; LEVELS.forEach((l, k) => { if (v >= l[0]) i = k; }); const nx = LEVELS[i + 1]; return { name: LEVELS[i][1], idx: i + 1, next: nx ? nx[0] : null, nextName: nx ? nx[1] : "", from: LEVELS[i][0] }; }
+function checkAchievements() {
+  const s = myStats(), got = new Set(store.get("ach", [])), fresh = ACH.filter(a => !got.has(a.id) && a.t(s));
+  if (!fresh.length) return;
+  fresh.forEach(a => got.add(a.id)); store.set("ach", [...got]);
+  if (!CASINO) return;
+  const a = fresh[0];
+  setTimeout(() => { toast(`🏆 Trophäe: ${a.icon} ${a.name}`); confetti(); }, 700);
+}
+function confetti() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = document.createElement("div"); box.className = "confetti";
+  box.innerHTML = Array.from({ length: 22 }, (_, i) => `<i style="left:${Math.random() * 100}%;animation-delay:${Math.random() * .4}s;animation-duration:${1.4 + Math.random()}s">${["🪙", "♠️", "♦️", "🃏", "⭐", "🥢"][i % 6]}</i>`).join("");
+  document.body.appendChild(box); setTimeout(() => box.remove(), 2800);
+  try { navigator.vibrate && navigator.vibrate([30, 40, 30]); } catch {}
+}
+function groupBoard() {
+  const per = {};
+  for (const [d, ppl] of Object.entries(groupHist || {})) for (const v of Object.values(ppl || {})) if (v && v.n && Array.isArray(v.i)) (per[v.n] = per[v.n] || []).push([d, v.i]);
+  return Object.entries(per).map(([n, days]) => ({ n, ...statsFrom(days.sort()) }));
+}
+function openProfile() {
+  if (!me) return openName();
+  const s = myStats(), lv = level(s.visits), got = new Set(store.get("ach", []));
+  const prog = lv.next ? Math.round((s.visits - lv.from) / (lv.next - lv.from) * 100) : 100;
+  const board = live ? groupBoard() : [];
+  const top = (arr, key, fmt, filt = () => true) => arr.filter(filt).sort((a, b) => b[key] - a[key]).slice(0, 3).map((x, i) => `<div class="rk"><span>${["🥇", "🥈", "🥉"][i]}</span><b>${x.n === me ? "Du" : esc(x.n)}</b><span>${fmt(x)}</span></div>`).join("") || `<div class="rk" style="color:var(--dim)">noch keine Daten</div>`;
+  const gFav = (() => { const c = {}; for (const ppl of Object.values(groupHist || {})) for (const v of Object.values(ppl || {})) (v.i || []).forEach(([nr, q]) => { if (byNr[nr]) c[nr] = (c[nr] || 0) + q; }); const f = Object.entries(c).sort((a, b) => b[1] - a[1])[0]; return f ? byNr[f[0]] : null; })();
+  $("#profBox").innerHTML = `<div class="grab"></div>
+    <div class="phead"><div class="avatar">${esc(me.slice(0, 1).toUpperCase())}</div><div style="flex:1;min-width:0"><h3>${esc(me)}</h3><div class="lvl">Level ${lv.idx} · ${lv.name}</div></div><button type="button" class="chip" id="profName">✏️ Name</button></div>
+    <div class="chipbank"><span class="pchip"></span><div><b>${fmtChips(s.chips)}</b><small>Chips</small></div></div>
+    <div class="bar"><i style="width:${prog}%"></i></div>
+    <div class="barlbl">${lv.next ? `Noch ${lv.next - s.visits} ${lv.next - s.visits === 1 ? "Besuch" : "Besuche"} bis <b>${lv.nextName}</b>` : "Höchstes Level. Das Haus verneigt sich. 👑"}</div>
+    <div class="stats">
+      <div><b>${s.visits}</b><span>Besuche</span></div>
+      <div><b>${s.streak}</b><span>Wochen-Serie</span></div>
+      <div><b>${s.unique}<small>/${MENU.length}</small></b><span>probiert</span></div>
+      <div><b>${s.avgHot.toFixed(1)}</b><span>Ø Schärfe</span></div>
+    </div>
+    <div class="bar thin"><i style="width:${Math.round(s.unique / MENU.length * 100)}%"></i></div>
+    <div class="barlbl">${Math.round(s.unique / MENU.length * 100)} % der Karte erspielt${s.unique < MENU.length ? ` · <button type="button" class="linkb" id="profNew">🎰 Was Neues drehen</button>` : ""}</div>
+    ${s.fav ? `<div class="favline">❤️ Deine Glückszahl: <b>${byNr[s.fav].sayName ? "" : esc(s.fav) + " "}${esc(byNr[s.fav].name)}</b> (${s.favN}×)</div>` : ""}
+    <h4 class="psec">🏆 Trophäen <span>${got.size}/${ACH.length}</span></h4>
+    <div class="achs">${ACH.map(a => `<div class="ach ${got.has(a.id) ? "on" : ""}"><span>${got.has(a.id) ? a.icon : "🔒"}</span><b>${esc(a.name)}</b><small>${esc(a.desc)}</small></div>`).join("")}</div>
+    ${live ? `<h4 class="psec">♠️ Rangliste am Tisch</h4>
+      <div class="board">
+        <div><div class="bt">🪙 High Roller</div>${top(board, "chips", x => fmtChips(x.chips))}</div>
+        <div><div class="bt">🔥 Risikospieler</div>${top(board, "avgHot", x => "Ø " + x.avgHot.toFixed(1) + " 🌶️", x => x.visits > 0)}</div>
+        <div><div class="bt">🧭 Entdecker</div>${top(board, "unique", x => x.unique + (x.unique === 1 ? " Gericht" : " Gerichte"))}</div>
+      </div>
+      ${gFav ? `<div class="favline">🔥 Liebling am Tisch: <b>${gFav.sayName ? "" : esc(gFav.nr) + " "}${esc(gFav.name)}</b></div>` : ""}` : `<p class="fnote">In der Live-Gruppe gibt's auch eine Rangliste mit deinen Leuten.</p>`}
+    <p class="fnote">Chips sind nur zum Spaß und haben keinen Wert: +100 pro Besuch, +50 pro neuem Gericht, +75 pro Wochen-Serie.</p>`;
+  $("#profName").onclick = () => { $("#profDlg").close(); openName(); };
+  const nb = $("#profNew"); if (nb) nb.onclick = () => { $("#profDlg").close(); show("wuerfeln"); newOnly = true; spin(); newOnly = false; };
+  $("#profDlg").showModal();
+}
+
 // ---------- Rendering: dice / last ----------
 function renderLastQuick() {
   const last = (store.get("last", []) || []).filter(x => byNr[x[0]]), p = myP();
@@ -1153,12 +1368,13 @@ function renderLast() {
   $("#lastCard").classList.toggle("hidden", !last.length);
   $("#lastList").innerHTML = last.map((x, i) => lineHTML(x, i, false)).join("");
 }
-let spinning = false, favOnly = false;
+let spinning = false, favOnly = false, newOnly = false;
 function reelHTML(items) { return items.map(x => `<div>${x}</div>`).join(""); }
 function spin() {
   if (spinning) return;
   let pool = filtered({ q: "" });
   if (favOnly) pool = pool.filter(m => favs.has(m.nr));
+  if (newOnly) { TRIED = triedMap(); pool = pool.filter(m => !TRIED[m.nr]); if (!pool.length) return toast("Du hast schon alles probiert. Das Haus gehört dir 🏯"); }
   pool = pool.filter(m => m.cat !== "Beilagen");
   if (!pool.length) return toast(favOnly ? "Noch keine Favoriten ⭐" : "Nichts passt zu den Filtern");
   pick = pool[Math.floor(Math.random() * pool.length)];
@@ -1206,10 +1422,15 @@ function renderCasinoStatic() {
   $("#heroP").textContent = C("Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.", "Setzt eure Chips auf die Karte. Einer ruft an, und wenn ihr ankommt, steht der Gewinn auf dem Tisch.");
   $("#nameTitle").textContent = C("Wie heißt du? 👋", "Wie heißt du, Spieler? 🎩");
   const t = $("#casinoTog"); if (t) { t.setAttribute("aria-pressed", CASINO); t.textContent = CASINO ? "An" : "Aus"; }
+  document.body.classList.toggle("casino", CASINO);
+  $("#brandTxt").innerHTML = C("Asia Le", `Asia Le <small class="ctag">CASINO</small>`);
+  const tb = $('.tabs [data-v="bestellung"]'); if (tb) tb.childNodes[1].nodeValue = C("Bestellung", "Spieltisch");
+  const tk = $('.tabs [data-v="karte"] .e'); if (tk) tk.textContent = C("🍜", "🃏");
+  const to = $('.tabs [data-v="bestellung"] .e'); if (to) to.textContent = C("🧾", "♠️");
 }
 function renderChrome() {
   renderCasinoStatic();
-  $("#whoBtn").textContent = "👤 " + (me || "Name");
+  $("#whoBtn").innerHTML = me ? (CASINO ? `<span class="pchip sm"></span>${fmtChips(myStats().chips)}` : `👤 ${esc(me)}`) : "👤 Name";
   const p = myP(), mc = p ? p.i.reduce((a, x) => a + x[1], 0) : 0, all = countAll();
   $("#tabBadge").classList.toggle("hidden", !all); $("#tabBadge").textContent = all;
   $("#cartMine").textContent = mc ? C(`Du: ${mc}× · ${eur(sumP(p))}`, `Dein Einsatz: ${mc}× · ${eur(sumP(p))}`) : C(`Gruppe: ${all} Gerichte`, `Am Tisch: ${all} Chips`);
@@ -1271,7 +1492,7 @@ document.addEventListener("click", e => {
   else if (d.dledit !== undefined) { dlEdit = d.dledit === "1"; renderDeadline(); }
   else if (d.dl !== undefined) { dlEdit = false;  const v = d.dl; patchRound({ deadline: v === "0" ? 0 : v === "+5" ? Math.max(round.deadline, Date.now()) + 5 * 60e3 : Date.now() + (+v) * 60e3 }); }
   else if (d.paymode) { if (d.paymode === "self") { payChoose = false; patchRound({ payer: "" }); } else { payChoose = true; if (round.payer) patchRound({ payer: "" }); else renderPay(); } }
-  else if (d.payer) { payChoose = false; if (d.payer === me && myPP()) { const p = myP(); if (p) p.pp = myPP(); } patchRound({ payer: d.payer }); if (live && d.payer === me) pushMine(); }
+  else if (d.payer) { payChoose = false; if (d.payer === me) bumpFlag("payer", true); if (d.payer === me && myPP()) { const p = myP(); if (p) p.pp = myPP(); } patchRound({ payer: d.payer }); if (live && d.payer === me) pushMine(); }
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
   else if (d.mode) patchRound({ mode: d.mode });
   else if (d.filter !== undefined) openFilters();
@@ -1287,7 +1508,8 @@ function mergeDupes(p) { const out = []; for (const x of p.i) { const ex = out.f
 function resetFilters() { F = F0(); saveF(); cat = ""; query = ""; $("#q").value = ""; $("#qClr").classList.add("hidden"); renderChips(); renderMenu(); renderHits(); }
 $$(".tabs button").forEach(b => b.onclick = () => show(b.dataset.v));
 $("#howCard summary").addEventListener("click", () => { howTouched = true; });
-$("#whoBtn").onclick = () => openName();
+$("#whoBtn").onclick = () => CASINO ? openProfile() : openName();
+$("#profDlg").addEventListener("click", e => { if (e.target.id === "profDlg") e.target.close(); });
 let qT;
 $("#q").addEventListener("input", e => { query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") { const r = filtered(); if (r.length === 1) { openItem(r[0].nr); } e.target.blur(); } });
@@ -1305,7 +1527,7 @@ $("#spin").onclick = () => spin();
 $("#casinoTog").onclick = () => { CASINO = !CASINO; store.set("casino", CASINO); render(); toast(CASINO ? "🎰 Casino-Modus an. Viel Glück!" : "Casino-Modus aus"); };
 $("#lever").onclick = () => spin();
 $("#spinFav").onclick = e => { favOnly = !favOnly; e.currentTarget.setAttribute("aria-pressed", favOnly); };
-$("#takeIt").onclick = () => { if (pick) { pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
+$("#takeIt").onclick = () => { if (pick) { bumpFlag("dice"); pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
 $("#repeatLast").onclick = () => needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); commit(); toast("Wie letztes Mal ✓"); });
 $("#copyText").onclick = () => copy(orderText(), "Bestellung kopiert ✓");
 $("#pickupName").value = store.get("pickup", "");
