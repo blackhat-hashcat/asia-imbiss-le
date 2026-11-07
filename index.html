@@ -55,7 +55,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 
 /* ---------- Hero ---------- */
 .hero{position:relative;margin:14px 0 6px;border-radius:24px;overflow:hidden;min-height:176px;display:flex;align-items:flex-end;
-  background:linear-gradient(95deg,rgba(15,11,10,.97) 0%,rgba(15,11,10,.82) 38%,rgba(15,11,10,.25) 72%,rgba(15,11,10,0) 100%),linear-gradient(0deg,rgba(15,11,10,.55),transparent 45%),url(img/wok.jpg?v=5) 70% 45%/cover;background-origin:border-box;background-repeat:no-repeat;border:1px solid rgba(255,182,39,.18);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  background:linear-gradient(95deg,rgba(15,11,10,.97) 0%,rgba(15,11,10,.82) 38%,rgba(15,11,10,.25) 72%,rgba(15,11,10,0) 100%),linear-gradient(0deg,rgba(15,11,10,.55),transparent 45%),url(img/wok.jpg?v=8) 70% 45%/cover;background-origin:border-box;background-repeat:no-repeat;border:1px solid rgba(255,182,39,.18);box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .hero::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);pointer-events:none}
 .hero .in{padding:18px}
 .hero h1{font-family:var(--display);font-size:1.75rem;line-height:1.05;margin:0 0 6px}
@@ -1172,7 +1172,7 @@ $("#pickupName").value = store.get("pickup", "");
 $("#pickupName").oninput = e => { store.set("pickup", e.target.value); renderCall(); };
 $("#callBtn").onclick = () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); };
 // ---------- Original-Karte: Galerie + Lightbox ----------
-const SCANS = [1, 2, 3, 4, 5, 6].map(i => ({ src: `karte/spalte-${i}.jpg?v=5`, alt: ["Suppen, Vorspeisen, Reis, Nudeln", "Huhn, Rind, Ente", "Ente, Schwein, Vegetarisch, Meeresfrüchte, Spezialitäten", "Spezialitäten S05–S14, Allergene", "Beilagen, Desserts, Nudelbox", "Öffnungszeiten, Telefon, Adresse"][i - 1] }));
+const SCANS = [1, 2, 3, 4, 5, 6].map(i => ({ src: `karte/spalte-${i}.jpg?v=8`, alt: ["Suppen, Vorspeisen, Reis, Nudeln", "Huhn, Rind, Ente", "Ente, Schwein, Vegetarisch, Meeresfrüchte, Spezialitäten", "Spezialitäten S05–S14, Allergene", "Beilagen, Desserts, Nudelbox", "Öffnungszeiten, Telefon, Adresse"][i - 1] }));
 $("#gal").innerHTML = SCANS.map((x, i) => `<img src="${x.src}" alt="Speisekarte Teil ${i + 1}: ${esc(x.alt)}" loading="lazy" data-zoom="${i}">`).join("");
 let lbI = 0;
 function openLb(i) { lbI = (i + SCANS.length) % SCANS.length; const im = $("#lbImg"); im.src = SCANS[lbI].src; im.alt = SCANS[lbI].alt; im.classList.remove("z"); $("#lbCount").textContent = `${lbI + 1} / ${SCANS.length}`; $("#lbIn").scrollTo(0, 0); if (!$("#lightbox").open) $("#lightbox").showModal(); }
