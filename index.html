@@ -417,7 +417,7 @@ body.casino .flizard{display:inline-block}
 @keyframes flick{30%{transform:rotate(-25deg) translateX(-3px);opacity:.8}60%{transform:rotate(15deg)}}
 .lonebat{position:fixed;left:-40px;z-index:240;pointer-events:none;font-style:normal;font-size:1.1rem;opacity:.35;animation:lonebat 6.5s linear forwards}
 @keyframes lonebat{0%{transform:translate(0,0)}20%{transform:translate(22vw,-14px) scaleX(-1)}45%{transform:translate(50vw,10px)}70%{transform:translate(78vw,-10px) scaleX(-1)}100%{transform:translate(110vw,4px)}}
-.hero.melt{animation:melt 7s ease-in-out}
+.hero.melt,#list.melt{animation:melt 7s ease-in-out}
 @keyframes melt{0%,100%{filter:none;transform:none}20%{filter:saturate(1.8) hue-rotate(25deg);transform:scale(1.02) skewX(1.5deg)}45%{filter:saturate(2.2) hue-rotate(-30deg) blur(.6px);transform:scale(.985) skewY(-1.5deg)}70%{filter:saturate(1.6) hue-rotate(60deg);transform:scale(1.015) skewX(-1deg)}}
 body.ether main,body.ether .top,body.ether .tabs{animation:ether 7.5s ease-in-out}
 @keyframes ether{0%,100%{filter:none;transform:none}15%{filter:blur(2px);transform:rotate(-2deg) translateX(-10px)}35%{filter:blur(3.5px) brightness(1.15);transform:rotate(2.5deg) translateX(12px) scale(1.02)}55%{filter:blur(2.5px) saturate(.6);transform:rotate(-1.8deg) translate(-8px,6px)}75%{filter:blur(3px);transform:rotate(1.5deg) translateX(6px)}90%{filter:blur(1px);transform:rotate(-.6deg)}}
@@ -526,7 +526,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
 
   <!-- ================= KARTE ================= -->
   <section class="view on" id="v-karte">
-    <div class="hero" id="hero" onclick="window.__flHero && window.__flHero()">
+    <div class="hero" id="hero">
       <div class="in">
         <h1 id="heroH">Hunger?<br><span>Vorbestellen.</span></h1>
         <p id="heroP">Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.</p>
@@ -1636,6 +1636,7 @@ function renderCasinoStatic() {
   document.body.classList.toggle("late", CASINO && FL_NIGHT());
   if (CASINO && /^(raoul|gonzo|duke)/i.test(me || "")) document.body.classList.add("hawaii"); else if (!CASINO) document.body.classList.remove("hawaii");
   if (CASINO && !flBatTimer) flAmbient();
+  if (CASINO && !stareT) stareReset();
   $("#brandTxt").innerHTML = C("Asia Le", `Asia Le <small class="ctag" onclick="event.stopPropagation(); window.__flCtag && window.__flCtag()">CASINO</small>`);
   const tb = $('.tabs [data-v="bestellung"]'); if (tb) tb.childNodes[1].nodeValue = C("Bestellung", "Spieltisch");
   const tk = $('.tabs [data-v="karte"] .e'); if (tk) tk.textContent = C("🍜", "🃏");
@@ -1740,7 +1741,7 @@ $("#share").onclick = async () => {
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin();
-window.__flHero = flHeroTap; window.__flCtag = flCtag; window.__flAvatar = flAvatar;
+window.__flCtag = flCtag; window.__flAvatar = flAvatar;
 $("#flLizard").addEventListener("click", e => { e.stopPropagation(); flLizard(); });
 // ---------- Easter Egg: Suche "jackpot" oder 7-7-7 am Automaten ----------
 let casinoCooldown = 0;
@@ -1812,15 +1813,21 @@ function flAmbient() {   // gelegentlich flattert eine einzelne, halbtransparent
 }
 function flSometimes(chance) { return CASINO && Math.random() < chance; }
 function flQuote() { return pickOne(FL_QUOTES); }
-let heroTaps = [];
-function flHeroTap() {   // 3× aufs Essensfoto: das Bild fängt an zu atmen
+// Eigene Mechanik "Starren": wer im Casino 45 s untätig auf die Karte schaut, dem fängt das Essen an zu atmen
+let stareT = 0;
+function stareReset() {
+  clearTimeout(stareT);
   if (!CASINO) return;
-  const now = Date.now(); heroTaps = heroTaps.filter(t => now - t < 1500); heroTaps.push(now);
-  if (heroTaps.length < 3) return; heroTaps = [];
-  const h = $("#hero"); h.classList.remove("melt"); void h.offsetWidth; h.classList.add("melt");
-  setTimeout(() => h.classList.remove("melt"), 7000);
-  eggToast("🌀 " + pickOne(["Das Essen atmet. Ganz ruhig.", "Bei Barstow fing es auch so an …", "Kein Grund zur Panik. Das ist nur das Meskalin."]));
+  stareT = setTimeout(() => {
+    if (!CASINO || document.hidden || !$("#v-karte").classList.contains("on") || document.querySelector("dialog[open]")) return stareReset();
+    if (!flOnceKey("stare")) return;
+    const els = [$("#hero"), $("#list")];
+    els.forEach(el => { el.classList.remove("melt"); void el.offsetWidth; el.classList.add("melt"); });
+    setTimeout(() => els.forEach(el => el.classList.remove("melt")), 7000);
+    eggToast("🌀 " + pickOne(["Du starrst jetzt schon eine Weile auf die Karte. Das Essen fängt an zu atmen. Ganz ruhig.", "Bei Barstow fing es auch so an …", "Kein Grund zur Panik. Das ist nur das Meskalin."]));
+  }, 45000);
 }
+["pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, stareReset, { passive: true }));
 function flLizard() {
   if (!CASINO) return;
   eggToast("🦎 " + flQuote());
