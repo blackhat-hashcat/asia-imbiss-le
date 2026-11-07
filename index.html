@@ -994,8 +994,7 @@ function add(nr, note = "", n = 1) {
     buzz(); commit();
     const m = byNr[nr];
     const lbl = `${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""}`;
-    toast(CASINO ? (flSometimes(.06) ? "🦇 " + flQuote() : pickOne(QUIP_ADD).replace("{x}", lbl)) : `✓ ${lbl} hinzugefügt`);
-    if (flSometimes(.04)) batSwarm(1);
+    toast(CASINO ? pickOne(QUIP_ADD).replace("{x}", lbl) : `✓ ${lbl} hinzugefügt`);
     if (CASINO) chipFly(lastAddEl); lastAddEl = null;
     flAfterAdd();
   });
@@ -1641,7 +1640,7 @@ function renderCasinoStatic() {
   if (CASINO && /^(raoul|gonzo|duke)/i.test(me || "")) document.body.classList.add("hawaii"); else if (!CASINO) document.body.classList.remove("hawaii");
   if (CASINO && !flBatTimer) flAmbient();
   if (CASINO && !stareT) stareReset();
-  $("#brandTxt").innerHTML = C("Asia Le", `Asia Le <small class="ctag" onclick="event.stopPropagation(); window.__flCtag && window.__flCtag()">CASINO</small>`);
+  $("#brandTxt").innerHTML = C("Asia Le", `Asia Le <small class="ctag">CASINO</small>`);
   const tb = $('.tabs [data-v="bestellung"]'); if (tb) tb.childNodes[1].nodeValue = C("Bestellung", "Spieltisch");
   const tk = $('.tabs [data-v="karte"] .e'); if (tk) tk.textContent = C("🍜", "🃏");
   const to = $('.tabs [data-v="bestellung"] .e'); if (to) to.textContent = C("🧾", "♠️");
@@ -1732,7 +1731,7 @@ $("#howCard summary").addEventListener("click", () => { howTouched = true; });
 $("#whoBtn").onclick = () => CASINO ? openProfile() : openName();
 $("#profDlg").addEventListener("click", e => { if (e.target.id === "profDlg") e.target.close(); });
 let qT;
-$("#q").addEventListener("input", e => { if (/^jackpot$/i.test(e.target.value.trim()) && Date.now() > casinoCooldown) { e.target.value = ""; e.target.blur(); setCasino(!CASINO); } if (CASINO && vegasEgg(e.target.value)) { e.target.value = ""; e.target.blur(); } query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
+$("#q").addEventListener("input", e => { if (/^jackpot$/i.test(e.target.value.trim()) && Date.now() > casinoCooldown) { e.target.value = ""; e.target.blur(); setCasino(!CASINO); } query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") { const r = filtered(); if (r.length === 1) { openItem(r[0].nr); } e.target.blur(); } });
 $("#qClr").onclick = () => { $("#q").value = ""; query = ""; $("#qClr").classList.add("hidden"); renderMenu(); renderHits(); $("#q").focus(); };
 $("#readout").onclick = e => { const li = e.target.closest("li[data-k]"); if (!li) return; const k = li.dataset.k; done.has(k) ? done.delete(k) : done.add(k); store.set("done", [...done]); li.classList.toggle("done"); buzz(); };
@@ -1745,7 +1744,7 @@ $("#share").onclick = async () => {
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin();
-window.__flCtag = flCtag; window.__flAvatar = flAvatar;
+window.__flAvatar = flAvatar;
 $("#flLizard").addEventListener("click", e => { e.stopPropagation(); flLizard(); });
 // ---------- Easter Egg: Suche "jackpot" oder 7-7-7 am Automaten ----------
 let casinoCooldown = 0;
@@ -1757,19 +1756,6 @@ function setCasino(v) {
 let eggTaps = [];
 // ---------- Fear & Loathing Easter Eggs (nur im Casino-Modus) ----------
 const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-function vegasEgg(v) {
-  const q = norm(v.trim());
-  if (/^(bat ?country|fledermaus(land)?|fledermaeuse|fledermause)$/.test(q)) { batSwarm(); eggToast("🦇 Nicht anhalten. Hier ist Fledermaus-Land!"); return true; }
-  if (/^(lizard|lizards|echse|eidechse|echsen)$/.test(q)) { carpetTrip(); eggToast("🦎 Der Hotelteppich hat gerade gezwinkert …"); return true; }
-  if (/^(las ?vegas|vegas|wueste|wuste)$/.test(q)) { redShark(); eggToast("🌵 Mit dem roten Cabrio quer durch die Wüste nach Las Vegas …"); return true; }
-  if (/^(gonzo|raoul|duke|hawaii(hemd)?)$/.test(q)) { const on = document.body.classList.toggle("hawaii"); eggToast(on ? "🌺 Hawaiihemd an. Sonnenbrille auf. Notizblock bereit." : "👔 Hawaiihemd wieder im Schrank."); return true; }
-  if (/^(adrenochrom|adrenochrome)$/.test(q)) { carpetTrip(); batSwarm(18); setTimeout(redShark, 900); eggToast("🧪 " + "Das ist kein Spielzeug. … Na gut. Viel Spaß."); return true; }
-  if (/^(ather|aether|ether)$/.test(q)) { document.body.classList.add("ether"); setTimeout(() => document.body.classList.remove("ether"), 7500); eggToast("🌫️ Es gibt nichts Hilfloseres als einen Mann im Äther-Rausch."); return true; }
-  if (/^(meskalin|mescaline|mescalin)$/.test(q)) { carpetTrip(); eggToast("🌈 75 Kügelchen. Die Farben fangen an zu singen."); return true; }
-  if (/^(buy the ticket|ticket)$/.test(q)) { eggToast("🎟️ Kauf das Ticket, nimm die Fahrt."); setTimeout(() => { show("wuerfeln"); spin(); }, 500); return true; }
-  if (/^(american ?dream|amerikanischer ?traum)$/.test(q)) { eggToast("🇺🇸 Gesucht: der amerikanische Traum. Gefunden: H42 mit sechs Chilis."); setTimeout(() => openItem("H42"), 600); return true; }
-  return false;
-}
 function batSwarm(n = 22) {
   if (reduceMotion()) return;
   const box = document.createElement("div"); box.className = "fx batbox";
@@ -1856,12 +1842,6 @@ function flAfterAdd() {
   if (n >= 3 && flOnceKey("ether")) setTimeout(() => { document.body.classList.add("ether"); setTimeout(() => document.body.classList.remove("ether"), 7500); eggToast("🌫️ Es gibt nichts Hilfloseres als einen Mann im Äther-Rausch."); }, 900);
   const tot = people().reduce((a, x) => a + sumP(x), 0);
   if (tot >= 100 && flOnceKey("dream")) setTimeout(() => eggToast("🇺🇸 Der amerikanische Traum: über 100 € in Nudeln."), 1600);
-}
-let ctagTaps = [];
-function flCtag() {   // 3× aufs CASINO-Schild: der Hotelteppich
-  if (!CASINO) return;
-  const now = Date.now(); ctagTaps = ctagTaps.filter(t => now - t < 1500); ctagTaps.push(now);
-  if (ctagTaps.length >= 3) { ctagTaps = []; carpetTrip(); eggToast("🦎 Der Hotelteppich hat gerade gezwinkert …"); }
 }
 let avTaps = [];
 function flAvatar() {   // 3× aufs Profilbild: Hawaiihemd
