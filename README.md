@@ -17,7 +17,7 @@ Ohne Server und ohne Login: Die Gruppenbestellung steckt komplett im Link. Die A
 
 ## Dateien
 - `menu.js`: Speisekarte, Telefon, Adresse und Öffnungszeiten. Preise ändern sich? Nur hier anpassen.
-- `karte/`: Original-Scans des Flyers (Quelle aller Daten)
+- `karte/`: Original-Scans des Flyers (`seite-*.jpg`) und zugeschnittene Spalten für die App (`spalte-1…6.jpg`)
 - `img/`: Fotos für die Startseite
 - `index.html`: die App
 

@@ -8,7 +8,7 @@
 <title>Asia Imbiss Le · Gruppenbestellung</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@ a{color:inherit}
 .top{position:sticky;top:0;z-index:20;background:rgba(15,11,10,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:10px;height:56px}
 .brand{font-family:var(--display);font-size:1.15rem;letter-spacing:.5px;flex:1;white-space:nowrap;display:flex;align-items:center;gap:8px}
-.brand .dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--red),var(--red2));display:grid;place-items:center;font-size:1rem;box-shadow:0 0 18px rgba(239,51,64,.5)}
+.brand .logo{width:34px;height:34px;border-radius:10px;display:block;box-shadow:0 0 18px rgba(239,51,64,.45)}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--s2);border:1px solid var(--line);white-space:nowrap}
 .pill i{width:8px;height:8px;border-radius:50%;background:var(--dim)}
 .pill.open i{background:var(--jade);box-shadow:0 0 8px var(--jade)}
@@ -54,8 +54,9 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .sub{color:var(--muted);margin:0 0 14px;font-size:.95rem}
 
 /* ---------- Hero ---------- */
-.hero{position:relative;margin:14px 0 6px;border-radius:24px;overflow:hidden;min-height:170px;display:flex;align-items:flex-end;
-  background:linear-gradient(90deg,rgba(15,11,10,.95) 0%,rgba(15,11,10,.6) 55%,rgba(15,11,10,.1) 100%),url(img/wok.jpg) right center/cover;border:1px solid var(--line)}
+.hero{position:relative;margin:14px 0 6px;border-radius:24px;overflow:hidden;min-height:176px;display:flex;align-items:flex-end;
+  background:linear-gradient(95deg,rgba(15,11,10,.97) 0%,rgba(15,11,10,.82) 38%,rgba(15,11,10,.25) 72%,rgba(15,11,10,0) 100%),linear-gradient(0deg,rgba(15,11,10,.55),transparent 45%),url(img/wok.jpg) 70% 45%/cover;border:1px solid rgba(255,182,39,.18);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.hero::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);pointer-events:none}
 .hero .in{padding:18px}
 .hero h1{font-family:var(--display);font-size:1.75rem;line-height:1.05;margin:0 0 6px}
 .hero h1 span{color:var(--gold)}
@@ -85,8 +86,32 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .chip{flex:none;border:1px solid var(--line);background:var(--s1);border-radius:999px;padding:7px 12px;font-size:.86rem;font-weight:600;white-space:nowrap;color:var(--muted)}
 .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .chip.cat.on{background:var(--gold);color:#2b1b00;border-color:var(--gold)}
-.resinfo{display:flex;justify-content:space-between;align-items:center;color:var(--dim);font-size:.82rem;padding:2px 0 0}
-.resinfo button{color:var(--gold);font-weight:700;font-size:.82rem}
+.srow{display:flex;gap:8px;align-items:stretch}
+.srow .sbox{flex:1;min-width:0}
+.fbtn{flex:none;display:flex;align-items:center;gap:6px;padding:0 14px;border-radius:14px;border:1px solid var(--line);background:var(--s1);font-weight:700;font-size:.92rem;position:relative}
+.fbtn.on{border-color:var(--gold);color:var(--gold);background:rgba(255,182,39,.08)}
+.fbtn .n{background:var(--gold);color:#2b1b00;border-radius:999px;font-size:.72rem;padding:1px 7px;font-weight:800}
+.chip.af{background:rgba(255,182,39,.14);border-color:rgba(255,182,39,.5);color:var(--gold);display:inline-flex;align-items:center;gap:6px}
+.chip.af b{font-size:.75rem;opacity:.8}
+.chips .sep{flex:none;width:1px;background:var(--line);margin:4px 2px}
+.fsec{margin:16px 0 0}
+.fsec h4{margin:0 0 8px;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.fgrid{display:flex;flex-wrap:wrap;gap:8px}
+.tog{border:1px solid var(--line);background:var(--s2);border-radius:14px;padding:10px 14px;font-weight:600;font-size:.95rem;color:var(--ink)}
+.tog.on{background:var(--gold);border-color:var(--gold);color:#2b1b00}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.seg button{padding:9px 2px;border-radius:10px;font-weight:700;font-size:.82rem;color:var(--muted);line-height:1.15}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.fhead{display:flex;align-items:center;justify-content:space-between}
+.fhead button{color:var(--muted);font-weight:600;font-size:.88rem;padding:6px}
+.fsum{color:var(--muted);font-size:.88rem;margin:6px 0 0}
+.gal{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:4px 16px 8px;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.gal img{flex:none;height:260px;width:auto;border-radius:12px;border:1px solid var(--line);scroll-snap-align:start;cursor:zoom-in;background:var(--s2)}
+.galhint{color:var(--dim);font-size:.8rem;text-align:center}
+.lbnav{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:64px;border-radius:12px;background:rgba(0,0,0,.6);color:#fff;font-size:1.6rem;font-weight:800;z-index:2}
+.lbnav.prev{left:8px}.lbnav.next{right:8px}
+#lbCount{position:fixed;top:calc(18px + env(safe-area-inset-top));left:16px;color:#fff;background:rgba(0,0,0,.6);padding:6px 12px;border-radius:999px;font-weight:700;font-size:.85rem;z-index:2}
 
 /* ---------- Menu ---------- */
 .sec{margin-top:18px}
@@ -226,14 +251,15 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 .quick button{font-size:.8rem;padding:5px 10px;border-radius:999px;background:var(--s3);color:var(--muted);font-weight:600}
 #lightbox{width:100vw;height:100dvh}
 #lightbox .lb-in{width:100vw;height:100dvh;overflow:auto;overscroll-behavior:contain;background:#000}
-#lightbox img{display:block;width:100%;transition:width .2s;position:relative;top:50%;transform:translateY(-50%)}
-#lightbox img.z{top:0;transform:none}
+#lightbox img{display:block;width:100%;max-width:720px;margin:0 auto;transition:width .2s}
+#lightbox img.z{width:220%;max-width:none}
 #lightbox img.z{width:260%}
 #lightbox .close{position:fixed;top:calc(12px + env(safe-area-inset-top));right:12px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-size:1.3rem;font-weight:800;z-index:2}
 #lightbox .hint{white-space:nowrap;position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#fff;padding:6px 12px;border-radius:999px;font-size:.8rem}
 .toast{position:fixed;left:50%;bottom:calc(var(--dock,140px) + 12px);top:auto;transform:translate(-50%,20px);font-size:.92rem;box-shadow:0 8px 24px rgba(0,0,0,.4);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;z-index:100;max-width:90vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media (min-width:720px){.hero{min-height:210px}.hero h1{font-size:2.2rem}}
+@media (max-width:400px){.fbtn{padding:0 12px}.fbtn span:not(.n){display:none}.hero{min-height:150px}.hero .in{padding:14px}.hero h1{font-size:1.5rem}.hero p{font-size:.85rem;max-width:210px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -241,7 +267,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 
 <header class="top">
   <div class="wrap">
-    <div class="brand"><span class="dot">🥢</span><span>Asia Le</span></div>
+    <div class="brand"><img class="logo" src="icon.svg" alt="" width="34" height="34"><span>Asia Le</span></div>
     <span class="pill" id="statusPill"><i></i><span>…</span></span>
     <button class="who" id="whoBtn">👤 Name</button>
   </div>
@@ -262,15 +288,16 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
     </div>
 
     <div class="searchbar">
-      <div class="sbox">
-        <span class="ico">🔎</span>
-        <input id="q" type="search" inputmode="search" placeholder="Nr. oder Gericht suchen" autocomplete="off" enterkeyhint="search">
-        <button class="clr hidden" id="qClr" aria-label="Suche löschen">✕</button>
+      <div class="srow">
+        <div class="sbox">
+          <span class="ico">🔎</span>
+          <input id="q" type="search" inputmode="search" placeholder="Nr. oder Gericht" autocomplete="off" enterkeyhint="search">
+          <button class="clr hidden" id="qClr" aria-label="Suche löschen">✕</button>
+        </div>
+        <button class="fbtn" data-filter aria-label="Filter">⚙️<span>Filter</span><span class="n hidden" id="fCount"></span></button>
       </div>
       <div class="chips" id="cats"></div>
-      <div class="resinfo hidden" id="resinfo"><span id="resTxt"></span><button id="resReset">Filter zurücksetzen</button></div>
     </div>
-    <div class="chips" id="filters"></div>
 
     <div id="hitsWrap" class="hidden">
       <div class="sech" style="margin-top:14px"><span class="ic">🔥</span><h3>Die Gruppe nimmt schon</h3></div>
@@ -293,12 +320,10 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
       <button class="btn jade block hidden" id="takeIt">✅ Nehm ich</button>
     </div>
     <div class="card">
-      <h3>Worauf hast du Lust?</h3>
-      <div class="chips" id="dFilters" style="margin:0;padding:0 0 8px"></div>
+      <h3><span>Worauf hast du Lust?</span><button class="btn sm" data-filter>⚙️ Filter <span class="n hidden" id="fCount2" style="background:var(--gold);color:#2b1b00;border-radius:999px;font-size:.72rem;padding:1px 7px"></span></button></h3>
+      <div class="fsum" id="dSum">Keine Filter: alles ist möglich.</div>
       <label class="lb">Kategorie</label>
       <div class="chips" id="dCats" style="margin:0;padding:0"></div>
-      <label class="lb">Budget: <b id="budgetLbl" style="color:var(--gold)">egal</b></label>
-      <input type="range" class="range" id="budget" min="0" max="13" step="0.5" value="0">
     </div>
     <div class="card hidden" id="lastCard">
       <h3>Dein letztes Mal</h3>
@@ -375,9 +400,9 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
     </div>
     <div class="card">
       <h3>📄 Original-Speisekarte</h3>
-      <p style="color:var(--muted);font-size:.88rem;margin:-4px 0 4px">Der Flyer zum Nachschauen. Antippen zum Vergrößern.</p>
-      <img class="scan" src="karte/seite-2.jpg" alt="Speisekarte Seite 1: Suppen, Vorspeisen, Reis, Nudeln, Huhn, Rind, Ente, Schwein, Vegetarisch, Meeresfrüchte" loading="lazy" data-zoom>
-      <img class="scan" src="karte/seite-1.jpg" alt="Speisekarte Seite 2: Spezialitäten, Beilagen, Desserts, Nudelbox, Öffnungszeiten" loading="lazy" data-zoom>
+      <p style="color:var(--muted);font-size:.88rem;margin:-4px 0 8px">Der Flyer zum Nachschauen, aufgeteilt in seine Spalten.</p>
+      <div class="gal" id="gal"></div>
+      <div class="galhint">← wischen · 6 Teile · antippen zum Vergrößern</div>
     </div>
     <div class="card">
       <h3>⚠️ Allergene &amp; Zusatzstoffe</h3>
@@ -421,11 +446,19 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
   <form method="dialog" class="box" id="itemBox"></form>
 </dialog>
 
+<!-- Filter -->
+<dialog id="filterDlg" class="sheet">
+  <form method="dialog" class="box" id="filterBox"></form>
+</dialog>
+
 <!-- Lightbox -->
 <dialog id="lightbox">
-  <div class="lb-in"><img id="lbImg" alt=""></div>
+  <div class="lb-in" id="lbIn"><img id="lbImg" alt=""></div>
+  <span id="lbCount"></span>
+  <button class="lbnav prev" id="lbPrev" aria-label="Zurück">‹</button>
+  <button class="lbnav next" id="lbNext" aria-label="Weiter">›</button>
   <button class="close" id="lbClose" aria-label="Schließen">✕</button>
-  <div class="hint">Tippen = Zoom · Wischen = Verschieben</div>
+  <div class="hint">Tippen = Zoom · ‹ › = blättern</div>
 </dialog>
 
 <div class="toast" id="toast"></div>
@@ -451,24 +484,45 @@ const hasAl = (m, codes) => alTokens(m).some(t => codes.includes(t));
 const isLong = nr => nr.length > 4;
 
 // ---------- Filters ----------
-const FILTERS = [
-  { id: "fav", label: "⭐ Favoriten", test: m => favs.has(m.nr) },
-  { id: "veg", label: "🌱 Vegetarisch", test: m => m.veg },
-  { id: "mild", label: "😌 Nicht scharf", test: m => !m.hot },
-  { id: "hot", label: "🌶️ Scharf", test: m => m.hot >= 1 },
-  { id: "fire", label: "🔥 Richtig scharf", test: m => m.hot >= 3 },
-  { id: "nopeanut", label: "🥜 Ohne Erdnuss", test: m => !hasAl(m, ["5", "8"]) && !(m.opts || []).length },
-  { id: "nosea", label: "🦐 Ohne Meeresfrüchte", test: m => !hasAl(m, ["2", "4", "14"]) },
-  { id: "nomilk", label: "🥛 Ohne Milch", test: m => !hasAl(m, ["7", "H"]) },
-  { id: "cheap", label: "💸 Unter 9 €", test: m => m.price < 9 },
+const SPICE = [["any", "Egal"], ["mild", "😌 Mild"], ["hot", "🌶️ Scharf"], ["fire", "🔥 Sehr scharf"]];
+const NO = [
+  { id: "nut", label: "🥜 Erdnuss & Nüsse", test: m => !hasAl(m, ["5", "8"]) && !(m.opts || []).length },
+  { id: "sea", label: "🦐 Meeresfrüchte & Fisch", test: m => !hasAl(m, ["2", "4", "14"]) },
+  { id: "milk", label: "🥛 Milch", test: m => !hasAl(m, ["7", "H"]) },
 ];
-const fById = Object.fromEntries(FILTERS.map(f => [f.id, f]));
+const MAXP = Math.ceil(Math.max(...MENU.map(m => m.price)));
+const F0 = () => ({ fav: false, veg: false, spice: "any", no: [], max: 0 });
+function passes(m, F) {
+  if (F.fav && !favs.has(m.nr)) return false;
+  if (F.veg && !m.veg) return false;
+  if (F.spice === "mild" && m.hot) return false;
+  if (F.spice === "hot" && m.hot < 1) return false;
+  if (F.spice === "fire" && m.hot < 3) return false;
+  for (const id of F.no) { const n = NO.find(x => x.id === id); if (n && !n.test(m)) return false; }
+  if (F.max && m.price > F.max) return false;
+  return true;
+}
+function activeFilters(F) {
+  const a = [];
+  if (F.fav) a.push(["fav", "⭐ Favoriten"]);
+  if (F.veg) a.push(["veg", "🌱 Vegetarisch"]);
+  if (F.spice !== "any") a.push(["spice", SPICE.find(x => x[0] === F.spice)[1]]);
+  for (const id of F.no) { const n = NO.find(x => x.id === id); if (n) a.push(["no:" + id, "ohne " + n.label.replace(/^(\S+) /, "$1 ").split(" & ")[0]]); }
+  if (F.max) a.push(["max", "bis " + eur(F.max)]);
+  return a;
+}
+function removeFilter(key) {
+  if (key === "fav") F.fav = false; else if (key === "veg") F.veg = false; else if (key === "spice") F.spice = "any";
+  else if (key === "max") F.max = 0; else if (key.startsWith("no:")) F.no = F.no.filter(x => x !== key.slice(3));
+  saveF(); renderChips(); renderMenu(); renderHits();
+}
+function saveF() { store.set("filters", F); }
 
 // ---------- State ----------
 let me = store.get("name", "");
 let favs = new Set(store.get("favs", []));
 let group = readHash() || store.get("group", []);
-let active = new Set(), cat = "", query = "", budget = 0, pick = null;
+let F = Object.assign(F0(), store.get("filters", {})), cat = "", query = "", pick = null;
 let done = new Set(store.get("done", []));
 
 function readHash() {
@@ -571,7 +625,7 @@ function matches(m, q) {
 }
 function filtered(opts = {}) {
   const c = opts.cat !== undefined ? opts.cat : cat;
-  return MENU.filter(m => (!c || m.cat === c) && [...active].every(id => fById[id].test(m)) && (!opts.budget || m.price <= opts.budget) && matches(m, opts.q !== undefined ? opts.q : query));
+  return MENU.filter(m => (!c || m.cat === c) && passes(m, opts.F || F) && matches(m, opts.q !== undefined ? opts.q : query));
 }
 const hotHTML = n => n ? `<span class="hot" title="Schärfe ${n} von 6">${"🌶️".repeat(Math.min(n, 3))}${n > 3 ? `<b style="letter-spacing:0;font-size:.72rem"> ×${n}</b>` : ""}</span>` : "";
 function othersWith(nr) { return people().filter(p => p.n !== me && qtyOf(p, nr)).map(p => p.n); }
@@ -594,12 +648,9 @@ function itemHTML(m) {
 
 function renderMenu() {
   const items = filtered();
-  const isFiltering = !!(query || active.size || cat);
-  $("#resinfo").classList.toggle("hidden", !isFiltering);
-  $("#resTxt").textContent = `${items.length} von ${MENU.length} Gerichten`;
   $("#hero").classList.toggle("hidden", !!query);
   if (!items.length) {
-    $("#list").innerHTML = `<div class="empty"><span class="big">🥢</span>Nichts gefunden.<br><button class="btn sm" style="margin-top:12px" id="emptyReset">Filter zurücksetzen</button></div>`;
+    $("#list").innerHTML = `<div class="empty"><span class="big">🥢</span>Nichts gefunden${activeFilters(F).length || cat ? " mit diesen Filtern" : ""}.<br>${activeFilters(F).length || cat || query ? `<button class="btn sm" style="margin-top:12px" id="emptyReset">Alles zurücksetzen</button>` : ""}</div>`;
     return;
   }
   const groups = {};
@@ -615,12 +666,41 @@ function chipsHTML(sel, list, attr, onCls = "") {
   return list.map(x => `<button class="chip ${onCls} ${sel(x.id) ? "on" : ""}" data-${attr}="${esc(x.id)}">${x.label}</button>`).join("");
 }
 function renderChips() {
-  $("#filters").innerHTML = chipsHTML(id => active.has(id), FILTERS, "f");
+  const af = activeFilters(F);
   const cl = [{ id: "", label: "Alle" }, ...CATS.map(c => ({ id: c.id, label: `${c.icon} ${c.id}` }))];
-  $("#cats").innerHTML = chipsHTML(id => cat === id, cl, "c", "cat");
-  $("#dFilters").innerHTML = chipsHTML(id => active.has(id), FILTERS.filter(f => f.id !== "fav"), "f");
+  const afHTML = af.map(([k, l]) => `<button class="chip af" data-rmf="${esc(k)}" aria-label="${esc(l)} entfernen">${esc(l)} <b>✕</b></button>`).join("");
+  $("#cats").innerHTML = (af.length ? afHTML + '<span class="sep"></span>' : "") + chipsHTML(id => cat === id, cl, "c", "cat");
   $("#dCats").innerHTML = chipsHTML(id => cat === id, cl, "c", "cat");
+  for (const id of ["#fCount", "#fCount2"]) { $(id).textContent = af.length; $(id).classList.toggle("hidden", !af.length); }
+  $$(".fbtn").forEach(b => b.classList.toggle("on", !!af.length));
+  $("#dSum").textContent = af.length ? "Aktiv: " + af.map(x => x[1]).join(" · ") : "Keine Filter: alles ist möglich.";
 }
+function openFilters() {
+  const box = $("#filterBox");
+  const draw = () => {
+    const n = MENU.filter(m => (!cat || m.cat === cat) && passes(m, F) && matches(m, query)).length;
+    box.innerHTML = `<div class="grab"></div>
+      <div class="fhead"><h3>Filter</h3><button type="button" id="fReset">Zurücksetzen</button></div>
+      <div class="fsec"><h4>Was magst du?</h4><div class="fgrid">
+        <button type="button" class="tog ${F.veg ? "on" : ""}" data-t="veg">🌱 Vegetarisch</button>
+        <button type="button" class="tog ${F.fav ? "on" : ""}" data-t="fav">⭐ Meine Favoriten</button></div></div>
+      <div class="fsec"><h4>Schärfe</h4><div class="seg">${SPICE.map(([k, l]) => `<button type="button" class="${F.spice === k ? "on" : ""}" data-sp="${k}">${l}</button>`).join("")}</div></div>
+      <div class="fsec"><h4>Allergien: ohne …</h4><div class="fgrid">${NO.map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div></div>
+      <div class="fsec"><h4>Max. Preis: <span style="color:var(--gold)">${F.max ? "bis " + eur(F.max) : "egal"}</span></h4>
+        <input type="range" class="range" id="fMax" min="0" max="${MAXP}" step="0.5" value="${F.max}"></div>
+      <button type="button" class="btn red block" id="fApply" style="margin-top:18px">${n ? `${n} ${n === 1 ? "Gericht" : "Gerichte"} anzeigen` : "Keine Treffer – Filter lockern"}</button>`;
+    const upd = () => { saveF(); renderChips(); renderMenu(); renderHits(); draw(); };
+    box.querySelectorAll("[data-t]").forEach(b => b.onclick = () => { F[b.dataset.t] = !F[b.dataset.t]; upd(); });
+    box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { F.spice = b.dataset.sp; upd(); });
+    box.querySelectorAll("[data-no]").forEach(b => b.onclick = () => { const id = b.dataset.no; F.no = F.no.includes(id) ? F.no.filter(x => x !== id) : [...F.no, id]; upd(); });
+    const r = $("#fMax"); r.oninput = () => { F.max = +r.value; box.querySelector(".fsec:last-of-type h4 span").textContent = F.max ? "bis " + eur(F.max) : "egal"; };
+    r.onchange = upd;
+    $("#fReset").onclick = () => { F = F0(); upd(); };
+    $("#fApply").onclick = () => $("#filterDlg").close();
+  };
+  draw(); $("#filterDlg").showModal();
+}
+$("#filterDlg").addEventListener("click", e => { if (e.target.id === "filterDlg") e.target.close(); });
 function renderHits() {
   const tally = {};
   for (const p of people()) if (p.n !== me) for (const [nr, q] of p.i) { tally[nr] = tally[nr] || { q: 0, who: new Set() }; tally[nr].q += q; tally[nr].who.add(p.n); }
@@ -731,7 +811,7 @@ function renderLast() {
   $("#lastList").innerHTML = last.map((x, i) => lineHTML(x, i, false)).join("");
 }
 function spin(fromFav) {
-  let pool = filtered({ q: "", budget });
+  let pool = filtered({ q: "" });
   if (fromFav) pool = pool.filter(m => favs.has(m.nr));
   pool = pool.filter(m => m.cat !== "Beilagen");
   if (!pool.length) return toast(fromFav ? "Noch keine Favoriten ⭐" : "Nichts passt zu den Filtern");
@@ -800,7 +880,7 @@ function show(v, push = true) {
 
 // ---------- Events ----------
 document.addEventListener("click", e => {
-  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-f],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
+  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
   if (!t) return;
   const d = t.dataset;
   if (d.add) { const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
@@ -808,24 +888,24 @@ document.addEventListener("click", e => {
   else if (d.fav) toggleFav(d.fav);
   else if (d.open) openItem(d.open);
   else if (d.go) show(d.go);
-  else if (d.f) { active.has(d.f) ? active.delete(d.f) : active.add(d.f); renderChips(); renderMenu(); }
-  else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); if ($("#v-karte").classList.contains("on")) { const f = $("#filters"); window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) }); } }
+  else if (d.rmf) removeFilter(d.rmf);
+  else if (d.filter !== undefined) openFilters();
+  else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
   else if (d.inc !== undefined) { const p = myP(); p.i[+d.inc][1]++; buzz(); commit(); }
   else if (d.dec !== undefined) { const p = myP(); const x = p.i[+d.dec]; if (--x[1] <= 0) p.i.splice(+d.dec, 1); buzz(); commit(); }
   else if (d.copy) { const src = group.find(p => p.n === d.copy); needName(() => { const p = mine(); src.i.forEach(([nr, q, n]) => { const ex = p.i.find(x => x[0] === nr && x[2] === n); ex ? ex[1] += q : p.i.push([nr, q, n]); }); commit(); toast("Übernommen ✓"); }); }
-  else if (d.zoom !== undefined) { $("#lbImg").src = t.src; $("#lbImg").classList.remove("z"); $("#lightbox").showModal(); }
+  else if (d.zoom !== undefined) openLb(+d.zoom);
   else if (t.id === "emptyReset") resetFilters();
 });
 function mergeDupes(p) { const out = []; for (const x of p.i) { const ex = out.find(y => y[0] === x[0] && y[2] === x[2]); ex ? ex[1] += x[1] : out.push(x); } p.i = out; }
-function resetFilters() { active.clear(); cat = ""; query = ""; $("#q").value = ""; $("#qClr").classList.add("hidden"); renderChips(); renderMenu(); renderHits(); }
+function resetFilters() { F = F0(); saveF(); cat = ""; query = ""; $("#q").value = ""; $("#qClr").classList.add("hidden"); renderChips(); renderMenu(); renderHits(); }
 $$(".tabs button").forEach(b => b.onclick = () => show(b.dataset.v));
 $("#whoBtn").onclick = () => openName();
 let qT;
 $("#q").addEventListener("input", e => { query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") { const r = filtered(); if (r.length === 1) { openItem(r[0].nr); } e.target.blur(); } });
 $("#qClr").onclick = () => { $("#q").value = ""; query = ""; $("#qClr").classList.add("hidden"); renderMenu(); renderHits(); $("#q").focus(); };
-$("#resReset").onclick = resetFilters;
 $("#readout").onclick = e => { const li = e.target.closest("li[data-k]"); if (!li) return; const k = li.dataset.k; done.has(k) ? done.delete(k) : done.add(k); store.set("done", [...done]); li.classList.toggle("done"); buzz(); };
 $("#share").onclick = async () => {
   const p = myP(); if (p && p.i.length) store.set("last", p.i);
@@ -838,12 +918,19 @@ $("#reset").onclick = () => { if (confirm("Ganze Gruppenbestellung löschen und 
 $("#spin").onclick = () => spin(false);
 $("#spinFav").onclick = () => spin(true);
 $("#takeIt").onclick = () => { if (pick) { pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
-$("#budget").oninput = e => { budget = +e.target.value; $("#budgetLbl").textContent = budget ? "bis " + eur(budget) : "egal"; };
 $("#repeatLast").onclick = () => needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); commit(); toast("Wie letztes Mal ✓"); });
 $("#copyText").onclick = () => copy(orderText(), "Bestellung kopiert ✓");
 $("#pickupName").value = store.get("pickup", "");
 $("#pickupName").oninput = e => store.set("pickup", e.target.value);
 $("#callBtn").onclick = () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); };
+// ---------- Original-Karte: Galerie + Lightbox ----------
+const SCANS = [1, 2, 3, 4, 5, 6].map(i => ({ src: `karte/spalte-${i}.jpg`, alt: ["Suppen, Vorspeisen, Reis, Nudeln", "Huhn, Rind, Ente", "Ente, Schwein, Vegetarisch, Meeresfrüchte, Spezialitäten", "Spezialitäten S05–S14, Allergene", "Beilagen, Desserts, Nudelbox", "Öffnungszeiten, Telefon, Adresse"][i - 1] }));
+$("#gal").innerHTML = SCANS.map((x, i) => `<img src="${x.src}" alt="Speisekarte Teil ${i + 1}: ${esc(x.alt)}" loading="lazy" data-zoom="${i}">`).join("");
+let lbI = 0;
+function openLb(i) { lbI = (i + SCANS.length) % SCANS.length; const im = $("#lbImg"); im.src = SCANS[lbI].src; im.alt = SCANS[lbI].alt; im.classList.remove("z"); $("#lbCount").textContent = `${lbI + 1} / ${SCANS.length}`; $("#lbIn").scrollTo(0, 0); if (!$("#lightbox").open) $("#lightbox").showModal(); }
+$("#lbPrev").onclick = () => openLb(lbI - 1);
+$("#lbNext").onclick = () => openLb(lbI + 1);
+document.addEventListener("keydown", e => { if (!$("#lightbox").open) return; if (e.key === "ArrowLeft") openLb(lbI - 1); if (e.key === "ArrowRight") openLb(lbI + 1); });
 $("#lbImg").onclick = e => e.target.classList.toggle("z");
 $("#lbClose").onclick = () => $("#lightbox").close();
 async function copy(text, msg) { try { await navigator.clipboard.writeText(text); toast(msg); } catch { prompt("Kopieren:", text); } }
@@ -856,7 +943,6 @@ $("#phoneLbl").textContent = SHOP.phoneDisplay + " · " + SHOP.address;
 $("#addr").innerHTML = esc(SHOP.street) + "<br>" + esc(SHOP.city);
 $("#routeBtn").href = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(SHOP.name + ", " + SHOP.address);
 $("#alList").innerHTML = Object.entries(ALG).map(([k, v]) => `<b>${esc(k)}</b><span>${esc(v)}</span>`).join("");
-$("#budget").max = Math.ceil(Math.max(...MENU.map(m => m.price)));
 renderInfos(); setInterval(renderInfos, 60000);
 const fromLink = location.hash.startsWith("#o=");
 if (fromLink) store.set("group", group);
