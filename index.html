@@ -105,6 +105,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .fhead{display:flex;align-items:center;justify-content:space-between}
 .fhead button{color:var(--muted);font-weight:600;font-size:.88rem;padding:6px}
 .fsum{color:var(--muted);font-size:.88rem;margin:6px 0 0}
+.fnote{color:var(--dim);font-size:.8rem;line-height:1.35;margin:10px 0 0}
 .gal{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:4px 16px 8px;scrollbar-width:none}
 .gal::-webkit-scrollbar{display:none}
 .gal img{flex:none;height:260px;width:auto;border-radius:12px;border:1px solid var(--line);scroll-snap-align:start;cursor:zoom-in;background:var(--s2)}
@@ -491,7 +492,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 
 <div class="toast" id="toast"></div>
 
-<script src="menu.js?v=7"></script>
+<script src="menu.js?v=8"></script>
 <script src="config.js?v=7"></script>
 <script>
 (() => {
@@ -514,11 +515,29 @@ const isLong = nr => nr.length > 4;
 
 // ---------- Filters ----------
 const SPICE = [["any", "Egal"], ["mild", "😌 Mild"], ["hot", "🌶️ Scharf"], ["fire", "🔥 Sehr scharf"]];
-const NO = [
-  { id: "nut", label: "🥜 Erdnuss & Nüsse", test: m => !hasAl(m, ["5", "8"]) && !(m.opts || []).length },
-  { id: "sea", label: "🦐 Meeresfrüchte & Fisch", test: m => !hasAl(m, ["2", "4", "14"]) },
-  { id: "milk", label: "🥛 Milch", test: m => !hasAl(m, ["7", "H"]) },
+// Allergene & Zusatzstoffe laut Flyer. Angezeigt werden nur die, die auf der Karte wirklich vorkommen.
+const NO_ALL = [
+  { id: "gluten", label: "🌾 Gluten", codes: ["1", "1a", "1b", "1c"], g: "al" },
+  { id: "milk", label: "🥛 Milch / Laktose", codes: ["7", "H"], g: "al" },
+  { id: "egg", label: "🥚 Ei", codes: ["3"], g: "al" },
+  { id: "soy", label: "🫘 Soja", codes: ["6"], g: "al" },
+  { id: "peanut", label: "🥜 Erdnuss", codes: ["5"], g: "al" },
+  { id: "treenut", label: "🌰 Nüsse", codes: ["8"], g: "al" },
+  { id: "crust", label: "🦐 Krebstiere", codes: ["2"], g: "al" },
+  { id: "fish", label: "🐟 Fisch", codes: ["4"], g: "al" },
+  { id: "mollusc", label: "🦑 Weichtiere", codes: ["14"], g: "al" },
+  { id: "celery", label: "🥬 Sellerie", codes: ["9"], g: "al" },
+  { id: "mustard", label: "🌭 Senf", codes: ["10"], g: "al" },
+  { id: "sesame", label: "⚪ Sesam", codes: ["11"], g: "al" },
+  { id: "sulfite", label: "🍷 Sulfite", codes: ["12", "E"], g: "al" },
+  { id: "lupin", label: "🌼 Lupinen", codes: ["13"], g: "al" },
+  { id: "color", label: "🎨 Farbstoff", codes: ["A"], g: "zs" },
+  { id: "preserv", label: "🧪 Konservierungsstoff", codes: ["B"], g: "zs" },
+  { id: "sweet", label: "🍬 Süßungsmittel", codes: ["N"], g: "zs" },
 ];
+const optOk = (m, codes) => !m.opts || !m.optAl || m.opts.some(o => !(m.optAl[o] || []).some(c => codes.includes(c)));   // Sauce: mind. eine Sorte passt
+const NO = NO_ALL.filter(n => MENU.some(m => hasAl(m, n.codes) || Object.values(m.optAl || {}).flat().some(c => n.codes.includes(c))))
+  .map(n => ({ ...n, test: m => !hasAl(m, n.codes) && optOk(m, n.codes) }));
 const MAXP = Math.ceil(Math.max(...MENU.map(m => m.price)));
 const F0 = () => ({ fav: false, veg: false, spice: "any", no: [], max: 0 });
 function passes(m, F) {
@@ -536,7 +555,7 @@ function activeFilters(F) {
   if (F.fav) a.push(["fav", "⭐ Favoriten"]);
   if (F.veg) a.push(["veg", "🌱 Vegetarisch"]);
   if (F.spice !== "any") a.push(["spice", SPICE.find(x => x[0] === F.spice)[1]]);
-  for (const id of F.no) { const n = NO.find(x => x.id === id); if (n) a.push(["no:" + id, "ohne " + n.label.replace(/^(\S+) /, "$1 ").split(" & ")[0]]); }
+  for (const id of F.no) { const n = NO.find(x => x.id === id); if (n) a.push(["no:" + id, "ohne " + n.label.split(" / ")[0]]); }
   if (F.max) a.push(["max", "bis " + eur(F.max)]);
   return a;
 }
@@ -555,6 +574,7 @@ const fromHash = readHash();
 let group = fromHash ? fromHash.p : store.get("group", []);
 let round = Object.assign(R0(), fromHash ? fromHash.r : store.get("round", {}));
 let F = Object.assign(F0(), store.get("filters", {})), cat = "", query = "", pick = null;
+F.no = (F.no || []).filter(id => NO.some(n => n.id === id));
 let done = new Set(store.get("done", []));
 
 function cleanPP(v) { return String(v || "").replace(/^.*paypal\.me\//i, "").replace(/[^A-Za-z0-9]/g, "").slice(0, 30); }
@@ -805,7 +825,10 @@ function openFilters() {
         <button type="button" class="tog ${F.veg ? "on" : ""}" data-t="veg">🌱 Vegetarisch</button>
         <button type="button" class="tog ${F.fav ? "on" : ""}" data-t="fav">⭐ Meine Favoriten</button></div></div>
       <div class="fsec"><h4>Schärfe</h4><div class="seg">${SPICE.map(([k, l]) => `<button type="button" class="${F.spice === k ? "on" : ""}" data-sp="${k}">${l}</button>`).join("")}</div></div>
-      <div class="fsec"><h4>Allergien: ohne …</h4><div class="fgrid">${NO.map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div></div>
+      <div class="fsec"><h4>Allergien &amp; Unverträglichkeiten: ohne …</h4><div class="fgrid">${NO.filter(x => x.g === "al").map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div></div>
+      <div class="fsec"><h4>Zusatzstoffe: ohne …</h4><div class="fgrid">${NO.filter(x => x.g === "zs").map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div>
+        <p class="fnote">🧂 Geschmacksverstärker ist in fast allen Gerichten, gibt's laut Imbiss aber <b>auf Wunsch auch ohne</b>: beim Gericht als Sonderwunsch „ohne Geschmacksverstärker“ wählen.</p></div>
+      <p class="fnote">⚠️ Angaben laut Flyer, ohne Gewähr. Bei starken Allergien bitte beim Bestellen nachfragen.</p>
       <div class="fsec"><h4>Max. Preis: <span style="color:var(--gold)">${F.max ? "bis " + eur(F.max) : "egal"}</span></h4>
         <input type="range" class="range" id="fMax" min="0" max="${MAXP}" step="0.5" value="${F.max}"></div>
       <button type="button" class="btn red block" id="fApply" style="margin-top:18px">${n ? `${n} ${n === 1 ? "Gericht" : "Gerichte"} anzeigen` : "Keine Treffer – Filter lockern"}</button>`;
@@ -832,7 +855,10 @@ function renderHits() {
 
 // ---------- Item sheet ----------
 function openItem(nr) {
-  const m = byNr[nr]; let opt = m.opts ? m.opts[0] : "", n = 1;
+  const m = byNr[nr];
+  const badCodes = F.no.flatMap(id => (NO.find(x => x.id === id) || { codes: [] }).codes);
+  const optBad = o => !!(m.optAl && (m.optAl[o] || []).some(c => badCodes.includes(c)));
+  let opt = m.opts ? (m.opts.find(o => !optBad(o)) || m.opts[0]) : "", n = 1;
   const als = alTokens(m).filter(t => ALG[t]);
   const box = $("#itemBox");
   const draw = () => {
@@ -842,7 +868,7 @@ function openItem(nr) {
       <h3 style="margin-top:4px">${esc(m.name)}</h3>
       ${m.desc ? `<div style="color:var(--muted);margin-top:2px">${esc(m.desc)}</div>` : ""}
       <div class="meta" style="margin-top:8px"><span class="price" style="font-size:1.2rem;color:var(--gold)">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">vegetarisch</span>` : ""}${hotHTML(m.hot)}${m.hot ? `<span class="badge-s">Schärfe ${m.hot}/6</span>` : ""}</div>
-      ${m.opts ? `<label class="lb">Sorte wählen</label><div class="optrow">${m.opts.map(o => `<button type="button" class="chip ${o === opt ? "on" : ""}" data-opt="${esc(o)}">${esc(o)}</button>`).join("")}</div>` : ""}
+      ${m.opts ? `<label class="lb">Sorte wählen</label><div class="optrow">${m.opts.map(o => `<button type="button" class="chip ${o === opt ? "on" : ""}" data-opt="${esc(o)}" ${optBad(o) ? 'style="opacity:.4;text-decoration:line-through" title="passt nicht zu deinem Filter"' : ""}>${esc(o)}</button>`).join("")}</div>${m.opts.some(optBad) ? `<div class="fnote" style="margin-top:2px">Durchgestrichen = passt nicht zu deinem Allergie-Filter</div>` : ""}` : ""}
       <label class="lb">Sonderwunsch (optional)</label>
       <input class="inp" id="noteIn" maxlength="50" placeholder="z. B. ohne Zwiebeln, extra scharf">
       <div class="quick">${["ohne Zwiebeln", "extra scharf", "nicht scharf", "ohne Geschmacksverstärker", "Soße extra"].map(t => `<button type="button" data-qn="${t}">${t}</button>`).join("")}</div>

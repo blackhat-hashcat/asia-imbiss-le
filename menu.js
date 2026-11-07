@@ -190,7 +190,7 @@ window.MENU = [
   { nr: "B01", name: "Gebratener Reis", desc: "nur mit Hauptspeise", price: 4.50, cat: BE, veg: true, al: "1a,3,6,A,D" },
   { nr: "B02", name: "Gebratene Nudeln", desc: "nur mit Hauptspeise", price: 4.50, cat: BE, veg: true, al: "1a,3,6,A,D" },
   { nr: "B03", name: "Reis", desc: "nur mit Hauptspeise", price: 2.00, cat: BE, veg: true, al: "" },
-  { nr: "B05", name: "Sauce", desc: "nur mit Hauptspeise", price: 2.00, cat: BE, veg: true, al: "1a,A", opts: ["Curry (7)", "süß-sauer", "Erdnuss (5)", "pikant"] },
+  { nr: "B05", name: "Sauce", desc: "nur mit Hauptspeise", price: 2.00, cat: BE, veg: true, al: "1a,A", opts: ["Curry (7)", "süß-sauer", "Erdnuss (5)", "pikant"], optAl: { "Curry (7)": ["7"], "Erdnuss (5)": ["5"] } },
 
   // ---- Desserts ----
   { nr: "D01", name: "Gebackene Banane mit Honig", price: 3.30, cat: DE, veg: true, al: "1a,A" },
