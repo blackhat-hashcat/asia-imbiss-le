@@ -1709,7 +1709,7 @@ document.addEventListener("click", e => {
   else if (d.paymode) { if (d.paymode === "self") { payChoose = false; patchRound({ payer: "" }); } else { payChoose = true; if (round.payer) patchRound({ payer: "" }); else renderPay(); } }
   else if (d.payer) { payChoose = false; if (d.payer === me) bumpFlag("payer", true); if (d.payer === me && myPP()) { const p = myP(); if (p) p.pp = myPP(); } patchRound({ payer: d.payer }); if (live && d.payer === me) pushMine(); }
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
-  else if (d.mode) { patchRound({ mode: d.mode }); if (CASINO && d.mode === "mit" && flOnceKey("shark")) { redShark(); eggToast("🌵 Ab durch die Wüste nach Las Vegas. Das Essen kommt mit!"); } }
+  else if (d.mode) { patchRound({ mode: d.mode }); if (CASINO && d.mode === "mit" && flOnceKey("shark")) { redShark(); } }
   else if (d.filter !== undefined) openFilters();
   else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); dealAnim(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
