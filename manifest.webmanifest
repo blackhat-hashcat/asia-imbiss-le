@@ -1,0 +1,9 @@
+{
+  "name": "Asia Imbiss Le – Gruppenbestellung",
+  "short_name": "Asia Le",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fbf7f2",
+  "theme_color": "#c8102e",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

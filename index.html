@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#c8102e">
+<title>Asia Imbiss Le – Gruppenbestellung</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#fbf7f2; --card:#ffffff; --ink:#1d1a17; --muted:#6f655c; --line:#ece3d8;
+  --red:#c8102e; --red-ink:#fff; --gold:#e8a317; --green:#2e7d32; --chip:#f3ebe1;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141210; --card:#1e1b18; --ink:#f3ede6; --muted:#a89d92; --line:#2e2a26;
+  --red:#e0384f; --chip:#2a2622; --shadow:none;
+}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+header{position:sticky;top:0;z-index:10;background:var(--red);color:var(--red-ink);padding:12px 16px calc(10px);box-shadow:var(--shadow)}
+.hrow{display:flex;align-items:center;gap:10px;max-width:760px;margin:0 auto}
+.logo{font-weight:800;font-size:1.15rem;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who{background:rgba(255,255,255,.18);border:0;border-radius:999px;padding:6px 12px;color:#fff;font-weight:600;max-width:45%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+nav{display:flex;max-width:760px;margin:10px auto 0;gap:6px}
+nav button{flex:1;border:0;border-radius:10px;padding:8px 4px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;font-size:.92rem;position:relative}
+nav button.on{background:#fff;color:var(--red)}
+.badge{position:absolute;top:-6px;right:6px;background:var(--gold);color:#000;border-radius:999px;font-size:.72rem;padding:1px 6px;font-weight:800}
+main{max-width:760px;margin:0 auto;padding:14px 16px 120px}
+.view{display:none}.view.on{display:block}
+.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:1rem}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:6px 12px;font-size:.88rem;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cat{margin:18px 0 6px;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.item{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:6px 0;box-shadow:var(--shadow)}
+.nr{flex:none;min-width:44px;height:44px;border-radius:12px;background:var(--chip);display:grid;place-items:center;font-weight:800;font-size:1.05rem}
+.info{flex:1;min-width:0}
+.iname{font-weight:600}
+.idesc{color:var(--muted);font-size:.85rem}
+.tags{display:inline-flex;gap:4px;margin-left:4px;vertical-align:middle}
+.tag{font-size:.7rem;border-radius:6px;padding:1px 5px;font-weight:700}
+.t-veggie{background:#e3f4e4;color:#1b5e20}.t-scharf{background:#fde3e3;color:#a10f1f}.t-beliebt{background:#fff2cc;color:#7a5600}
+.price{font-weight:700;white-space:nowrap}
+.fav{border:0;background:none;font-size:1.2rem;padding:4px;opacity:.35}
+.fav.on{opacity:1}
+.qty{display:flex;align-items:center;gap:6px}
+.qbtn{width:36px;height:36px;border-radius:10px;border:0;background:var(--red);color:#fff;font-size:1.3rem;font-weight:700;line-height:1}
+.qbtn.minus{background:var(--chip);color:var(--ink)}
+.qn{min-width:18px;text-align:center;font-weight:800}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0;box-shadow:var(--shadow)}
+.card h3{margin:0 0 8px;font-size:1.05rem;display:flex;justify-content:space-between;gap:8px}
+.line{display:flex;gap:10px;align-items:baseline;padding:4px 0;border-bottom:1px dashed var(--line)}
+.line:last-child{border-bottom:0}
+.line .q{font-weight:800;min-width:30px}
+.line .n{flex:1}
+.note{color:var(--muted);font-size:.85rem;display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 16px;font-weight:700;background:var(--chip);text-decoration:none;color:var(--ink)}
+.btn.primary{background:var(--red);color:#fff}
+.btn.green{background:var(--green);color:#fff}
+.btn.block{width:100%;margin:6px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row .btn{flex:1}
+.muted{color:var(--muted);font-size:.9rem}
+.total{display:flex;justify-content:space-between;font-weight:800;font-size:1.15rem;padding:8px 2px}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);z-index:9}
+.bar .inner{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.bar .sum{flex:1;font-weight:700}
+.readout{font-size:1.6rem;line-height:1.5}
+.readout .line .q{min-width:54px}
+.readout .nrbig{font-weight:900;color:var(--red);min-width:70px}
+.wheel{font-size:1.3rem;text-align:center;padding:18px 8px;min-height:90px;display:grid;place-items:center}
+.wheel b{font-size:2rem;color:var(--red);display:block}
+dialog{border:0;border-radius:18px;padding:18px;background:var(--card);color:var(--ink);width:min(92vw,420px);box-shadow:0 10px 40px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog input,dialog textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);margin:6px 0 12px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
+.toast.on{opacity:1}
+.warn{background:#fff4d6;color:#6b4e00;border-radius:12px;padding:10px 12px;font-size:.9rem;margin-bottom:10px}
+@media (prefers-color-scheme: dark){.warn{background:#3a3010;color:#ffe6a3}}
+.x{border:0;background:none;color:var(--muted);font-size:1.1rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="logo">🥢 <span id="shopName">Asia Imbiss</span></div>
+    <button class="who" id="whoBtn">👤 Name?</button>
+  </div>
+  <nav>
+    <button data-v="karte" class="on">Karte</button>
+    <button data-v="hilfe">🎲 Was essen?</button>
+    <button data-v="gruppe">Gruppe<span class="badge" id="grpBadge" hidden></span></button>
+    <button data-v="anruf">📞 Anrufen</button>
+  </nav>
+</header>
+
+<main>
+  <!-- KARTE -->
+  <section class="view on" id="v-karte">
+    <div id="demoWarn" class="warn" hidden>⚠️ Es stehen noch Beispielgerichte drin. Die echte Karte kommt in <code>menu.js</code>.</div>
+    <input class="search" id="q" type="search" placeholder="Suchen: Nummer, Gericht, Zutat …" autocomplete="off">
+    <div class="chips" id="cats"></div>
+    <div class="chips" id="filters"></div>
+    <div id="list"></div>
+  </section>
+
+  <!-- ENTSCHEIDUNGSHILFE -->
+  <section class="view" id="v-hilfe">
+    <div class="card">
+      <h3>Keine Ahnung, was du willst?</h3>
+      <p class="muted">Lass den Zufall entscheiden. Die Filter von der Karte (z.&nbsp;B. veggie, scharf, Kategorie) gelten hier auch.</p>
+      <div class="wheel" id="wheel">Drück auf den Button 👇</div>
+      <div class="row">
+        <button class="btn primary" id="spin">🎲 Würfeln</button>
+        <button class="btn" id="spinFav">⭐ Aus Favoriten</button>
+      </div>
+      <button class="btn green block" id="takeIt" hidden>✅ Nehm ich!</button>
+    </div>
+    <div class="card">
+      <h3>Max. Budget</h3>
+      <div class="row" style="align-items:center">
+        <input type="range" id="budget" min="0" max="25" step="0.5" value="0" style="flex:3">
+        <span id="budgetLbl" class="muted" style="flex:1;text-align:right">egal</span>
+      </div>
+    </div>
+    <div class="card" id="lastCard" hidden>
+      <h3>Hattest du letztes Mal</h3>
+      <div id="lastList"></div>
+      <button class="btn block" id="repeatLast">🔁 Nochmal dasselbe</button>
+    </div>
+  </section>
+
+  <!-- GRUPPE -->
+  <section class="view" id="v-gruppe">
+    <div class="card">
+      <h3>So läuft's in der Gruppe</h3>
+      <ol class="muted" style="margin:0;padding-left:20px">
+        <li>Jeder sucht sich was aus (Name oben eintragen).</li>
+        <li><b>„Link teilen"</b> und in die Gruppe schicken.</li>
+        <li>Der Nächste öffnet den Link, packt seins dazu und teilt den neuen Link weiter.</li>
+        <li>Wer anruft, öffnet den letzten Link und geht auf <b>📞 Anrufen</b>.</li>
+      </ol>
+    </div>
+    <div id="people"></div>
+    <div class="total"><span>Gesamt</span><span id="grpTotal">0,00 €</span></div>
+    <div class="row">
+      <button class="btn primary" id="share">🔗 Link teilen</button>
+      <button class="btn" id="reset">🗑️ Neue Bestellung</button>
+    </div>
+  </section>
+
+  <!-- ANRUF / VORLESEN -->
+  <section class="view" id="v-anruf">
+    <a class="btn green block" id="callBtn" href="#">📞 Jetzt anrufen</a>
+    <p class="muted" style="text-align:center;margin:4px 0 12px" id="phoneLbl"></p>
+    <div class="card">
+      <h3><span>Zum Vorlesen</span><span class="muted" id="readCount"></span></h3>
+      <div class="readout" id="readout"></div>
+    </div>
+    <div class="card">
+      <h3>Abholname</h3>
+      <input class="search" id="pickupName" placeholder="z.&nbsp;B. Müller">
+    </div>
+    <div class="total"><span>Gesamt</span><span id="readTotal">0,00 €</span></div>
+    <button class="btn block" id="copyText">📋 Als Text kopieren (für WhatsApp)</button>
+  </section>
+</main>
+
+<div class="bar" id="bar">
+  <div class="inner">
+    <div class="sum" id="barSum">Noch nichts ausgewählt</div>
+    <button class="btn primary" id="barGo">Zur Gruppe →</button>
+  </div>
+</div>
+
+<dialog id="nameDlg">
+  <form method="dialog">
+    <h3 style="margin-top:0">Wie heißt du?</h3>
+    <p class="muted">Damit die Gruppe sieht, wer was bestellt, und am Ende jeder weiß, was er zahlt.</p>
+    <input id="nameIn" maxlength="24" placeholder="Dein Name" required>
+    <button class="btn primary block" value="ok">Passt</button>
+  </form>
+</dialog>
+
+<dialog id="noteDlg">
+  <form method="dialog">
+    <h3 style="margin-top:0" id="noteTitle">Sonderwunsch</h3>
+    <textarea id="noteIn" rows="2" maxlength="60" placeholder="z.&nbsp;B. ohne Zwiebeln, extra scharf"></textarea>
+    <div class="row"><button class="btn" value="cancel">Abbrechen</button><button class="btn primary" value="ok">Speichern</button></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script src="menu.js"></script>
+<script>
+(() => {
+  const MENU = (window.MENU || []).map(m => ({ tags: [], desc: "", ...m, nr: String(m.nr) }));
+  const SHOP = window.IMBISS || {};
+  const byNr = Object.fromEntries(MENU.map(m => [m.nr, m]));
+  const $ = s => document.querySelector(s);
+  const eur = v => v.toFixed(2).replace(".", ",") + " €";
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("ail_" + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v) { try { localStorage.setItem("ail_" + k, JSON.stringify(v)); } catch {} },
+  };
+
+  // ---- State -------------------------------------------------------
+  // group: [{ n: "Name", i: [[nr, qty, note], ...] }]
+  let me = store.get("name", "");
+  let favs = new Set(store.get("favs", []));
+  let group = loadGroupFromHash() || store.get("group", []);
+  let activeCat = "Alle", activeTags = new Set(), query = "", pick = null;
+
+  function loadGroupFromHash() {
+    const m = location.hash.match(/^#o=(.+)$/);
+    if (!m) return null;
+    try {
+      const raw = decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/"))));
+      const g = JSON.parse(raw);
+      return Array.isArray(g) ? g.filter(p => p && p.n && Array.isArray(p.i)) : null;
+    } catch { return null; }
+  }
+  function groupToHash() {
+    const s = btoa(unescape(encodeURIComponent(JSON.stringify(group)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    return "#o=" + s;
+  }
+  function save() {
+    group = group.filter(p => p.i.length || p.n === me);
+    store.set("group", group);
+    history.replaceState(null, "", group.some(p => p.i.length) ? groupToHash() : location.pathname);
+    renderAll();
+  }
+  function mine() {
+    let p = group.find(p => p.n === me);
+    if (!p) { p = { n: me, i: [] }; group.push(p); }
+    return p;
+  }
+  function myQty(nr) { const p = group.find(p => p.n === me); return p ? p.i.filter(x => x[0] === nr).reduce((a, x) => a + x[1], 0) : 0; }
+
+  function ensureName(then) {
+    if (me) return then && then();
+    $("#nameIn").value = "";
+    $("#nameDlg").showModal();
+    $("#nameDlg").onclose = () => {
+      const v = $("#nameIn").value.trim();
+      if (v) { renameMe(v); then && then(); }
+    };
+  }
+  function renameMe(v) {
+    const old = group.find(p => p.n === me);
+    const clash = group.find(p => p.n === v);
+    if (old && clash && old !== clash) { clash.i.push(...old.i); group = group.filter(p => p !== old); }
+    else if (old) old.n = v;
+    me = v; store.set("name", me); save();
+  }
+
+  function add(nr, delta) {
+    ensureName(() => {
+      const p = mine();
+      if (delta > 0) {
+        const plain = p.i.find(x => x[0] === nr && !x[2]);
+        plain ? plain[1]++ : p.i.push([nr, 1, ""]);
+        vibrate();
+      } else {
+        const idx = p.i.map(x => x[0]).lastIndexOf(nr);
+        if (idx >= 0) { p.i[idx][1]--; if (p.i[idx][1] <= 0) p.i.splice(idx, 1); }
+      }
+      save();
+    });
+  }
+  const vibrate = () => { try { navigator.vibrate && navigator.vibrate(15); } catch {} };
+
+  // ---- Render: Karte ----------------------------------------------
+  const cats = ["Alle", ...new Set(MENU.map(m => m.cat || "Sonstiges"))];
+  const allTags = [...new Set(MENU.flatMap(m => m.tags))];
+  const tagLabel = { veggie: "🌱 Veggie", scharf: "🌶️ Scharf", beliebt: "🔥 Beliebt" };
+
+  function filtered() {
+    const q = query.toLowerCase().trim();
+    const max = +$("#budget").value;
+    return MENU.filter(m =>
+      (activeCat === "Alle" || (m.cat || "Sonstiges") === activeCat) &&
+      [...activeTags].every(t => t === "fav" ? favs.has(m.nr) : m.tags.includes(t)) &&
+      (!max || m.price <= max) &&
+      (!q || m.nr.toLowerCase() === q || (m.nr + " " + m.name + " " + m.desc + " " + (m.cat || "")).toLowerCase().includes(q)));
+  }
+
+  function renderChips() {
+    $("#cats").innerHTML = cats.map(c => `<button class="chip ${c === activeCat ? "on" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
+    $("#filters").innerHTML = ["fav", ...allTags].map(t =>
+      `<button class="chip ${activeTags.has(t) ? "on" : ""}" data-tag="${esc(t)}">${t === "fav" ? "⭐ Favoriten" : esc(tagLabel[t] || t)}</button>`).join("");
+  }
+
+  function itemHTML(m) {
+    const q = myQty(m.nr);
+    return `<div class="item">
+      <div class="nr">${esc(m.nr)}</div>
+      <div class="info">
+        <div class="iname">${esc(m.name)}<span class="tags">${m.tags.map(t => `<span class="tag t-${esc(t)}">${esc((tagLabel[t] || t).split(" ")[0])}</span>`).join("")}</span></div>
+        ${m.desc ? `<div class="idesc">${esc(m.desc)}</div>` : ""}
+        <div class="price">${eur(m.price)} <button class="fav ${favs.has(m.nr) ? "on" : ""}" data-fav="${esc(m.nr)}" aria-label="Favorit">⭐</button></div>
+      </div>
+      <div class="qty">
+        ${q ? `<button class="qbtn minus" data-sub="${esc(m.nr)}" aria-label="weniger">−</button><span class="qn">${q}</span>` : ""}
+        <button class="qbtn" data-add="${esc(m.nr)}" aria-label="hinzufügen">+</button>
+      </div>
+    </div>`;
+  }
+
+  function renderList() {
+    const items = filtered();
+    if (!items.length) { $("#list").innerHTML = `<div class="empty">Nichts gefunden 🤷</div>`; return; }
+    let html = "", last = null;
+    for (const m of items) {
+      const c = m.cat || "Sonstiges";
+      if (c !== last && activeCat === "Alle") { html += `<div class="cat">${esc(c)}</div>`; last = c; }
+      html += itemHTML(m);
+    }
+    $("#list").innerHTML = html;
+  }
+
+  // ---- Render: Gruppe ---------------------------------------------
+  const personTotal = p => p.i.reduce((a, [nr, q]) => a + (byNr[nr] ? byNr[nr].price * q : 0), 0);
+
+  function renderGroup() {
+    const ppl = group.filter(p => p.i.length);
+    $("#people").innerHTML = ppl.length ? ppl.map((p, pi) => `
+      <div class="card">
+        <h3><span>${p.n === me ? "👤 " : ""}${esc(p.n)}</span><span>${eur(personTotal(p))}</span></h3>
+        ${p.i.map(([nr, q, note], ii) => {
+          const m = byNr[nr];
+          return `<div class="line"><span class="q">${q}×</span><span class="n"><b>Nr. ${esc(nr)}</b> ${m ? esc(m.name) : "(unbekannt)"}${note ? `<span class="note">✏️ ${esc(note)}</span>` : ""}</span>
+          ${p.n === me ? `<button class="x" data-note="${ii}" title="Sonderwunsch">✏️</button><button class="x" data-del="${ii}" title="Entfernen">✕</button>` : ""}</div>`;
+        }).join("")}
+      </div>`).join("") : `<div class="empty">Noch hat keiner was ausgesucht.<br>Ab auf die <b>Karte</b>!</div>`;
+    const tot = ppl.reduce((a, p) => a + personTotal(p), 0);
+    $("#grpTotal").textContent = eur(tot);
+    const n = ppl.length;
+    $("#grpBadge").hidden = !n; $("#grpBadge").textContent = n;
+  }
+
+  // ---- Render: Anruf ----------------------------------------------
+  function aggregate() {
+    const map = new Map();
+    for (const p of group) for (const [nr, q, note] of p.i) {
+      const k = nr + "|" + (note || "");
+      const e = map.get(k) || { nr, note, q: 0 };
+      e.q += q; map.set(k, e);
+    }
+    const num = s => { const n = parseFloat(s); return isNaN(n) ? 1e9 : n; };
+    return [...map.values()].sort((a, b) => num(a.nr) - num(b.nr) || a.nr.localeCompare(b.nr) || (a.note ? 1 : -1));
+  }
+  function renderCall() {
+    const agg = aggregate();
+    $("#readout").innerHTML = agg.length ? agg.map(e => `<div class="line"><span class="q">${e.q}×</span><span class="nrbig">Nr.&nbsp;${esc(e.nr)}</span><span class="n" style="font-size:1rem">${byNr[e.nr] ? esc(byNr[e.nr].name) : ""}${e.note ? `<span class="note">✏️ ${esc(e.note)}</span>` : ""}</span></div>`).join("")
+      : `<div class="empty" style="font-size:1rem">Noch nichts zum Vorlesen.</div>`;
+    const count = agg.reduce((a, e) => a + e.q, 0);
+    $("#readCount").textContent = count ? count + " Gerichte" : "";
+    $("#readTotal").textContent = eur(group.reduce((a, p) => a + personTotal(p), 0));
+  }
+  function orderText() {
+    const lines = aggregate().map(e => `${e.q}x Nr. ${e.nr}${byNr[e.nr] ? " (" + byNr[e.nr].name + ")" : ""}${e.note ? " – " + e.note : ""}`);
+    const pn = $("#pickupName").value.trim();
+    return `🥢 Bestellung ${SHOP.name || ""}\n` + lines.join("\n") + (pn ? `\nAbholname: ${pn}` : "") +
+      `\nGesamt: ${$("#readTotal").textContent}\n\nWer zahlt was:\n` +
+      group.filter(p => p.i.length).map(p => `• ${p.n}: ${eur(personTotal(p))}`).join("\n");
+  }
+
+  // ---- Render: Leiste ---------------------------------------------
+  function renderBar() {
+    const p = group.find(p => p.n === me);
+    const cnt = p ? p.i.reduce((a, x) => a + x[1], 0) : 0;
+    const all = group.reduce((a, p) => a + p.i.reduce((b, x) => b + x[1], 0), 0);
+    $("#barSum").innerHTML = cnt ? `Du: ${cnt} × · ${eur(personTotal(p))}<br><span class="muted">Gruppe: ${all} Gerichte</span>`
+      : all ? `Gruppe: ${all} Gerichte<br><span class="muted">Du hast noch nichts</span>` : "Noch nichts ausgewählt";
+    const v = document.querySelector(".view.on").id;
+    $("#bar").hidden = v === "v-gruppe" || v === "v-anruf";
+  }
+
+  function renderAll() {
+    $("#whoBtn").textContent = "👤 " + (me || "Name?");
+    renderChips(); renderList(); renderGroup(); renderCall(); renderBar(); renderLast();
+  }
+
+  // ---- Entscheidungshilfe -----------------------------------------
+  function spin(fromFavs) {
+    let pool = filtered();
+    if (fromFavs) pool = pool.filter(m => favs.has(m.nr));
+    if (!pool.length) { toast(fromFavs ? "Noch keine Favoriten ⭐" : "Nichts passt zu den Filtern"); return; }
+    let t = 0; const steps = 14;
+    const tick = () => {
+      pick = pool[Math.floor(Math.random() * pool.length)];
+      $("#wheel").innerHTML = `<div><b>Nr. ${esc(pick.nr)}</b>${esc(pick.name)}<div class="muted">${eur(pick.price)}</div></div>`;
+      if (++t < steps) setTimeout(tick, 40 + t * 12); else { $("#takeIt").hidden = false; vibrate(); }
+    };
+    $("#takeIt").hidden = true; tick();
+  }
+  function renderLast() {
+    const last = store.get("last", []);
+    $("#lastCard").hidden = !last.length;
+    $("#lastList").innerHTML = last.map(([nr, q, note]) => `<div class="line"><span class="q">${q}×</span><span class="n"><b>Nr. ${esc(nr)}</b> ${byNr[nr] ? esc(byNr[nr].name) : ""}${note ? `<span class="note">✏️ ${esc(note)}</span>` : ""}</span></div>`).join("");
+  }
+
+  // ---- Navigation --------------------------------------------------
+  function show(v) {
+    document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+    document.querySelectorAll(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+    store.set("tab", v); renderBar(); scrollTo(0, 0);
+  }
+  let toastT;
+  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 1800); }
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); toast("Kopiert ✅"); }
+    catch { prompt("Kopieren:", text); }
+  }
+
+  // ---- Events ------------------------------------------------------
+  document.querySelector("nav").onclick = e => { const b = e.target.closest("button"); if (b) show(b.dataset.v); };
+  $("#whoBtn").onclick = () => { $("#nameIn").value = me; $("#nameDlg").showModal(); $("#nameDlg").onclose = () => { const v = $("#nameIn").value.trim(); if (v && v !== me) renameMe(v); }; };
+  $("#q").oninput = e => { query = e.target.value; renderList(); };
+  $("#cats").onclick = e => { const b = e.target.closest("[data-cat]"); if (b) { activeCat = b.dataset.cat; renderChips(); renderList(); } };
+  $("#filters").onclick = e => { const b = e.target.closest("[data-tag]"); if (!b) return; const t = b.dataset.tag; activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t); renderChips(); renderList(); };
+  $("#list").onclick = e => {
+    const a = e.target.closest("[data-add]"), s = e.target.closest("[data-sub]"), f = e.target.closest("[data-fav]");
+    if (a) add(a.dataset.add, 1);
+    else if (s) add(s.dataset.sub, -1);
+    else if (f) { const nr = f.dataset.fav; favs.has(nr) ? favs.delete(nr) : favs.add(nr); store.set("favs", [...favs]); renderList(); }
+  };
+  $("#people").onclick = e => {
+    const d = e.target.closest("[data-del]"), n = e.target.closest("[data-note]");
+    const p = group.find(p => p.n === me); if (!p) return;
+    if (d) { p.i.splice(+d.dataset.del, 1); save(); }
+    if (n) {
+      const it = p.i[+n.dataset.note];
+      $("#noteTitle").textContent = `Sonderwunsch für Nr. ${it[0]}`;
+      $("#noteIn").value = it[2] || ""; $("#noteDlg").showModal();
+      $("#noteDlg").onclose = () => { if ($("#noteDlg").returnValue === "ok") { it[2] = $("#noteIn").value.trim(); save(); } };
+    }
+  };
+  $("#share").onclick = async () => {
+    if (!group.some(p => p.i.length)) return toast("Erst was aussuchen 🙂");
+    const p = group.find(p => p.n === me); if (p && p.i.length) store.set("last", p.i);
+    const url = location.origin + location.pathname + groupToHash();
+    const who = group.filter(p => p.i.length).map(p => p.n).join(", ");
+    const text = `🥢 Asia-Bestellung – bisher dabei: ${who}. Pack deins dazu und schick den neuen Link weiter:`;
+    if (navigator.share) { try { await navigator.share({ title: "Asia Imbiss Bestellung", text, url }); return; } catch (err) { if (err.name === "AbortError") return; } }
+    copy(text + "\n" + url);
+  };
+  $("#reset").onclick = () => { if (confirm("Ganze Gruppenbestellung löschen und neu anfangen?")) { group = []; save(); } };
+  $("#barGo").onclick = () => show("gruppe");
+  $("#spin").onclick = () => spin(false);
+  $("#spinFav").onclick = () => spin(true);
+  $("#takeIt").onclick = () => { if (pick) { add(pick.nr, 1); toast(`Nr. ${pick.nr} hinzugefügt ✅`); $("#takeIt").hidden = true; } };
+  $("#budget").oninput = e => { $("#budgetLbl").textContent = +e.target.value ? "bis " + eur(+e.target.value) : "egal"; renderList(); };
+  $("#repeatLast").onclick = () => ensureName(() => { const p = mine(); p.i = store.get("last", []).map(x => [...x]); save(); toast("Wie letztes Mal ✅"); });
+  $("#copyText").onclick = () => copy(orderText());
+  $("#pickupName").value = store.get("pickup", "");
+  $("#pickupName").oninput = e => store.set("pickup", e.target.value);
+  $("#callBtn").onclick = () => { const p = group.find(p => p.n === me); if (p && p.i.length) store.set("last", p.i); };
+  window.addEventListener("hashchange", () => { const g = loadGroupFromHash(); if (g) { group = g; store.set("group", group); renderAll(); } });
+
+  // ---- Init --------------------------------------------------------
+  $("#shopName").textContent = SHOP.name || "Asia Imbiss";
+  $("#callBtn").href = "tel:" + (SHOP.phone || "");
+  $("#phoneLbl").textContent = SHOP.phoneDisplay || SHOP.phone || "";
+  $("#demoWarn").hidden = !MENU.some(m => /^Beispiel/.test(m.name));
+  const max = Math.ceil(Math.max(10, ...MENU.map(m => m.price)));
+  $("#budget").max = max;
+  if (location.hash.startsWith("#o=")) { store.set("group", group); show("gruppe"); } else show(store.get("tab", "karte"));
+  renderAll();
+  if (!me) setTimeout(() => ensureName(), 400);
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+})();
+</script>
+</body>
+</html>
