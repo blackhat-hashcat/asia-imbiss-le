@@ -122,13 +122,12 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .live .dotl.off{background:#ff9f43;box-shadow:0 0 10px #ff9f43}
 @keyframes pulse{50%{opacity:.4}}
 .dlrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.dlcustom{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.dlcustom{margin-top:10px;max-width:280px}
 .dlf{display:flex;flex-direction:column;gap:4px;font-size:.78rem;color:var(--muted);font-weight:600;min-width:0}
 .dlin{display:flex;gap:6px}
 .dlin input{flex:1;min-width:0;width:100%;padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:1rem;color-scheme:dark}
 .dlin input:focus{outline:none;border-color:var(--gold)}
 .dlin .btn{padding:8px 12px}
-@media (max-width:420px){.dlcustom{grid-template-columns:1fr}}
 .dlrow .lbl{font-weight:700;margin-right:auto}
 .dlbig{font-family:var(--display);font-size:2rem;color:var(--gold);line-height:1;margin:6px 0 2px}
 .dlbig.over{color:var(--red)}
@@ -944,13 +943,12 @@ function dlPickerHTML() {
   const sug = new Date(Date.now() + 15 * 60e3); sug.setMinutes(Math.ceil(sug.getMinutes() / 5) * 5, 0, 0);
   return `<div class="chips" style="margin:8px 0 0;padding:0">${[5, 10, 15, 20, 30].map(m => `<button class="chip" data-dl="${m}">${m} Min</button>`).join("")}</div>
     <div class="dlcustom">
-      <label class="dlf"><span>Eigene Minuten</span><span class="dlin"><input type="number" id="dlMin" inputmode="numeric" min="1" max="240" placeholder="z. B. 25"><button class="btn sm" data-dlset="min">OK</button></span></label>
       <label class="dlf"><span>Feste Uhrzeit</span><span class="dlin"><input type="time" id="dlTime" value="${hhmm(sug)}" step="300"><button class="btn sm" data-dlset="time">OK</button></span></label>
     </div>
     ${round.deadline ? `<button class="chip" data-dledit="0" style="margin-top:8px">Abbrechen</button>` : ""}`;
 }
 function renderDeadline() {
-  if (document.activeElement && ["dlMin", "dlTime"].includes(document.activeElement.id)) return;   // nicht beim Tippen überschreiben
+  if (document.activeElement && document.activeElement.id === "dlTime") return;   // nicht beim Tippen überschreiben
   const el = $("#dlBox"); const d = round.deadline, left = d - Date.now();
   if (!d) {
     el.innerHTML = `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><span style="color:var(--dim);font-size:.82rem">optional</span></div>${dlPickerHTML()}`;
@@ -960,17 +958,12 @@ function renderDeadline() {
       ${dlEdit ? dlPickerHTML() : ""}
       ${left <= 0 ? `<button class="btn gold block" data-go="anrufen" style="margin-top:8px">📞 Zum Anrufen</button>` : ""}`;
   }
-  const mi = $("#dlMin"), ti = $("#dlTime");
-  if (mi) mi.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); setDlCustom("min"); } };
+  const ti = $("#dlTime");
   if (ti) ti.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); setDlCustom("time"); } };
 }
 function setDlCustom(kind) {
   let t = 0;
-  if (kind === "min") {
-    const m = Math.round(+$("#dlMin").value);
-    if (!m || m < 1 || m > 240) return toast("Bitte 1–240 Minuten eingeben");
-    t = Date.now() + m * 60e3;
-  } else {
+  {
     const v = $("#dlTime").value; if (!/^\d{1,2}:\d{2}/.test(v)) return toast("Bitte eine Uhrzeit wählen");
     const [h, mm] = v.split(":").map(Number), dt = new Date(); dt.setHours(h, mm, 0, 0);
     if (dt.getTime() <= Date.now()) return toast("Die Uhrzeit ist schon vorbei");
