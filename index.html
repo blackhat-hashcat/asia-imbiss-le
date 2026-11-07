@@ -1017,7 +1017,7 @@ function renderLiveBox() {
   const el = $("#liveBox"); if (!el) return;
   if (live) {
     el.innerHTML = `<div class="card slim"><div class="live"><span class="dotl ${liveOnline ? "" : "off"}"></span><div style="flex:1;min-width:0"><b>${liveOnline ? "Live-Gruppe" : "Offline"}</b><div style="color:var(--muted);font-size:.8rem">${liveOnline ? "Alle sehen Änderungen sofort" : "Wird gesendet, sobald du online bist"}</div></div>
-      <button class="btn sm red" data-act="shareGroup" aria-label="Gruppe einladen">📤 Einladen</button><a class="btn sm jade" target="_blank" rel="noopener" aria-label="Per WhatsApp einladen" href="https://wa.me/?text=${encodeURIComponent(shareText() + "\n" + shareUrl())}">WA</a></div>
+      <button class="btn sm red" data-act="shareGroup" aria-label="Gruppe einladen">📤 Einladen</button></div>
       ${isStale() && people().length ? `<div class="warn" style="margin:6px 0 0">🕓 <span>Das ist noch die Runde von ${new Date(round.started).toLocaleDateString("de-DE", { weekday: "long" })}. Sobald jemand etwas hinzufügt, startet automatisch eine neue.</span></div>` : ""}</div>`;
   } else if (liveCapable) {
     el.innerHTML = `<div class="card"><h3>⚡ Live-Gruppe</h3><p style="color:var(--muted);margin:-4px 0 10px;font-size:.92rem">Ein fester Link für eure Gruppe. Jeder trägt sich ein, alle sehen es sofort. Kein Link-Weiterschicken mehr.</p><button class="btn red block" data-act="createLive">Live-Gruppe erstellen</button></div>`;
