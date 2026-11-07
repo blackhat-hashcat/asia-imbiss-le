@@ -403,6 +403,25 @@ body.trip main{animation:trip 4.2s ease-in-out}
 @keyframes heat{0%,100%{opacity:0}30%,70%{opacity:1}}
 body.hawaii .top{background:repeating-linear-gradient(45deg,rgba(255,90,140,.35) 0 14px,rgba(255,182,39,.3) 14px 28px,rgba(31,209,161,.3) 28px 42px),rgba(4,17,10,.9)}
 
+
+/* ---------- Fear & Loathing, subtil ---------- */
+.flizard{display:none;font-size:.7rem;opacity:.18;margin-left:3px;cursor:default;filter:grayscale(.6)}
+body.casino .flizard{display:inline-block}
+.flizard.flick{animation:flick .6s}
+@keyframes flick{30%{transform:rotate(-25deg) translateX(-3px);opacity:.8}60%{transform:rotate(15deg)}}
+.lonebat{position:fixed;left:-40px;z-index:240;pointer-events:none;font-style:normal;font-size:1.1rem;opacity:.35;animation:lonebat 6.5s linear forwards}
+@keyframes lonebat{0%{transform:translate(0,0)}20%{transform:translate(22vw,-14px) scaleX(-1)}45%{transform:translate(50vw,10px)}70%{transform:translate(78vw,-10px) scaleX(-1)}100%{transform:translate(110vw,4px)}}
+.hero.melt{animation:melt 7s ease-in-out}
+@keyframes melt{0%,100%{filter:none;transform:none}20%{filter:saturate(1.8) hue-rotate(25deg);transform:scale(1.02) skewX(1.5deg)}45%{filter:saturate(2.2) hue-rotate(-30deg) blur(.6px);transform:scale(.985) skewY(-1.5deg)}70%{filter:saturate(1.6) hue-rotate(60deg);transform:scale(1.015) skewX(-1deg)}}
+body.ether main{animation:ether 6s ease-in-out}
+@keyframes ether{0%,100%{filter:none;transform:none}25%{filter:blur(1.2px);transform:rotate(-.8deg) translateX(-4px)}50%{filter:blur(2px) brightness(1.1);transform:rotate(.9deg) translateX(5px)}75%{filter:blur(1px);transform:rotate(-.5deg)}}
+body.casino.late::before{animation:latedrift 50s linear infinite}
+@keyframes latedrift{to{filter:hue-rotate(360deg)}}
+body.casino.late .hero{animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.008);filter:saturate(1.15)}}
+.leaf{position:fixed;left:50%;top:40%;z-index:240;font-style:normal;font-size:1.6rem;pointer-events:none;animation:leaf 3.4s ease-out forwards}
+@keyframes leaf{0%{opacity:0;transform:translate(-50%,0) rotate(0)}15%{opacity:.8}100%{opacity:0;transform:translate(40px,-160px) rotate(220deg)}}
+
 /* ================= CASINO-DESIGN ================= */
 body.casino{--bg:#04110a;--s1:#0b2417;--s2:#10301f;--s3:#173d29;--line:#24533a;--muted:#a9c6b2;--dim:#6e917b}
 body.casino::before{background:radial-gradient(700px 500px at 50% -10%,rgba(24,110,62,.55),transparent 65%),radial-gradient(500px 400px at 110% 40%,rgba(239,51,64,.15),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 6px)}
@@ -501,7 +520,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
 
   <!-- ================= KARTE ================= -->
   <section class="view on" id="v-karte">
-    <div class="hero" id="hero">
+    <div class="hero" id="hero" onclick="window.__flHero && window.__flHero()">
       <div class="in">
         <h1 id="heroH">Hunger?<br><span>Vorbestellen.</span></h1>
         <p id="heroP">Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.</p>
@@ -644,7 +663,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <div class="card">
       <h3>⚠️ Allergene &amp; Zusatzstoffe</h3>
       <div class="al" id="alList"></div>
-      <p style="color:var(--dim);font-size:.8rem;margin:10px 0 0">Alle Speisen mit Geschmacksverstärker (auf Wunsch auch ohne). Alle Preise in Euro inkl. MwSt. Angaben laut Flyer, ohne Gewähr.</p>
+      <p style="color:var(--dim);font-size:.8rem;margin:10px 0 0">Alle Speisen mit Geschmacksverstärker (auf Wunsch auch ohne)<span id="flLizard" class="flizard" aria-hidden="true">🦎</span>. Alle Preise in Euro inkl. MwSt. Angaben laut Flyer, ohne Gewähr.</p>
     </div>
   </section>
 </main>
@@ -965,7 +984,8 @@ function add(nr, note = "", n = 1) {
     buzz(); commit();
     const m = byNr[nr];
     const lbl = `${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""}`;
-    toast(CASINO ? pickOne(QUIP_ADD).replace("{x}", lbl) : `✓ ${lbl} hinzugefügt`);
+    toast(CASINO ? (flSometimes(.06) ? "🦇 " + flQuote() : pickOne(QUIP_ADD).replace("{x}", lbl)) : `✓ ${lbl} hinzugefügt`);
+    if (flSometimes(.04)) batSwarm(1);
     if (CASINO) chipFly(lastAddEl); lastAddEl = null;
   });
 }
@@ -1027,7 +1047,7 @@ function itemHTML(m) {
     <div class="info" data-open="${esc(m.nr)}">
       <div class="iname">${esc(m.name)}</div>
       ${m.desc ? `<div class="idesc">${esc(m.desc)}</div>` : ""}
-      <div class="meta"><span class="price">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">veggie</span>` : ""}${hotHTML(m.hot)}${CASINO && HAS_HIST ? (triedCount(m.nr) ? `<span class="badge-s tried">✓ ${triedCount(m.nr)}×</span>` : `<span class="badge-s new">✨ neu</span>`) : ""}${o.length ? `<span class="whohas">👥 ${esc(o.slice(0, 2).join(", "))}${o.length > 2 ? " +" + (o.length - 2) : ""}</span>` : ""}</div>
+      <div class="meta"><span class="price">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">veggie</span>` : ""}${hotHTML(m.hot)}${CASINO && triedCount(m.nr) ? `<span class="badge-s tried">✓ ${triedCount(m.nr)}×</span>` : ""}${o.length ? `<span class="whohas">👥 ${esc(o.slice(0, 2).join(", "))}${o.length > 2 ? " +" + (o.length - 2) : ""}</span>` : ""}</div>
     </div>
     <div class="act">
       <div class="step">${q ? `<button class="qb minus" data-sub="${esc(m.nr)}" aria-label="Eins weniger">−</button><span class="qn">${q}</span>` : ""}<button class="qb" data-add="${esc(m.nr)}" aria-label="Hinzufügen">+</button></div>
@@ -1297,6 +1317,7 @@ function setDlCustom(kind) {
 function tickDeadline() {
   const d = round.deadline; if (!d) return;
   const left = d - Date.now(), el = $("#dlLeft");
+  if (CASINO && left > 0 && fmtLeft(left) === "4:20" && tickDeadline.leaf !== d) { tickDeadline.leaf = d; flLeaf(); }
   if (el) { if (left > 0) el.textContent = "noch " + fmtLeft(left); else if (!el.classList.contains("over")) renderDeadline(); }
   if (left <= 0 && left > -5000 && dlAlerted !== d) { dlAlerted = d; toast(C("⏱ Bestellschluss! Jetzt anrufen 📞", "🎰 Rien ne va plus! Ab ans Telefon 📞")); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} }
   renderChrome();
@@ -1556,11 +1577,13 @@ function spin() {
   const rnd = a => a[Math.floor(Math.random() * a.length)];
   const icons = CATS.map(c => c.icon), nrs = MENU.map(m => m.sayName ? "🥡" : m.nr), prices = MENU.map(m => eur(m.price));
   const finals = [catIcon[pick.cat], pick.sayName ? "🥡" : pick.nr, eur(pick.price)];
+  const batRoll = flSometimes(.08);
   const H = $("#reels .reel").offsetHeight || 92;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   [icons, nrs, prices].forEach((src, i) => {
     const n = reduce ? 1 : 18 + i * 7;
     const items = Array.from({ length: n }, () => rnd(src)).concat([finals[i]]);
+    if (batRoll && n > 3) items.splice(items.length - 2, 1, "🦇");
     const st = $("#r" + i);
     st.style.transition = "none"; st.style.transform = "translateY(0)"; st.innerHTML = reelHTML(items);
     void st.offsetHeight;
@@ -1572,7 +1595,7 @@ function spin() {
   const total = reduce ? 50 : 1100 + 2 * 550 + 150;
   setTimeout(() => {
     spinning = false; $("#spin").disabled = false; slot.classList.remove("spinning"); slot.classList.add("win");
-    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${batRoll ? "Fledermausland. Nicht anhalten." : flSometimes(.12) ? flQuote() : pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
     if (CASINO && pick.hot >= 6) setTimeout(() => { batSwarm(10); toast("🦇 Sechs Chilis. Willkommen im Fledermaus-Land."); }, 500);
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
@@ -1594,6 +1617,8 @@ function renderCasinoStatic() {
   $("#heroP").textContent = C("Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.", "Setzt eure Chips auf die Karte. Einer ruft an, und wenn ihr ankommt, steht der Gewinn auf dem Tisch.");
   $("#nameTitle").textContent = C("Wie heißt du? 👋", "Wie heißt du, Spieler? 🎩");
   document.body.classList.toggle("casino", CASINO);
+  document.body.classList.toggle("late", CASINO && FL_NIGHT());
+  if (CASINO && !flBatTimer) flAmbient();
   $("#brandTxt").innerHTML = C("Asia Le", `Asia Le <small class="ctag">CASINO</small>`);
   const tb = $('.tabs [data-v="bestellung"]'); if (tb) tb.childNodes[1].nodeValue = C("Bestellung", "Spieltisch");
   const tk = $('.tabs [data-v="karte"] .e'); if (tk) tk.textContent = C("🍜", "🃏");
@@ -1697,6 +1722,8 @@ $("#share").onclick = async () => {
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin();
+window.__flHero = flHeroTap;
+$("#flLizard").addEventListener("click", e => { e.stopPropagation(); flLizard(); });
 // ---------- Easter Egg: 5× aufs Logo tippen oder "jackpot" suchen ----------
 function setCasino(v) {
   CASINO = v; store.set("casinoEgg", v); render();
@@ -1716,6 +1743,10 @@ function vegasEgg(v) {
   if (/^(lizard|lizards|echse|eidechse|echsen)$/.test(q)) { carpetTrip(); toast("🦎 Der Hotelteppich hat gerade gezwinkert …"); return true; }
   if (/^(las ?vegas|vegas|wueste|wuste|barstow)$/.test(q)) { redShark(); toast("🌵 Irgendwo bei Barstow, am Rand der Wüste …"); return true; }
   if (/^(gonzo|raoul|duke|hawaii(hemd)?)$/.test(q)) { const on = document.body.classList.toggle("hawaii"); toast(on ? "🌺 Hawaiihemd an. Sonnenbrille auf. Notizblock bereit." : "👔 Hawaiihemd wieder im Schrank."); return true; }
+  if (/^(adrenochrom|adrenochrome)$/.test(q)) { carpetTrip(); batSwarm(18); setTimeout(redShark, 900); toast("🧪 " + "Das ist kein Spielzeug. … Na gut. Viel Spaß."); return true; }
+  if (/^(ather|aether|ether)$/.test(q)) { document.body.classList.add("ether"); setTimeout(() => document.body.classList.remove("ether"), 6000); toast("🌫️ Es gibt nichts Hilfloseres als einen Mann im Äther-Rausch."); return true; }
+  if (/^(meskalin|mescaline|mescalin)$/.test(q)) { carpetTrip(); toast("🌈 75 Kügelchen. Die Farben fangen an zu singen."); return true; }
+  if (/^(buy the ticket|ticket)$/.test(q)) { toast("🎟️ Kauf das Ticket, nimm die Fahrt."); setTimeout(() => { show("wuerfeln"); spin(); }, 500); return true; }
   if (/^(american ?dream|amerikanischer ?traum)$/.test(q)) { toast("🇺🇸 Gesucht: der amerikanische Traum. Gefunden: H42 mit sechs Chilis."); setTimeout(() => openItem("H42"), 600); return true; }
   return false;
 }
@@ -1737,10 +1768,58 @@ function redShark() {
   c.innerHTML = `<div class="shark"><span class="dust">💨💨</span><span class="car">🚗</span></div><div class="heat"></div>`;
   document.body.appendChild(c); setTimeout(() => c.remove(), 4300);
 }
+
+// ---------- Fear & Loathing: das Easter Egg im Easter Egg (selten & subtil) ----------
+const FL_QUOTES = [
+  "Wir waren irgendwo bei Barstow, am Rande der Wüste, als die Drogen zu wirken begannen …",
+  "Wir können hier nicht anhalten. Das ist Fledermausland!",
+  "Kauf das Ticket, nimm die Fahrt.",
+  "Zu seltsam zum Leben, zu selten zum Sterben.",
+  "Als dein Anwalt rate ich dir: Nimm die S11.",
+  "Zwei Tüten Gras, 75 Kügelchen Meskalin … und eine Nudelbox.",
+  "Da geht er hin. Einer von Gottes eigenen Prototypen.",
+  "Ein Mann, der zu viel Äther hatte, bestellt trotzdem pünktlich.",
+  "Es gibt nichts Hilfloseres als einen Mann im Äther-Rausch. Außer einen Mann ohne Ente.",
+  "Kein Grund zur Sorge. Das ist nur der Teppich.",
+];
+const FL_NIGHT = () => { const h = new Date().getHours(); return h >= 22 || h < 5; };
+let flBatTimer = 0;
+function flAmbient() {   // gelegentlich flattert eine einzelne, halbtransparente Fledermaus oben vorbei
+  clearTimeout(flBatTimer);
+  if (!CASINO) { flBatTimer = 0; return; }
+  flBatTimer = setTimeout(() => {
+    if (CASINO && !document.hidden && !reduceMotion() && Math.random() < .35) {
+      const b = document.createElement("i"); b.className = "lonebat"; b.textContent = "🦇";
+      b.style.top = (60 + Math.random() * 140) + "px"; document.body.appendChild(b); setTimeout(() => b.remove(), 7000);
+    }
+    flAmbient();
+  }, 40000 + Math.random() * 50000);
+}
+function flSometimes(chance) { return CASINO && Math.random() < chance; }
+function flQuote() { return pickOne(FL_QUOTES); }
+let heroTaps = [];
+function flHeroTap() {   // 3× aufs Essensfoto: das Bild fängt an zu atmen
+  if (!CASINO) return;
+  const now = Date.now(); heroTaps = heroTaps.filter(t => now - t < 1500); heroTaps.push(now);
+  if (heroTaps.length < 3) return; heroTaps = [];
+  const h = $("#hero"); h.classList.remove("melt"); void h.offsetWidth; h.classList.add("melt");
+  setTimeout(() => h.classList.remove("melt"), 7000);
+  toast("🌀 " + pickOne(["Das Essen atmet. Ganz ruhig.", "Bei Barstow fing es auch so an …", "Kein Grund zur Panik. Das ist nur das Meskalin."]));
+}
+function flLizard() {
+  if (!CASINO) return;
+  toast("🦎 " + flQuote());
+  const l = $("#flLizard"); l.classList.remove("flick"); void l.offsetWidth; l.classList.add("flick");
+}
+function flLeaf() {   // 4:20 im Countdown
+  if (reduceMotion()) return;
+  const b = document.createElement("i"); b.className = "leaf"; b.textContent = "🍃"; document.body.appendChild(b); setTimeout(() => b.remove(), 3500);
+}
+
 function casinoIntro() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) { toast("🎰 Willkommen im Asia Le Casino!"); return; }
   const o = document.createElement("div"); o.className = "intro";
-  o.innerHTML = `<div class="intro-in"><div class="ibulbs"></div><div class="islot">🎰</div><div class="iw">Willkommen im</div><div class="it">ASIA&nbsp;LE<br>CASINO</div><div class="isub">Faites vos jeux!</div><div class="ibulbs"></div></div>`
+  o.innerHTML = `<div class="intro-in"><div class="ibulbs"></div><div class="islot">🎰</div><div class="iw">Willkommen im</div><div class="it">ASIA&nbsp;LE<br>CASINO</div><div class="isub">${Math.random() < .2 ? "… irgendwo bei Barstow …" : "Faites vos jeux!"}</div><div class="ibulbs"></div></div>`
     + Array.from({ length: 26 }, () => `<i style="left:${Math.random() * 100}%;animation-delay:${.3 + Math.random() * .9}s">${pickOne(["🪙", "♠️", "♦️", "♣️", "♥️", "🃏"])}</i>`).join("");
   document.body.appendChild(o);
   try { navigator.vibrate && navigator.vibrate([60, 40, 60, 40, 200]); } catch {}
