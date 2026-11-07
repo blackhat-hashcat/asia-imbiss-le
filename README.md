@@ -1,23 +1,28 @@
-# 🥢 Asia Imbiss Le – Gruppenbestellung
+# 🥢 Asia Imbiss Le · Gruppenbestellung
 
-Kleine Web-App, mit der unsere Gruppe in der Pause zusammen aussucht, was wir beim Asia Imbiss Le vorbestellen. Einer ruft an und liest nur noch die Nummern vor.
+Web-App für unsere Mittagspause: Jeder sucht sich beim **Asia Imbiss Le** (Hechinger Str. 2, 70567 Stuttgart, ☎ 0711 72248733) was aus, wir schicken einen Link durch die Gruppe, einer ruft an und liest nur noch die Nummern vor. Bis wir da sind, ist alles fertig.
+
+**Live:** https://blackhat-hashcat.github.io/asia-imbiss-le/
 
 ## Funktionen
-- **Karte**: Suche nach Nummer, Name oder Zutat, Kategorien, Filter (Veggie, Scharf, Beliebt, ⭐ Favoriten)
-- **Gruppenbestellung ohne Server und ohne Login**: Die ganze Bestellung steckt im Link. Jeder packt seins dazu und teilt den neuen Link in der Gruppe weiter
-- **Sonderwünsche** pro Gericht (z. B. „ohne Zwiebeln")
-- **📞 Anrufen**: Ein Tipp ruft beim Imbiss an. Daneben steht die zusammengefasste Liste nach Nummern sortiert in großer Schrift zum Vorlesen
-- **Wer zahlt was**: Betrag pro Person, als Text kopierbar für WhatsApp
-- **🎲 Was essen?**: Zufallsauswahl, berücksichtigt Filter, Budget und Favoriten. Dazu „Nochmal wie letztes Mal"
-- Lässt sich als App auf den Homescreen legen (PWA), Dark Mode
+| Tab | Was es kann |
+|---|---|
+| 🍜 **Karte** | Alle 104 Gerichte vom Flyer. Suche nach Nummer (`24` findet H24) oder Stichwort (`ente curry`). Filter: Favoriten, vegetarisch, nicht scharf, scharf, richtig scharf, ohne Erdnuss, ohne Meeresfrüchte, ohne Milch, unter 9 €. Kategorien zum Antippen. „Die Gruppe nimmt schon“ zeigt, was die anderen gewählt haben. Antippen öffnet Details, Sonderwunsch, Menge und Allergene. |
+| 🎲 **Würfeln** | Zufallsgericht mit Filtern, Kategorie und Budget. Oder „Nochmal wie letztes Mal“. |
+| 🧾 **Bestellung** | Alle Personen mit Gerichten und Betrag. Link teilen oder direkt per WhatsApp. „Ich nehm dasselbe“ übernimmt die Bestellung eines anderen. Warnt, wenn der Imbiss zu hat oder bald schließt. |
+| 📞 **Anrufen** | Ein Tipp ruft an. Die Liste ist zusammengefasst und nach Nummer sortiert, beim Vorlesen hakt man Zeilen ab. Dazu Abholname, „Wer zahlt was“ und Text zum Kopieren. |
+| 📍 **Infos** | Live-Status geöffnet/geschlossen, Öffnungszeiten, Google-Maps-Karte, Route starten, Original-Flyer zum Zoomen, Allergen-Legende. |
 
-## Speisekarte eintragen
-Alles steht in **`menu.js`**: Telefonnummer und Gerichte (`nr`, `name`, `price`, `cat`, optional `tags`, `desc`).
-Solange dort noch Beispielgerichte stehen, zeigt die App oben einen Hinweis.
+Ohne Server und ohne Login: Die Gruppenbestellung steckt komplett im Link. Die App lässt sich auf den Homescreen legen (PWA).
 
-## Hosting mit GitHub Pages
-1. Repo → **Settings → Pages → Build and deployment → Source: „GitHub Actions"**
-2. Der Workflow `.github/workflows/pages.yml` veröffentlicht bei jedem Push automatisch.
-3. Die App liegt dann unter `https://blackhat-hashcat.github.io/asia-imbiss-le/`.
+## Dateien
+- `menu.js`: Speisekarte, Telefon, Adresse und Öffnungszeiten. Preise ändern sich? Nur hier anpassen.
+- `karte/`: Original-Scans des Flyers (Quelle aller Daten)
+- `img/`: Fotos für die Startseite
+- `index.html`: die App
+
+## Hosting (GitHub Pages)
+1. **Settings → Pages → Source: „GitHub Actions“**
+2. Jeder Push veröffentlicht automatisch über `.github/workflows/pages.yml`.
 
 Lokal testen: `python3 -m http.server` und dann http://localhost:8000 öffnen.

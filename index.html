@@ -3,197 +3,418 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#c8102e">
-<title>Asia Imbiss Le – Gruppenbestellung</title>
+<meta name="theme-color" content="#0f0b0a">
+<meta name="description" content="Gemeinsam beim Asia Imbiss Le vorbestellen: aussuchen, Link teilen, anrufen, Nummern vorlesen.">
+<title>Asia Imbiss Le · Gruppenbestellung</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#fbf7f2; --card:#ffffff; --ink:#1d1a17; --muted:#6f655c; --line:#ece3d8;
-  --red:#c8102e; --red-ink:#fff; --gold:#e8a317; --green:#2e7d32; --chip:#f3ebe1;
-  --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
+  --bg:#0f0b0a; --s1:#1a1311; --s2:#241a17; --s3:#30231e; --line:#3a2a24;
+  --ink:#f7efe7; --muted:#b5a194; --dim:#7d6b60;
+  --red:#ef3340; --red2:#b81d2a; --gold:#ffb627; --jade:#2fd3a7; --chili:#ff5a36;
+  --r:18px; --tab:68px;
+  --display:"Dela Gothic One",system-ui,sans-serif;
+  --body:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#141210; --card:#1e1b18; --ink:#f3ede6; --muted:#a89d92; --line:#2e2a26;
-  --red:#e0384f; --chip:#2a2622; --shadow:none;
-}}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-header{position:sticky;top:0;z-index:10;background:var(--red);color:var(--red-ink);padding:12px 16px calc(10px);box-shadow:var(--shadow)}
-.hrow{display:flex;align-items:center;gap:10px;max-width:760px;margin:0 auto}
-.logo{font-weight:800;font-size:1.15rem;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.who{background:rgba(255,255,255,.18);border:0;border-radius:999px;padding:6px 12px;color:#fff;font-weight:600;max-width:45%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-nav{display:flex;max-width:760px;margin:10px auto 0;gap:6px}
-nav button{flex:1;border:0;border-radius:10px;padding:8px 4px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;font-size:.92rem;position:relative}
-nav button.on{background:#fff;color:var(--red)}
-.badge{position:absolute;top:-6px;right:6px;background:var(--gold);color:#000;border-radius:999px;font-size:.72rem;padding:1px 6px;font-weight:800}
-main{max-width:760px;margin:0 auto;padding:14px 16px 120px}
-.view{display:none}.view.on{display:block}
-.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:1rem}
-.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 var(--body);min-height:100dvh;
+  background-image:radial-gradient(600px 400px at 110% -10%,rgba(239,51,64,.18),transparent 60%),radial-gradient(500px 360px at -20% 30%,rgba(255,182,39,.08),transparent 60%);background-attachment:fixed}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+.hidden{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:0;z-index:20;background:rgba(15,11,10,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:10px;height:56px}
+.brand{font-family:var(--display);font-size:1.15rem;letter-spacing:.5px;flex:1;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand .dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--red),var(--red2));display:grid;place-items:center;font-size:1rem;box-shadow:0 0 18px rgba(239,51,64,.5)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--s2);border:1px solid var(--line);white-space:nowrap}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--dim)}
+.pill.open i{background:var(--jade);box-shadow:0 0 8px var(--jade)}
+.pill.closed i{background:var(--red)}
+.who{font-weight:700;font-size:.85rem;padding:7px 12px;border-radius:999px;background:var(--s2);border:1px solid var(--line);max-width:34vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- Views ---------- */
+main{padding-bottom:calc(var(--tab) + 96px + env(safe-area-inset-bottom))}
+.view{display:none;animation:fade .25s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-spacing:.3px}
+.sub{color:var(--muted);margin:0 0 14px;font-size:.95rem}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;margin:14px 0 6px;border-radius:24px;overflow:hidden;min-height:170px;display:flex;align-items:flex-end;
+  background:linear-gradient(90deg,rgba(15,11,10,.95) 0%,rgba(15,11,10,.6) 55%,rgba(15,11,10,.1) 100%),url(img/wok.jpg) right center/cover;border:1px solid var(--line)}
+.hero .in{padding:18px}
+.hero h1{font-family:var(--display);font-size:1.75rem;line-height:1.05;margin:0 0 6px}
+.hero h1 span{color:var(--gold)}
+.hero p{margin:0 0 12px;color:var(--muted);font-size:.92rem;max-width:260px}
+.hero .row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;padding:12px 16px;font-weight:700;background:var(--s2);border:1px solid var(--line);text-decoration:none;transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn.red{background:linear-gradient(135deg,var(--red),var(--red2));border-color:transparent;color:#fff;box-shadow:0 6px 20px rgba(239,51,64,.35)}
+.btn.jade{background:var(--jade);border-color:transparent;color:#05261d}
+.btn.gold{background:var(--gold);border-color:transparent;color:#2b1b00}
+.btn.sm{padding:8px 12px;font-size:.88rem;border-radius:12px}
+.btn.block{width:100%}
+.btns{display:flex;gap:8px;margin:10px 0}
+.btns .btn{flex:1}
+
+/* ---------- Search & filters ---------- */
+.searchbar{position:sticky;top:56px;z-index:15;background:rgba(15,11,10,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:10px 0 4px;margin:0 -16px;padding-left:16px;padding-right:16px}
+.sbox{position:relative}
+.sbox input{width:100%;padding:13px 44px 13px 44px;border-radius:14px;border:1px solid var(--line);background:var(--s1);font-size:1rem;outline:none}
+.sbox input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,182,39,.15)}
+.sbox .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.6}
+.sbox .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:10px;background:var(--s3);font-weight:800}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0 6px;scrollbar-width:none;margin:0 -16px;padding-left:16px;padding-right:16px}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:6px 12px;font-size:.88rem;white-space:nowrap}
+.chip{flex:none;border:1px solid var(--line);background:var(--s1);border-radius:999px;padding:7px 12px;font-size:.86rem;font-weight:600;white-space:nowrap;color:var(--muted)}
 .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.cat{margin:18px 0 6px;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
-.item{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:6px 0;box-shadow:var(--shadow)}
-.nr{flex:none;min-width:44px;height:44px;border-radius:12px;background:var(--chip);display:grid;place-items:center;font-weight:800;font-size:1.05rem}
-.info{flex:1;min-width:0}
-.iname{font-weight:600}
-.idesc{color:var(--muted);font-size:.85rem}
-.tags{display:inline-flex;gap:4px;margin-left:4px;vertical-align:middle}
-.tag{font-size:.7rem;border-radius:6px;padding:1px 5px;font-weight:700}
-.t-veggie{background:#e3f4e4;color:#1b5e20}.t-scharf{background:#fde3e3;color:#a10f1f}.t-beliebt{background:#fff2cc;color:#7a5600}
-.price{font-weight:700;white-space:nowrap}
-.fav{border:0;background:none;font-size:1.2rem;padding:4px;opacity:.35}
-.fav.on{opacity:1}
-.qty{display:flex;align-items:center;gap:6px}
-.qbtn{width:36px;height:36px;border-radius:10px;border:0;background:var(--red);color:#fff;font-size:1.3rem;font-weight:700;line-height:1}
-.qbtn.minus{background:var(--chip);color:var(--ink)}
-.qn{min-width:18px;text-align:center;font-weight:800}
-.empty{text-align:center;color:var(--muted);padding:30px 10px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0;box-shadow:var(--shadow)}
-.card h3{margin:0 0 8px;font-size:1.05rem;display:flex;justify-content:space-between;gap:8px}
-.line{display:flex;gap:10px;align-items:baseline;padding:4px 0;border-bottom:1px dashed var(--line)}
-.line:last-child{border-bottom:0}
-.line .q{font-weight:800;min-width:30px}
-.line .n{flex:1}
-.note{color:var(--muted);font-size:.85rem;display:block}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 16px;font-weight:700;background:var(--chip);text-decoration:none;color:var(--ink)}
-.btn.primary{background:var(--red);color:#fff}
-.btn.green{background:var(--green);color:#fff}
-.btn.block{width:100%;margin:6px 0}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.row .btn{flex:1}
-.muted{color:var(--muted);font-size:.9rem}
-.total{display:flex;justify-content:space-between;font-weight:800;font-size:1.15rem;padding:8px 2px}
-.bar{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);z-index:9}
-.bar .inner{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
-.bar .sum{flex:1;font-weight:700}
-.readout{font-size:1.6rem;line-height:1.5}
-.readout .line .q{min-width:54px}
-.readout .nrbig{font-weight:900;color:var(--red);min-width:70px}
-.wheel{font-size:1.3rem;text-align:center;padding:18px 8px;min-height:90px;display:grid;place-items:center}
-.wheel b{font-size:2rem;color:var(--red);display:block}
-dialog{border:0;border-radius:18px;padding:18px;background:var(--card);color:var(--ink);width:min(92vw,420px);box-shadow:0 10px 40px rgba(0,0,0,.3)}
-dialog::backdrop{background:rgba(0,0,0,.45)}
-dialog input,dialog textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);margin:6px 0 12px}
-.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
-.toast.on{opacity:1}
-.warn{background:#fff4d6;color:#6b4e00;border-radius:12px;padding:10px 12px;font-size:.9rem;margin-bottom:10px}
-@media (prefers-color-scheme: dark){.warn{background:#3a3010;color:#ffe6a3}}
-.x{border:0;background:none;color:var(--muted);font-size:1.1rem}
+.chip.cat.on{background:var(--gold);color:#2b1b00;border-color:var(--gold)}
+.resinfo{display:flex;justify-content:space-between;align-items:center;color:var(--dim);font-size:.82rem;padding:2px 0 0}
+.resinfo button{color:var(--gold);font-weight:700;font-size:.82rem}
+
+/* ---------- Menu ---------- */
+.sec{margin-top:18px}
+.sech{display:flex;align-items:center;gap:10px;margin:0 0 8px}
+.sech .ic{font-size:1.4rem}
+.sech h3{font-family:var(--display);font-size:1.1rem;margin:0;letter-spacing:.3px;flex:1}
+.sech .cnt{color:var(--dim);font-size:.8rem}
+.note-sec{color:var(--muted);font-size:.85rem;margin:-4px 0 8px}
+.item{display:flex;gap:12px;align-items:center;background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:10px 10px 10px 10px;margin:7px 0;position:relative;transition:border-color .2s,background .2s}
+.item.in{border-color:rgba(255,182,39,.55);background:linear-gradient(90deg,rgba(255,182,39,.08),var(--s1) 60%)}
+.nr{flex:none;min-width:52px;height:52px;padding:0 4px;border-radius:14px;background:var(--s3);display:grid;place-items:center;font-family:var(--display);font-size:.95rem;color:var(--gold);text-align:center;line-height:1}
+.nr.long{font-family:var(--body);font-weight:800;font-size:.68rem;line-height:1.1}
+.info{flex:1;min-width:0;cursor:pointer}
+.iname{font-weight:700;line-height:1.25}
+.idesc{color:var(--muted);font-size:.85rem;line-height:1.3;margin-top:1px}
+.meta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.price{font-weight:800}
+.badge-s{font-size:.72rem;font-weight:700;padding:2px 7px;border-radius:7px;background:var(--s3);color:var(--muted)}
+.veg{background:rgba(47,211,167,.14);color:var(--jade)}
+.hot{color:var(--chili);letter-spacing:-2px;font-size:.8rem}
+.whohas{font-size:.72rem;color:var(--gold);font-weight:700}
+.act{display:flex;flex-direction:column;align-items:center;gap:4px}
+.fav{font-size:1.05rem;opacity:.28;padding:2px;filter:grayscale(1)}
+.fav.on{opacity:1;filter:none}
+.step{display:flex;align-items:center;gap:6px}
+.qb{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;font-size:1.4rem;font-weight:700;line-height:1;display:grid;place-items:center;box-shadow:0 4px 12px rgba(239,51,64,.3)}
+.qb.minus{background:var(--s3);box-shadow:none;color:var(--ink)}
+.qn{min-width:16px;text-align:center;font-weight:800;color:var(--gold)}
+.empty{text-align:center;color:var(--muted);padding:36px 12px}
+.empty .big{font-size:2.4rem;display:block;margin-bottom:6px}
+
+/* Hits */
+.hits{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 4px}
+.hits::-webkit-scrollbar{display:none}
+.hit{flex:none;width:170px;background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:left}
+.hit b{color:var(--gold);font-family:var(--display);font-size:.9rem}
+.hit .n{font-weight:600;font-size:.88rem;line-height:1.2;margin:2px 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.hit .w{font-size:.75rem;color:var(--muted)}
+
+/* ---------- Cards ---------- */
+.card{background:var(--s1);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0}
+.card h3{margin:0 0 10px;font-size:1.05rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card h3 .amt{color:var(--gold);font-weight:800}
+.line{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.line:first-of-type{border-top:0}
+.line .q{font-weight:800;min-width:30px;color:var(--gold)}
+.line .n{flex:1;min-width:0}
+.line .n small{display:block;color:var(--muted)}
+.line .pr{font-weight:700;color:var(--muted);font-size:.9rem}
+.mini{width:30px;height:30px;border-radius:9px;background:var(--s3);font-weight:800;display:grid;place-items:center}
+.total{display:flex;justify-content:space-between;align-items:baseline;font-weight:800;font-size:1.25rem;padding:10px 4px}
+.total span:last-child{color:var(--gold);font-family:var(--display);font-weight:400}
+.howto{counter-reset:s;list-style:none;padding:0;margin:0}
+.howto li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;margin:8px 0;color:var(--muted);font-size:.93rem}
+.howto li::before{content:counter(s);flex:none;width:24px;height:24px;border-radius:8px;background:var(--s3);color:var(--gold);font-weight:800;display:grid;place-items:center;font-size:.8rem}
+.warn{display:flex;gap:10px;align-items:flex-start;background:rgba(255,182,39,.1);border:1px solid rgba(255,182,39,.35);color:#ffd88a;border-radius:16px;padding:12px;font-size:.9rem;margin:12px 0}
+
+/* ---------- Readout ---------- */
+.callhero{text-align:center;padding:22px 16px}
+.callbtn{width:100%;font-size:1.25rem;padding:18px;border-radius:20px}
+.ro{list-style:none;margin:0;padding:0}
+.ro li{display:flex;align-items:center;gap:12px;padding:12px 4px;border-top:1px solid var(--line);cursor:pointer;transition:opacity .2s}
+.ro li:first-child{border-top:0}
+.ro .q{font-family:var(--display);font-size:1.6rem;min-width:52px;color:var(--ink)}
+.ro .nn{font-family:var(--display);font-size:1.6rem;color:var(--gold);min-width:84px}
+.ro .nn.long{font-size:1rem;font-family:var(--body);font-weight:800}
+.ro .t{flex:1;font-size:.9rem;color:var(--muted);line-height:1.25}
+.ro .t em{display:block;color:var(--ink);font-style:normal;font-weight:700}
+.ro .ck{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center;font-weight:900}
+.ro li.done{opacity:.35}
+.ro li.done .q,.ro li.done .nn{text-decoration:line-through}
+.ro li.done .ck{background:var(--jade);border-color:var(--jade);color:#05261d}
+.ro li.done .ck::after{content:"✓"}
+.inp{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);outline:none}
+.inp:focus{border-color:var(--gold)}
+
+/* ---------- Dice ---------- */
+.dice{text-align:center;padding:24px 10px 10px;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dice .big{font-size:3.4rem;display:block;transition:transform .4s}
+.dice .big.roll{animation:roll .5s ease}
+@keyframes roll{0%{transform:rotate(0) scale(1)}50%{transform:rotate(200deg) scale(1.2)}100%{transform:rotate(360deg) scale(1)}}
+.dice .pnr{font-family:var(--display);color:var(--gold);font-size:2.2rem;line-height:1}
+.dice .pname{font-weight:700;font-size:1.15rem;margin:6px 0 2px}
+.range{width:100%;accent-color:var(--gold)}
+
+/* ---------- Info ---------- */
+.hours{width:100%;border-collapse:collapse}
+.hours td{padding:9px 4px;border-top:1px solid var(--line)}
+.hours tr:first-child td{border-top:0}
+.hours td:last-child{text-align:right;font-weight:700;line-height:1.3}
+.hours tr.today td{color:var(--gold)}
+.map{width:100%;height:260px;border:0;border-radius:16px;display:block;background:var(--s2);filter:grayscale(.2) contrast(1.05)}
+.scan{display:block;width:100%;border-radius:14px;border:1px solid var(--line);margin:8px 0;cursor:zoom-in}
+.al{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:.85rem;color:var(--muted)}
+.al b{color:var(--ink)}
+
+/* ---------- Bottom: cart bar + tabs ---------- */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:30;pointer-events:none}
+.cart{pointer-events:auto;max-width:720px;margin:0 auto 8px;padding:0 12px;transform:translateY(20px);opacity:0;transition:.25s}
+.cart.show{transform:none;opacity:1}
+.cart .in{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#2a1d19,#1d1412);border:1px solid rgba(255,182,39,.35);border-radius:20px;padding:10px 10px 10px 16px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.cart .txt{flex:1;line-height:1.2;min-width:0}
+.cart .txt b{color:var(--gold)}
+.cart .txt small{color:var(--muted);display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs{pointer-events:auto;background:rgba(20,15,13,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs .wrap{display:flex;height:var(--tab);padding:0 6px}
+.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--dim);font-size:.7rem;font-weight:700;position:relative}
+.tabs button .e{font-size:1.35rem;filter:grayscale(1);opacity:.7;transition:.2s}
+.tabs button.on{color:var(--ink)}
+.tabs button.on .e{filter:none;opacity:1;transform:translateY(-2px)}
+.tabs button.on::before{content:"";position:absolute;top:0;width:28px;height:3px;border-radius:0 0 3px 3px;background:var(--gold)}
+.tabs .bd{position:absolute;top:8px;left:calc(50% + 6px);background:var(--red);color:#fff;border-radius:999px;font-size:.66rem;padding:1px 6px;min-width:18px}
+
+/* ---------- Dialogs ---------- */
+dialog{border:0;padding:0;background:transparent;color:var(--ink);max-width:100vw;max-height:100dvh}
+dialog::backdrop{background:rgba(0,0,0,.6);backdrop-filter:blur(3px)}
+.sheet{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:560px}
+.sheet .box{background:var(--s1);border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));max-height:88dvh;overflow:auto;animation:up .25s ease}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.grab{width:42px;height:5px;border-radius:5px;background:var(--line);margin:0 auto 12px}
+.sheet h3{margin:0;font-size:1.25rem}
+.sheet .bignr{font-family:var(--display);color:var(--gold);font-size:1.1rem}
+.optrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.optrow .chip{color:var(--ink)}
+.optrow .chip.on{color:var(--bg)}
+label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margin:14px 0 6px}
+.qsel{display:flex;align-items:center;gap:14px;justify-content:center;margin:14px 0}
+.qsel .qn{font-size:1.6rem;min-width:30px}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.quick button{font-size:.8rem;padding:5px 10px;border-radius:999px;background:var(--s3);color:var(--muted);font-weight:600}
+#lightbox{width:100vw;height:100dvh}
+#lightbox .lb-in{width:100vw;height:100dvh;overflow:auto;background:#000}
+#lightbox img{display:block;width:100%;transition:width .2s}
+#lightbox img.z{width:260%}
+#lightbox .close{position:fixed;top:calc(12px + env(safe-area-inset-top));right:12px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-size:1.3rem;font-weight:800;z-index:2}
+#lightbox .hint{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#fff;padding:6px 12px;border-radius:999px;font-size:.8rem}
+.toast{position:fixed;left:50%;top:70px;transform:translate(-50%,-20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;z-index:100;max-width:90vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (min-width:720px){.hero{min-height:210px}.hero h1{font-size:2.2rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<header>
-  <div class="hrow">
-    <div class="logo">🥢 <span id="shopName">Asia Imbiss</span></div>
-    <button class="who" id="whoBtn">👤 Name?</button>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="dot">🥢</span><span>Asia Le</span></div>
+    <span class="pill" id="statusPill"><i></i><span>…</span></span>
+    <button class="who" id="whoBtn">👤 Name</button>
   </div>
-  <nav>
-    <button data-v="karte" class="on">Karte</button>
-    <button data-v="hilfe">🎲 Was essen?</button>
-    <button data-v="gruppe">Gruppe<span class="badge" id="grpBadge" hidden></span></button>
-    <button data-v="anruf">📞 Anrufen</button>
-  </nav>
 </header>
 
-<main>
-  <!-- KARTE -->
+<main class="wrap">
+
+  <!-- ================= KARTE ================= -->
   <section class="view on" id="v-karte">
-    <div id="demoWarn" class="warn" hidden>⚠️ Es stehen noch Beispielgerichte drin. Die echte Karte kommt in <code>menu.js</code>.</div>
-    <input class="search" id="q" type="search" placeholder="Suchen: Nummer, Gericht, Zutat …" autocomplete="off">
-    <div class="chips" id="cats"></div>
-    <div class="chips" id="filters"></div>
+    <div class="hero" id="hero">
+      <div class="in">
+        <h1>Hunger?<br><span>Vorbestellen.</span></h1>
+        <p>Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.</p>
+        <div class="row">
+          <button class="btn gold sm" data-go="wuerfeln">🎲 Ich weiß nicht, was ich will</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="searchbar">
+      <div class="sbox">
+        <span class="ico">🔎</span>
+        <input id="q" type="search" inputmode="search" placeholder="Nummer oder Gericht, z. B. H24, Ente, Curry" autocomplete="off" enterkeyhint="search">
+        <button class="clr hidden" id="qClr" aria-label="Suche löschen">✕</button>
+      </div>
+      <div class="chips" id="filters"></div>
+      <div class="chips" id="cats"></div>
+      <div class="resinfo hidden" id="resinfo"><span id="resTxt"></span><button id="resReset">Filter zurücksetzen</button></div>
+    </div>
+
+    <div id="hitsWrap" class="hidden">
+      <div class="sech" style="margin-top:14px"><span class="ic">🔥</span><h3>Die Gruppe nimmt schon</h3></div>
+      <div class="hits" id="hits"></div>
+    </div>
+
     <div id="list"></div>
   </section>
 
-  <!-- ENTSCHEIDUNGSHILFE -->
-  <section class="view" id="v-hilfe">
+  <!-- ================= WÜRFELN ================= -->
+  <section class="view" id="v-wuerfeln">
+    <h2 class="title">Was esse ich heute?</h2>
+    <p class="sub">Keine Lust zu entscheiden? Der Würfel hält sich an deine Filter.</p>
     <div class="card">
-      <h3>Keine Ahnung, was du willst?</h3>
-      <p class="muted">Lass den Zufall entscheiden. Die Filter von der Karte (z.&nbsp;B. veggie, scharf, Kategorie) gelten hier auch.</p>
-      <div class="wheel" id="wheel">Drück auf den Button 👇</div>
-      <div class="row">
-        <button class="btn primary" id="spin">🎲 Würfeln</button>
+      <div class="dice" id="dice"><span class="big" id="dieIc">🎲</span><div class="muted" style="color:var(--muted)">Tippe auf „Würfeln“</div></div>
+      <div class="btns">
+        <button class="btn red" id="spin">🎲 Würfeln</button>
         <button class="btn" id="spinFav">⭐ Aus Favoriten</button>
       </div>
-      <button class="btn green block" id="takeIt" hidden>✅ Nehm ich!</button>
+      <button class="btn jade block hidden" id="takeIt">✅ Nehm ich</button>
     </div>
     <div class="card">
-      <h3>Max. Budget</h3>
-      <div class="row" style="align-items:center">
-        <input type="range" id="budget" min="0" max="25" step="0.5" value="0" style="flex:3">
-        <span id="budgetLbl" class="muted" style="flex:1;text-align:right">egal</span>
-      </div>
+      <h3>Worauf hast du Lust?</h3>
+      <div class="chips" id="dFilters" style="margin:0;padding:0 0 8px"></div>
+      <label class="lb">Kategorie</label>
+      <div class="chips" id="dCats" style="margin:0;padding:0"></div>
+      <label class="lb">Budget: <b id="budgetLbl" style="color:var(--gold)">egal</b></label>
+      <input type="range" class="range" id="budget" min="0" max="13" step="0.5" value="0">
     </div>
-    <div class="card" id="lastCard" hidden>
-      <h3>Hattest du letztes Mal</h3>
+    <div class="card hidden" id="lastCard">
+      <h3>Dein letztes Mal</h3>
       <div id="lastList"></div>
-      <button class="btn block" id="repeatLast">🔁 Nochmal dasselbe</button>
+      <button class="btn block" id="repeatLast" style="margin-top:10px">🔁 Nochmal genau das</button>
     </div>
   </section>
 
-  <!-- GRUPPE -->
-  <section class="view" id="v-gruppe">
+  <!-- ================= BESTELLUNG ================= -->
+  <section class="view" id="v-bestellung">
+    <h2 class="title">Gruppenbestellung</h2>
+    <p class="sub" id="grpSub">Noch leer.</p>
+    <div id="closedWarn"></div>
+    <div id="people"></div>
+    <div id="grpFoot" class="hidden">
+      <div class="total"><span>Gesamt</span><span id="grpTotal">0,00 €</span></div>
+      <div class="btns">
+        <button class="btn red" id="share">📤 Link teilen</button>
+        <a class="btn jade" id="waBtn" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+      <button class="btn gold block" data-go="anrufen">📞 Weiter zum Anrufen</button>
+      <button class="btn block" id="reset" style="margin-top:8px;color:var(--muted)">🗑️ Neue Bestellung starten</button>
+    </div>
     <div class="card">
-      <h3>So läuft's in der Gruppe</h3>
-      <ol class="muted" style="margin:0;padding-left:20px">
-        <li>Jeder sucht sich was aus (Name oben eintragen).</li>
-        <li><b>„Link teilen"</b> und in die Gruppe schicken.</li>
-        <li>Der Nächste öffnet den Link, packt seins dazu und teilt den neuen Link weiter.</li>
-        <li>Wer anruft, öffnet den letzten Link und geht auf <b>📞 Anrufen</b>.</li>
+      <h3>So geht's</h3>
+      <ol class="howto">
+        <li>Jeder sucht sich auf der Karte was aus.</li>
+        <li>„Link teilen“ und in die Gruppe schicken.</li>
+        <li>Der Nächste öffnet den Link, packt seins dazu und teilt weiter.</li>
+        <li>Wer anruft, öffnet den neuesten Link, tippt auf 📞 und liest nur noch die Nummern vor.</li>
       </ol>
     </div>
-    <div id="people"></div>
-    <div class="total"><span>Gesamt</span><span id="grpTotal">0,00 €</span></div>
-    <div class="row">
-      <button class="btn primary" id="share">🔗 Link teilen</button>
-      <button class="btn" id="reset">🗑️ Neue Bestellung</button>
-    </div>
   </section>
 
-  <!-- ANRUF / VORLESEN -->
-  <section class="view" id="v-anruf">
-    <a class="btn green block" id="callBtn" href="#">📞 Jetzt anrufen</a>
-    <p class="muted" style="text-align:center;margin:4px 0 12px" id="phoneLbl"></p>
-    <div class="card">
-      <h3><span>Zum Vorlesen</span><span class="muted" id="readCount"></span></h3>
-      <div class="readout" id="readout"></div>
+  <!-- ================= ANRUFEN ================= -->
+  <section class="view" id="v-anrufen">
+    <div class="callhero">
+      <a class="btn red callbtn" id="callBtn" href="#">📞 Jetzt anrufen</a>
+      <div style="color:var(--muted);margin-top:8px;font-size:.9rem" id="phoneLbl"></div>
     </div>
     <div class="card">
-      <h3>Abholname</h3>
-      <input class="search" id="pickupName" placeholder="z.&nbsp;B. Müller">
+      <h3><span>Zum Vorlesen</span><span class="amt" id="roCount"></span></h3>
+      <p style="color:var(--dim);font-size:.82rem;margin:-4px 0 6px">Tipp beim Vorlesen auf eine Zeile, dann wird sie abgehakt.</p>
+      <ul class="ro" id="readout"></ul>
     </div>
-    <div class="total"><span>Gesamt</span><span id="readTotal">0,00 €</span></div>
-    <button class="btn block" id="copyText">📋 Als Text kopieren (für WhatsApp)</button>
+    <div class="card">
+      <h3>Name für die Abholung</h3>
+      <input class="inp" id="pickupName" placeholder="z. B. Müller" autocomplete="name">
+    </div>
+    <div class="total"><span>Gesamt</span><span id="roTotal">0,00 €</span></div>
+    <div class="card">
+      <h3>Wer zahlt was</h3>
+      <div id="payList"></div>
+    </div>
+    <button class="btn block" id="copyText">📋 Bestellung als Text kopieren</button>
+  </section>
+
+  <!-- ================= INFOS ================= -->
+  <section class="view" id="v-infos">
+    <h2 class="title">Asia Imbiss Le</h2>
+    <p class="sub" id="infoStatus"></p>
+    <div class="card">
+      <h3>🕒 Öffnungszeiten</h3>
+      <table class="hours" id="hours"></table>
+    </div>
+    <div class="card">
+      <h3>📍 Adresse</h3>
+      <div style="font-weight:700;font-size:1.05rem" id="addr"></div>
+      <div class="btns">
+        <a class="btn gold" id="routeBtn" target="_blank" rel="noopener">🚗 Route starten</a>
+        <a class="btn" id="callBtn2">📞 Anrufen</a>
+      </div>
+      <iframe class="map" id="map" title="Karte: Asia Imbiss Le" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <div class="card">
+      <h3>📄 Original-Speisekarte</h3>
+      <p style="color:var(--muted);font-size:.88rem;margin:-4px 0 4px">Der Flyer zum Nachschauen. Antippen zum Vergrößern.</p>
+      <img class="scan" src="karte/seite-2.jpg" alt="Speisekarte Seite 1: Suppen, Vorspeisen, Reis, Nudeln, Huhn, Rind, Ente, Schwein, Vegetarisch, Meeresfrüchte" loading="lazy" data-zoom>
+      <img class="scan" src="karte/seite-1.jpg" alt="Speisekarte Seite 2: Spezialitäten, Beilagen, Desserts, Nudelbox, Öffnungszeiten" loading="lazy" data-zoom>
+    </div>
+    <div class="card">
+      <h3>⚠️ Allergene &amp; Zusatzstoffe</h3>
+      <div class="al" id="alList"></div>
+      <p style="color:var(--dim);font-size:.8rem;margin:10px 0 0">Alle Speisen mit Geschmacksverstärker (auf Wunsch auch ohne). Alle Preise in Euro inkl. MwSt. Angaben laut Flyer, ohne Gewähr.</p>
+    </div>
   </section>
 </main>
 
-<div class="bar" id="bar">
-  <div class="inner">
-    <div class="sum" id="barSum">Noch nichts ausgewählt</div>
-    <button class="btn primary" id="barGo">Zur Gruppe →</button>
+<div class="dock">
+  <div class="cart" id="cart">
+    <div class="in">
+      <div class="txt"><b id="cartMine"></b><small id="cartGrp"></small></div>
+      <button class="btn red sm" data-go="bestellung">Bestellung →</button>
+    </div>
   </div>
+  <nav class="tabs">
+    <div class="wrap">
+      <button data-v="karte" class="on"><span class="e">🍜</span>Karte</button>
+      <button data-v="wuerfeln"><span class="e">🎲</span>Würfeln</button>
+      <button data-v="bestellung"><span class="e">🧾</span>Bestellung<span class="bd hidden" id="tabBadge"></span></button>
+      <button data-v="anrufen"><span class="e">📞</span>Anrufen</button>
+      <button data-v="infos"><span class="e">📍</span>Infos</button>
+    </div>
+  </nav>
 </div>
 
-<dialog id="nameDlg">
-  <form method="dialog">
-    <h3 style="margin-top:0">Wie heißt du?</h3>
-    <p class="muted">Damit die Gruppe sieht, wer was bestellt, und am Ende jeder weiß, was er zahlt.</p>
-    <input id="nameIn" maxlength="24" placeholder="Dein Name" required>
-    <button class="btn primary block" value="ok">Passt</button>
+<!-- Name -->
+<dialog id="nameDlg" class="sheet">
+  <form method="dialog" class="box">
+    <div class="grab"></div>
+    <h3>Wie heißt du? 👋</h3>
+    <p style="color:var(--muted);margin:6px 0 12px;font-size:.92rem">Damit die Gruppe sieht, wer was nimmt, und am Ende jeder weiß, was er zahlt.</p>
+    <input class="inp" id="nameIn" maxlength="20" placeholder="Dein Name" autocomplete="given-name" enterkeyhint="done">
+    <button class="btn red block" value="ok" style="margin-top:12px">Los geht's</button>
   </form>
 </dialog>
 
-<dialog id="noteDlg">
-  <form method="dialog">
-    <h3 style="margin-top:0" id="noteTitle">Sonderwunsch</h3>
-    <textarea id="noteIn" rows="2" maxlength="60" placeholder="z.&nbsp;B. ohne Zwiebeln, extra scharf"></textarea>
-    <div class="row"><button class="btn" value="cancel">Abbrechen</button><button class="btn primary" value="ok">Speichern</button></div>
-  </form>
+<!-- Item detail -->
+<dialog id="itemDlg" class="sheet">
+  <form method="dialog" class="box" id="itemBox"></form>
+</dialog>
+
+<!-- Lightbox -->
+<dialog id="lightbox">
+  <div class="lb-in"><img id="lbImg" alt=""></div>
+  <button class="close" id="lbClose" aria-label="Schließen">✕</button>
+  <div class="hint">Antippen zum Zoomen · wischen zum Verschieben</div>
 </dialog>
 
 <div class="toast" id="toast"></div>
@@ -201,283 +422,411 @@ dialog input,dialog textarea{width:100%;padding:10px 12px;border-radius:10px;bor
 <script src="menu.js"></script>
 <script>
 (() => {
-  const MENU = (window.MENU || []).map(m => ({ tags: [], desc: "", ...m, nr: String(m.nr) }));
-  const SHOP = window.IMBISS || {};
-  const byNr = Object.fromEntries(MENU.map(m => [m.nr, m]));
-  const $ = s => document.querySelector(s);
-  const eur = v => v.toFixed(2).replace(".", ",") + " €";
-  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const store = {
-    get(k, d) { try { const v = localStorage.getItem("ail_" + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
-    set(k, v) { try { localStorage.setItem("ail_" + k, JSON.stringify(v)); } catch {} },
+"use strict";
+const SHOP = window.IMBISS, CATS = window.CATEGORIES, ALG = window.ALLERGENE;
+const MENU = window.MENU.map(m => ({ hot: 0, veg: false, desc: "", al: "", ...m }));
+const byNr = Object.fromEntries(MENU.map(m => [m.nr, m]));
+const catIcon = Object.fromEntries(CATS.map(c => [c.id, c.icon]));
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const eur = v => v.toFixed(2).replace(".", ",") + " €";
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ß/g, "ss");
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("ail2_" + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("ail2_" + k, JSON.stringify(v)); } catch {} },
+};
+const alTokens = m => m.al ? m.al.split(",").map(s => s.trim()).filter(Boolean) : [];
+const hasAl = (m, codes) => alTokens(m).some(t => codes.includes(t));
+const isLong = nr => nr.length > 4;
+
+// ---------- Filters ----------
+const FILTERS = [
+  { id: "fav", label: "⭐ Favoriten", test: m => favs.has(m.nr) },
+  { id: "veg", label: "🌱 Vegetarisch", test: m => m.veg },
+  { id: "mild", label: "😌 Nicht scharf", test: m => !m.hot },
+  { id: "hot", label: "🌶️ Scharf", test: m => m.hot >= 1 },
+  { id: "fire", label: "🔥 Richtig scharf", test: m => m.hot >= 3 },
+  { id: "nopeanut", label: "🥜 Ohne Erdnuss", test: m => !hasAl(m, ["5", "8"]) && !(m.opts || []).length },
+  { id: "nosea", label: "🦐 Ohne Meeresfrüchte", test: m => !hasAl(m, ["2", "4", "14"]) },
+  { id: "nomilk", label: "🥛 Ohne Milch", test: m => !hasAl(m, ["7", "H"]) },
+  { id: "cheap", label: "💸 Unter 9 €", test: m => m.price < 9 },
+];
+const fById = Object.fromEntries(FILTERS.map(f => [f.id, f]));
+
+// ---------- State ----------
+let me = store.get("name", "");
+let favs = new Set(store.get("favs", []));
+let group = readHash() || store.get("group", []);
+let active = new Set(), cat = "", query = "", budget = 0, pick = null;
+let done = new Set(store.get("done", []));
+
+function readHash() {
+  const m = location.hash.match(/^#o=(.+)$/); if (!m) return null;
+  try {
+    const g = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))));
+    return Array.isArray(g) ? g.filter(p => p && typeof p.n === "string" && Array.isArray(p.i))
+      .map(p => ({ n: p.n.slice(0, 20), i: p.i.filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 50), String(x[2] || "").slice(0, 60)]) })) : null;
+  } catch { return null; }
+}
+const hashOf = () => "#o=" + btoa(unescape(encodeURIComponent(JSON.stringify(group.filter(p => p.i.length))))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const shareUrl = () => location.origin + location.pathname + hashOf();
+
+function commit() {
+  group = group.filter(p => p.i.length || p.n === me);
+  store.set("group", group);
+  const has = group.some(p => p.i.length);
+  history.replaceState(null, "", has ? hashOf() : location.pathname);
+  render();
+}
+const mine = () => { let p = group.find(p => p.n === me); if (!p) { p = { n: me, i: [] }; group.push(p); } return p; };
+const myP = () => group.find(p => p.n === me);
+const qtyOf = (p, nr) => p ? p.i.filter(x => x[0] === nr).reduce((a, x) => a + x[1], 0) : 0;
+const sumP = p => p.i.reduce((a, [nr, q]) => a + byNr[nr].price * q, 0);
+const people = () => group.filter(p => p.i.length);
+const countAll = () => group.reduce((a, p) => a + p.i.reduce((b, x) => b + x[1], 0), 0);
+
+function needName(then) {
+  if (me) return then();
+  openName(then);
+}
+function openName(then) {
+  const d = $("#nameDlg"); $("#nameIn").value = me;
+  d.onclose = () => {
+    const v = $("#nameIn").value.trim().slice(0, 20);
+    if (v && v !== me) rename(v);
+    if (me && then) then();
   };
+  d.showModal(); setTimeout(() => $("#nameIn").focus(), 50);
+}
+function rename(v) {
+  const old = myP(), clash = group.find(p => p.n === v);
+  if (old && clash && old !== clash) { clash.i.push(...old.i); group = group.filter(p => p !== old); }
+  else if (old) old.n = v;
+  me = v; store.set("name", me); commit();
+}
 
-  // ---- State -------------------------------------------------------
-  // group: [{ n: "Name", i: [[nr, qty, note], ...] }]
-  let me = store.get("name", "");
-  let favs = new Set(store.get("favs", []));
-  let group = loadGroupFromHash() || store.get("group", []);
-  let activeCat = "Alle", activeTags = new Set(), query = "", pick = null;
+function add(nr, note = "", n = 1) {
+  needName(() => {
+    const p = mine(), ex = p.i.find(x => x[0] === nr && x[2] === note);
+    ex ? ex[1] += n : p.i.push([nr, n, note]);
+    buzz(); commit();
+    const m = byNr[nr];
+    toast(`✓ ${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""} hinzugefügt`);
+  });
+}
+function sub(nr) {
+  const p = myP(); if (!p) return;
+  let idx = -1; p.i.forEach((x, i) => { if (x[0] === nr) idx = i; });
+  if (idx < 0) return;
+  if (--p.i[idx][1] <= 0) p.i.splice(idx, 1);
+  buzz(); commit();
+}
+const buzz = () => { try { navigator.vibrate && navigator.vibrate(12); } catch {} };
+let tT; function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("on"); clearTimeout(tT); tT = setTimeout(() => el.classList.remove("on"), 1500); }
 
-  function loadGroupFromHash() {
-    const m = location.hash.match(/^#o=(.+)$/);
-    if (!m) return null;
-    try {
-      const raw = decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/"))));
-      const g = JSON.parse(raw);
-      return Array.isArray(g) ? g.filter(p => p && p.n && Array.isArray(p.i)) : null;
-    } catch { return null; }
+// ---------- Opening hours ----------
+const DAYS = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+const toMin = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+function status(now = new Date()) {
+  const d = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
+  for (const r of SHOP.hours[d]) {
+    const [a, b] = r.split("-").map(toMin);
+    if (mins >= a && mins < b) return { open: true, short: "Offen", text: `Jetzt geöffnet bis ${r.split("-")[1]} Uhr`, closesIn: b - mins };
   }
-  function groupToHash() {
-    const s = btoa(unescape(encodeURIComponent(JSON.stringify(group)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-    return "#o=" + s;
-  }
-  function save() {
-    group = group.filter(p => p.i.length || p.n === me);
-    store.set("group", group);
-    history.replaceState(null, "", group.some(p => p.i.length) ? groupToHash() : location.pathname);
-    renderAll();
-  }
-  function mine() {
-    let p = group.find(p => p.n === me);
-    if (!p) { p = { n: me, i: [] }; group.push(p); }
-    return p;
-  }
-  function myQty(nr) { const p = group.find(p => p.n === me); return p ? p.i.filter(x => x[0] === nr).reduce((a, x) => a + x[1], 0) : 0; }
-
-  function ensureName(then) {
-    if (me) return then && then();
-    $("#nameIn").value = "";
-    $("#nameDlg").showModal();
-    $("#nameDlg").onclose = () => {
-      const v = $("#nameIn").value.trim();
-      if (v) { renameMe(v); then && then(); }
-    };
-  }
-  function renameMe(v) {
-    const old = group.find(p => p.n === me);
-    const clash = group.find(p => p.n === v);
-    if (old && clash && old !== clash) { clash.i.push(...old.i); group = group.filter(p => p !== old); }
-    else if (old) old.n = v;
-    me = v; store.set("name", me); save();
-  }
-
-  function add(nr, delta) {
-    ensureName(() => {
-      const p = mine();
-      if (delta > 0) {
-        const plain = p.i.find(x => x[0] === nr && !x[2]);
-        plain ? plain[1]++ : p.i.push([nr, 1, ""]);
-        vibrate();
-      } else {
-        const idx = p.i.map(x => x[0]).lastIndexOf(nr);
-        if (idx >= 0) { p.i[idx][1]--; if (p.i[idx][1] <= 0) p.i.splice(idx, 1); }
+  for (let k = 0; k < 8; k++) {
+    const dd = (d + k) % 7;
+    for (const r of SHOP.hours[dd]) {
+      const a = toMin(r.split("-")[0]);
+      if (k > 0 || a > mins) {
+        const when = k === 0 ? "heute" : k === 1 ? "morgen" : DAYS[dd];
+        return { open: false, short: k === 0 ? "ab " + r.split("-")[0] : "Zu", text: `Geschlossen, öffnet ${when} um ${r.split("-")[0]} Uhr` };
       }
-      save();
-    });
-  }
-  const vibrate = () => { try { navigator.vibrate && navigator.vibrate(15); } catch {} };
-
-  // ---- Render: Karte ----------------------------------------------
-  const cats = ["Alle", ...new Set(MENU.map(m => m.cat || "Sonstiges"))];
-  const allTags = [...new Set(MENU.flatMap(m => m.tags))];
-  const tagLabel = { veggie: "🌱 Veggie", scharf: "🌶️ Scharf", beliebt: "🔥 Beliebt" };
-
-  function filtered() {
-    const q = query.toLowerCase().trim();
-    const max = +$("#budget").value;
-    return MENU.filter(m =>
-      (activeCat === "Alle" || (m.cat || "Sonstiges") === activeCat) &&
-      [...activeTags].every(t => t === "fav" ? favs.has(m.nr) : m.tags.includes(t)) &&
-      (!max || m.price <= max) &&
-      (!q || m.nr.toLowerCase() === q || (m.nr + " " + m.name + " " + m.desc + " " + (m.cat || "")).toLowerCase().includes(q)));
-  }
-
-  function renderChips() {
-    $("#cats").innerHTML = cats.map(c => `<button class="chip ${c === activeCat ? "on" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
-    $("#filters").innerHTML = ["fav", ...allTags].map(t =>
-      `<button class="chip ${activeTags.has(t) ? "on" : ""}" data-tag="${esc(t)}">${t === "fav" ? "⭐ Favoriten" : esc(tagLabel[t] || t)}</button>`).join("");
-  }
-
-  function itemHTML(m) {
-    const q = myQty(m.nr);
-    return `<div class="item">
-      <div class="nr">${esc(m.nr)}</div>
-      <div class="info">
-        <div class="iname">${esc(m.name)}<span class="tags">${m.tags.map(t => `<span class="tag t-${esc(t)}">${esc((tagLabel[t] || t).split(" ")[0])}</span>`).join("")}</span></div>
-        ${m.desc ? `<div class="idesc">${esc(m.desc)}</div>` : ""}
-        <div class="price">${eur(m.price)} <button class="fav ${favs.has(m.nr) ? "on" : ""}" data-fav="${esc(m.nr)}" aria-label="Favorit">⭐</button></div>
-      </div>
-      <div class="qty">
-        ${q ? `<button class="qbtn minus" data-sub="${esc(m.nr)}" aria-label="weniger">−</button><span class="qn">${q}</span>` : ""}
-        <button class="qbtn" data-add="${esc(m.nr)}" aria-label="hinzufügen">+</button>
-      </div>
-    </div>`;
-  }
-
-  function renderList() {
-    const items = filtered();
-    if (!items.length) { $("#list").innerHTML = `<div class="empty">Nichts gefunden 🤷</div>`; return; }
-    let html = "", last = null;
-    for (const m of items) {
-      const c = m.cat || "Sonstiges";
-      if (c !== last && activeCat === "Alle") { html += `<div class="cat">${esc(c)}</div>`; last = c; }
-      html += itemHTML(m);
     }
-    $("#list").innerHTML = html;
   }
+  return { open: false, short: "Zu", text: "Geschlossen" };
+}
 
-  // ---- Render: Gruppe ---------------------------------------------
-  const personTotal = p => p.i.reduce((a, [nr, q]) => a + (byNr[nr] ? byNr[nr].price * q : 0), 0);
+// ---------- Rendering: menu ----------
+function matches(m, q) {
+  if (!q) return true;
+  const nq = norm(q).replace(/\s+/g, "");
+  if (norm(m.nr).replace(/\s+/g, "") === nq) return true;
+  if (/^[a-z]?\d{1,2}$/.test(nq)) {               // Nummernsuche: "24" → H24, "h2" → H2x
+    const n = norm(m.nr);
+    return n.startsWith(nq) || n.replace(/^[a-z]0?/, "") === nq.replace(/^[a-z]0?/, "") && (!/^[a-z]/.test(nq) || n[0] === nq[0]);
+  }
+  const hay = norm([m.nr, m.name, m.desc, m.cat, m.veg ? "vegetarisch veggie" : "", m.hot ? "scharf spicy" : ""].join(" "));
+  return norm(q).split(/\s+/).every(w => hay.includes(w));
+}
+function filtered(opts = {}) {
+  const c = opts.cat !== undefined ? opts.cat : cat;
+  return MENU.filter(m => (!c || m.cat === c) && [...active].every(id => fById[id].test(m)) && (!opts.budget || m.price <= opts.budget) && matches(m, opts.q !== undefined ? opts.q : query));
+}
+const hotHTML = n => n ? `<span class="hot" title="Schärfe ${n} von 6">${"🌶️".repeat(Math.min(n, 3))}${n > 3 ? `<b style="letter-spacing:0;font-size:.72rem"> ×${n}</b>` : ""}</span>` : "";
+function othersWith(nr) { return people().filter(p => p.n !== me && qtyOf(p, nr)).map(p => p.n); }
 
-  function renderGroup() {
-    const ppl = group.filter(p => p.i.length);
-    $("#people").innerHTML = ppl.length ? ppl.map((p, pi) => `
-      <div class="card">
-        <h3><span>${p.n === me ? "👤 " : ""}${esc(p.n)}</span><span>${eur(personTotal(p))}</span></h3>
-        ${p.i.map(([nr, q, note], ii) => {
-          const m = byNr[nr];
-          return `<div class="line"><span class="q">${q}×</span><span class="n"><b>Nr. ${esc(nr)}</b> ${m ? esc(m.name) : "(unbekannt)"}${note ? `<span class="note">✏️ ${esc(note)}</span>` : ""}</span>
-          ${p.n === me ? `<button class="x" data-note="${ii}" title="Sonderwunsch">✏️</button><button class="x" data-del="${ii}" title="Entfernen">✕</button>` : ""}</div>`;
-        }).join("")}
-      </div>`).join("") : `<div class="empty">Noch hat keiner was ausgesucht.<br>Ab auf die <b>Karte</b>!</div>`;
-    const tot = ppl.reduce((a, p) => a + personTotal(p), 0);
-    $("#grpTotal").textContent = eur(tot);
-    const n = ppl.length;
-    $("#grpBadge").hidden = !n; $("#grpBadge").textContent = n;
-  }
+function itemHTML(m) {
+  const q = qtyOf(myP(), m.nr), o = othersWith(m.nr);
+  return `<div class="item ${q ? "in" : ""}" data-nr="${esc(m.nr)}">
+    <div class="nr ${isLong(m.nr) ? "long" : ""}">${isLong(m.nr) ? "🥡" : esc(m.nr)}</div>
+    <div class="info" data-open="${esc(m.nr)}">
+      <div class="iname">${esc(m.name)}</div>
+      ${m.desc ? `<div class="idesc">${esc(m.desc)}</div>` : ""}
+      <div class="meta"><span class="price">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">veggie</span>` : ""}${hotHTML(m.hot)}${o.length ? `<span class="whohas">👥 ${esc(o.slice(0, 2).join(", "))}${o.length > 2 ? " +" + (o.length - 2) : ""}</span>` : ""}</div>
+    </div>
+    <div class="act">
+      <div class="step">${q ? `<button class="qb minus" data-sub="${esc(m.nr)}" aria-label="Eins weniger">−</button><span class="qn">${q}</span>` : ""}<button class="qb" data-add="${esc(m.nr)}" aria-label="Hinzufügen">+</button></div>
+      <button class="fav ${favs.has(m.nr) ? "on" : ""}" data-fav="${esc(m.nr)}" aria-label="Favorit">⭐</button>
+    </div>
+  </div>`;
+}
 
-  // ---- Render: Anruf ----------------------------------------------
-  function aggregate() {
-    const map = new Map();
-    for (const p of group) for (const [nr, q, note] of p.i) {
-      const k = nr + "|" + (note || "");
-      const e = map.get(k) || { nr, note, q: 0 };
-      e.q += q; map.set(k, e);
-    }
-    const num = s => { const n = parseFloat(s); return isNaN(n) ? 1e9 : n; };
-    return [...map.values()].sort((a, b) => num(a.nr) - num(b.nr) || a.nr.localeCompare(b.nr) || (a.note ? 1 : -1));
+function renderMenu() {
+  const items = filtered();
+  const isFiltering = !!(query || active.size || cat);
+  $("#resinfo").classList.toggle("hidden", !isFiltering);
+  $("#resTxt").textContent = `${items.length} von ${MENU.length} Gerichten`;
+  $("#hero").classList.toggle("hidden", !!query);
+  if (!items.length) {
+    $("#list").innerHTML = `<div class="empty"><span class="big">🥢</span>Nichts gefunden.<br><button class="btn sm" style="margin-top:12px" id="emptyReset">Filter zurücksetzen</button></div>`;
+    return;
   }
-  function renderCall() {
-    const agg = aggregate();
-    $("#readout").innerHTML = agg.length ? agg.map(e => `<div class="line"><span class="q">${e.q}×</span><span class="nrbig">Nr.&nbsp;${esc(e.nr)}</span><span class="n" style="font-size:1rem">${byNr[e.nr] ? esc(byNr[e.nr].name) : ""}${e.note ? `<span class="note">✏️ ${esc(e.note)}</span>` : ""}</span></div>`).join("")
-      : `<div class="empty" style="font-size:1rem">Noch nichts zum Vorlesen.</div>`;
-    const count = agg.reduce((a, e) => a + e.q, 0);
-    $("#readCount").textContent = count ? count + " Gerichte" : "";
-    $("#readTotal").textContent = eur(group.reduce((a, p) => a + personTotal(p), 0));
-  }
-  function orderText() {
-    const lines = aggregate().map(e => `${e.q}x Nr. ${e.nr}${byNr[e.nr] ? " (" + byNr[e.nr].name + ")" : ""}${e.note ? " – " + e.note : ""}`);
-    const pn = $("#pickupName").value.trim();
-    return `🥢 Bestellung ${SHOP.name || ""}\n` + lines.join("\n") + (pn ? `\nAbholname: ${pn}` : "") +
-      `\nGesamt: ${$("#readTotal").textContent}\n\nWer zahlt was:\n` +
-      group.filter(p => p.i.length).map(p => `• ${p.n}: ${eur(personTotal(p))}`).join("\n");
-  }
+  const groups = {};
+  items.forEach(m => (groups[m.cat] = groups[m.cat] || []).push(m));
+  $("#list").innerHTML = CATS.filter(c => groups[c.id]).map(c => `
+    <div class="sec" id="sec-${esc(c.id)}">
+      <div class="sech"><span class="ic">${c.icon}</span><h3>${esc(c.id)}</h3><span class="cnt">${groups[c.id].length}</span></div>
+      ${c.id === "Beilagen" ? `<div class="note-sec">Nur zusammen mit einer Hauptspeise bestellbar.</div>` : ""}
+      ${groups[c.id].map(itemHTML).join("")}
+    </div>`).join("");
+}
+function chipsHTML(sel, list, attr, onCls = "") {
+  return list.map(x => `<button class="chip ${onCls} ${sel(x.id) ? "on" : ""}" data-${attr}="${esc(x.id)}">${x.label}</button>`).join("");
+}
+function renderChips() {
+  $("#filters").innerHTML = chipsHTML(id => active.has(id), FILTERS, "f");
+  const cl = [{ id: "", label: "Alle" }, ...CATS.map(c => ({ id: c.id, label: `${c.icon} ${c.id}` }))];
+  $("#cats").innerHTML = chipsHTML(id => cat === id, cl, "c", "cat");
+  $("#dFilters").innerHTML = chipsHTML(id => active.has(id), FILTERS.filter(f => f.id !== "fav"), "f");
+  $("#dCats").innerHTML = chipsHTML(id => cat === id, cl, "c", "cat");
+}
+function renderHits() {
+  const tally = {};
+  for (const p of people()) if (p.n !== me) for (const [nr, q] of p.i) { tally[nr] = tally[nr] || { q: 0, who: new Set() }; tally[nr].q += q; tally[nr].who.add(p.n); }
+  const top = Object.entries(tally).sort((a, b) => b[1].who.size - a[1].who.size || b[1].q - a[1].q).slice(0, 8);
+  $("#hitsWrap").classList.toggle("hidden", !top.length || !!query);
+  $("#hits").innerHTML = top.map(([nr, t]) => { const m = byNr[nr]; return `
+    <button class="hit" data-open="${esc(nr)}"><b>${isLong(nr) ? "🥡" : esc(nr)}</b><div class="n">${esc(m.name)}</div><div class="w">👥 ${esc([...t.who].join(", "))}</div></button>`; }).join("");
+}
 
-  // ---- Render: Leiste ---------------------------------------------
-  function renderBar() {
-    const p = group.find(p => p.n === me);
-    const cnt = p ? p.i.reduce((a, x) => a + x[1], 0) : 0;
-    const all = group.reduce((a, p) => a + p.i.reduce((b, x) => b + x[1], 0), 0);
-    $("#barSum").innerHTML = cnt ? `Du: ${cnt} × · ${eur(personTotal(p))}<br><span class="muted">Gruppe: ${all} Gerichte</span>`
-      : all ? `Gruppe: ${all} Gerichte<br><span class="muted">Du hast noch nichts</span>` : "Noch nichts ausgewählt";
-    const v = document.querySelector(".view.on").id;
-    $("#bar").hidden = v === "v-gruppe" || v === "v-anruf";
-  }
-
-  function renderAll() {
-    $("#whoBtn").textContent = "👤 " + (me || "Name?");
-    renderChips(); renderList(); renderGroup(); renderCall(); renderBar(); renderLast();
-  }
-
-  // ---- Entscheidungshilfe -----------------------------------------
-  function spin(fromFavs) {
-    let pool = filtered();
-    if (fromFavs) pool = pool.filter(m => favs.has(m.nr));
-    if (!pool.length) { toast(fromFavs ? "Noch keine Favoriten ⭐" : "Nichts passt zu den Filtern"); return; }
-    let t = 0; const steps = 14;
-    const tick = () => {
-      pick = pool[Math.floor(Math.random() * pool.length)];
-      $("#wheel").innerHTML = `<div><b>Nr. ${esc(pick.nr)}</b>${esc(pick.name)}<div class="muted">${eur(pick.price)}</div></div>`;
-      if (++t < steps) setTimeout(tick, 40 + t * 12); else { $("#takeIt").hidden = false; vibrate(); }
-    };
-    $("#takeIt").hidden = true; tick();
-  }
-  function renderLast() {
-    const last = store.get("last", []);
-    $("#lastCard").hidden = !last.length;
-    $("#lastList").innerHTML = last.map(([nr, q, note]) => `<div class="line"><span class="q">${q}×</span><span class="n"><b>Nr. ${esc(nr)}</b> ${byNr[nr] ? esc(byNr[nr].name) : ""}${note ? `<span class="note">✏️ ${esc(note)}</span>` : ""}</span></div>`).join("");
-  }
-
-  // ---- Navigation --------------------------------------------------
-  function show(v) {
-    document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
-    document.querySelectorAll(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
-    store.set("tab", v); renderBar(); scrollTo(0, 0);
-  }
-  let toastT;
-  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 1800); }
-  async function copy(text) {
-    try { await navigator.clipboard.writeText(text); toast("Kopiert ✅"); }
-    catch { prompt("Kopieren:", text); }
-  }
-
-  // ---- Events ------------------------------------------------------
-  document.querySelector("nav").onclick = e => { const b = e.target.closest("button"); if (b) show(b.dataset.v); };
-  $("#whoBtn").onclick = () => { $("#nameIn").value = me; $("#nameDlg").showModal(); $("#nameDlg").onclose = () => { const v = $("#nameIn").value.trim(); if (v && v !== me) renameMe(v); }; };
-  $("#q").oninput = e => { query = e.target.value; renderList(); };
-  $("#cats").onclick = e => { const b = e.target.closest("[data-cat]"); if (b) { activeCat = b.dataset.cat; renderChips(); renderList(); } };
-  $("#filters").onclick = e => { const b = e.target.closest("[data-tag]"); if (!b) return; const t = b.dataset.tag; activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t); renderChips(); renderList(); };
-  $("#list").onclick = e => {
-    const a = e.target.closest("[data-add]"), s = e.target.closest("[data-sub]"), f = e.target.closest("[data-fav]");
-    if (a) add(a.dataset.add, 1);
-    else if (s) add(s.dataset.sub, -1);
-    else if (f) { const nr = f.dataset.fav; favs.has(nr) ? favs.delete(nr) : favs.add(nr); store.set("favs", [...favs]); renderList(); }
+// ---------- Item sheet ----------
+function openItem(nr) {
+  const m = byNr[nr]; let opt = m.opts ? m.opts[0] : "", n = 1;
+  const als = alTokens(m).filter(t => ALG[t]);
+  const box = $("#itemBox");
+  const draw = () => {
+    const q = qtyOf(myP(), nr);
+    box.innerHTML = `<div class="grab"></div>
+      <div class="bignr">${m.sayName ? "🥡 Nudelbox" : "Nr. " + esc(m.nr)} · ${catIcon[m.cat]} ${esc(m.cat)}</div>
+      <h3 style="margin-top:4px">${esc(m.name)}</h3>
+      ${m.desc ? `<div style="color:var(--muted);margin-top:2px">${esc(m.desc)}</div>` : ""}
+      <div class="meta" style="margin-top:8px"><span class="price" style="font-size:1.2rem;color:var(--gold)">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">vegetarisch</span>` : ""}${hotHTML(m.hot)}${m.hot ? `<span class="badge-s">Schärfe ${m.hot}/6</span>` : ""}</div>
+      ${m.opts ? `<label class="lb">Sorte wählen</label><div class="optrow">${m.opts.map(o => `<button type="button" class="chip ${o === opt ? "on" : ""}" data-opt="${esc(o)}">${esc(o)}</button>`).join("")}</div>` : ""}
+      <label class="lb">Sonderwunsch (optional)</label>
+      <input class="inp" id="noteIn" maxlength="50" placeholder="z. B. ohne Zwiebeln, extra scharf">
+      <div class="quick">${["ohne Zwiebeln", "extra scharf", "nicht scharf", "ohne Geschmacksverstärker", "Soße extra"].map(t => `<button type="button" data-qn="${t}">${t}</button>`).join("")}</div>
+      <div class="qsel"><button type="button" class="qb minus" id="nMinus">−</button><span class="qn" id="nVal">${n}</span><button type="button" class="qb" id="nPlus">+</button></div>
+      <button type="button" class="btn red block" id="addBtn">Hinzufügen · ${eur(m.price * n)}</button>
+      ${q ? `<div style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:8px">Du hast schon ${q}× davon in der Bestellung</div>` : ""}
+      ${als.length ? `<details style="margin-top:14px;color:var(--muted);font-size:.85rem"><summary style="cursor:pointer">Allergene &amp; Zusatzstoffe (${esc(m.al)})</summary><div style="margin-top:6px">${als.map(t => `<b style="color:var(--ink)">${esc(t)}</b> ${esc(ALG[t])}`).join(" · ")}</div></details>` : ""}
+      <button type="button" class="btn block" style="margin-top:10px" id="favBtn">${favs.has(nr) ? "⭐ Aus Favoriten entfernen" : "☆ Zu Favoriten"}</button>`;
+    const note = $("#noteIn");
+    box.querySelectorAll("[data-opt]").forEach(b => b.onclick = () => { opt = b.dataset.opt; const v = note.value; draw(); $("#noteIn").value = v; });
+    box.querySelectorAll("[data-qn]").forEach(b => b.onclick = () => { note.value = note.value ? note.value + ", " + b.dataset.qn : b.dataset.qn; });
+    const upd = () => { $("#nVal").textContent = n; $("#addBtn").textContent = `Hinzufügen · ${eur(m.price * n)}`; };
+    $("#nMinus").onclick = () => { n = Math.max(1, n - 1); upd(); };
+    $("#nPlus").onclick = () => { n = Math.min(20, n + 1); upd(); };
+    $("#addBtn").onclick = () => { const nt = [opt, note.value.trim()].filter(Boolean).join(", "); $("#itemDlg").close(); add(nr, nt, n); };
+    $("#favBtn").onclick = () => { toggleFav(nr); draw(); };
   };
-  $("#people").onclick = e => {
-    const d = e.target.closest("[data-del]"), n = e.target.closest("[data-note]");
-    const p = group.find(p => p.n === me); if (!p) return;
-    if (d) { p.i.splice(+d.dataset.del, 1); save(); }
-    if (n) {
-      const it = p.i[+n.dataset.note];
-      $("#noteTitle").textContent = `Sonderwunsch für Nr. ${it[0]}`;
-      $("#noteIn").value = it[2] || ""; $("#noteDlg").showModal();
-      $("#noteDlg").onclose = () => { if ($("#noteDlg").returnValue === "ok") { it[2] = $("#noteIn").value.trim(); save(); } };
-    }
-  };
-  $("#share").onclick = async () => {
-    if (!group.some(p => p.i.length)) return toast("Erst was aussuchen 🙂");
-    const p = group.find(p => p.n === me); if (p && p.i.length) store.set("last", p.i);
-    const url = location.origin + location.pathname + groupToHash();
-    const who = group.filter(p => p.i.length).map(p => p.n).join(", ");
-    const text = `🥢 Asia-Bestellung – bisher dabei: ${who}. Pack deins dazu und schick den neuen Link weiter:`;
-    if (navigator.share) { try { await navigator.share({ title: "Asia Imbiss Bestellung", text, url }); return; } catch (err) { if (err.name === "AbortError") return; } }
-    copy(text + "\n" + url);
-  };
-  $("#reset").onclick = () => { if (confirm("Ganze Gruppenbestellung löschen und neu anfangen?")) { group = []; save(); } };
-  $("#barGo").onclick = () => show("gruppe");
-  $("#spin").onclick = () => spin(false);
-  $("#spinFav").onclick = () => spin(true);
-  $("#takeIt").onclick = () => { if (pick) { add(pick.nr, 1); toast(`Nr. ${pick.nr} hinzugefügt ✅`); $("#takeIt").hidden = true; } };
-  $("#budget").oninput = e => { $("#budgetLbl").textContent = +e.target.value ? "bis " + eur(+e.target.value) : "egal"; renderList(); };
-  $("#repeatLast").onclick = () => ensureName(() => { const p = mine(); p.i = store.get("last", []).map(x => [...x]); save(); toast("Wie letztes Mal ✅"); });
-  $("#copyText").onclick = () => copy(orderText());
-  $("#pickupName").value = store.get("pickup", "");
-  $("#pickupName").oninput = e => store.set("pickup", e.target.value);
-  $("#callBtn").onclick = () => { const p = group.find(p => p.n === me); if (p && p.i.length) store.set("last", p.i); };
-  window.addEventListener("hashchange", () => { const g = loadGroupFromHash(); if (g) { group = g; store.set("group", group); renderAll(); } });
+  draw(); $("#itemDlg").showModal();
+}
+function toggleFav(nr) { favs.has(nr) ? favs.delete(nr) : favs.add(nr); store.set("favs", [...favs]); renderMenu(); }
+$("#itemDlg").addEventListener("click", e => { if (e.target.id === "itemDlg") e.target.close(); });
+$("#nameDlg").addEventListener("click", e => { if (e.target.id === "nameDlg") e.target.close(); });
 
-  // ---- Init --------------------------------------------------------
-  $("#shopName").textContent = SHOP.name || "Asia Imbiss";
-  $("#callBtn").href = "tel:" + (SHOP.phone || "");
-  $("#phoneLbl").textContent = SHOP.phoneDisplay || SHOP.phone || "";
-  $("#demoWarn").hidden = !MENU.some(m => /^Beispiel/.test(m.name));
-  const max = Math.ceil(Math.max(10, ...MENU.map(m => m.price)));
-  $("#budget").max = max;
-  if (location.hash.startsWith("#o=")) { store.set("group", group); show("gruppe"); } else show(store.get("tab", "karte"));
-  renderAll();
-  if (!me) setTimeout(() => ensureName(), 400);
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+// ---------- Rendering: order ----------
+function lineHTML([nr, q, note], idx, editable) {
+  const m = byNr[nr];
+  return `<div class="line"><span class="q">${q}×</span>
+    <span class="n"><b style="color:var(--gold)">${m.sayName ? "🥡" : esc(nr)}</b> ${esc(m.name)}${note ? `<small>✏️ ${esc(note)}</small>` : ""}</span>
+    <span class="pr">${eur(m.price * q)}</span>
+    ${editable ? `<button class="mini" data-dec="${idx}" aria-label="weniger">−</button><button class="mini" data-inc="${idx}" aria-label="mehr">+</button>` : ""}</div>`;
+}
+function renderOrder() {
+  const ppl = people(), cnt = countAll(), tot = ppl.reduce((a, p) => a + sumP(p), 0);
+  $("#grpSub").textContent = ppl.length ? `${ppl.length} ${ppl.length === 1 ? "Person" : "Personen"} · ${cnt} Gerichte` : "Noch hat keiner was ausgesucht.";
+  const mineFirst = [...ppl].sort((a, b) => (b.n === me) - (a.n === me));
+  $("#people").innerHTML = mineFirst.length ? mineFirst.map(p => `
+    <div class="card" ${p.n === me ? 'style="border-color:rgba(255,182,39,.4)"' : ""}>
+      <h3><span>${p.n === me ? "👤 Du" : "🙂 " + esc(p.n)}</span><span class="amt">${eur(sumP(p))}</span></h3>
+      ${p.i.map((x, i) => lineHTML(x, i, p.n === me)).join("")}
+      ${p.n !== me ? `<button class="btn sm block" style="margin-top:8px" data-copy="${esc(p.n)}">➕ Ich nehm dasselbe</button>` : ""}
+    </div>`).join("") : `<div class="empty"><span class="big">🧾</span>Noch leer. Such dir was auf der Karte aus!<br><button class="btn red sm" style="margin-top:12px" data-go="karte">Zur Karte</button></div>`;
+  $("#grpFoot").classList.toggle("hidden", !ppl.length);
+  $("#grpTotal").textContent = eur(tot);
+  $("#waBtn").href = "https://wa.me/?text=" + encodeURIComponent(shareText() + "\n" + shareUrl());
+  const s = status();
+  const onlySides = ppl.length && ppl.some(p => p.i.every(([nr]) => byNr[nr].cat === "Beilagen"));
+  $("#closedWarn").innerHTML = (s.open ? (s.closesIn < 30 ? `<div class="warn">⏰ <span>Achtung: nur noch ${s.closesIn} Min. geöffnet!</span></div>` : "") : `<div class="warn">🌙 <span>${esc(s.text)}.</span></div>`)
+    + (onlySides ? `<div class="warn">🍚 <span>Beilagen gibt's nur zusammen mit einer Hauptspeise.</span></div>` : "");
+}
+function aggregate() {
+  const map = new Map();
+  for (const p of group) for (const [nr, q, note] of p.i) {
+    const k = nr + "|" + note, e = map.get(k) || { nr, note, q: 0 }; e.q += q; map.set(k, e);
+  }
+  const order = Object.fromEntries(MENU.map((m, i) => [m.nr, i]));
+  return [...map.values()].sort((a, b) => (!!byNr[a.nr].sayName - !!byNr[b.nr].sayName) || order[a.nr] - order[b.nr] || (a.note > b.note ? 1 : -1));
+}
+function renderCall() {
+  const agg = aggregate(), cnt = agg.reduce((a, e) => a + e.q, 0);
+  const keys = new Set(agg.map(e => e.nr + "|" + e.note));
+  done = new Set([...done].filter(k => keys.has(k)));
+  $("#readout").innerHTML = agg.length ? agg.map(e => { const m = byNr[e.nr], k = e.nr + "|" + e.note; return `
+    <li data-k="${esc(k)}" class="${done.has(k) ? "done" : ""}">
+      <span class="q">${e.q}×</span>
+      <span class="nn ${m.sayName ? "long" : ""}">${m.sayName ? esc(m.name.replace("Nudelbox ", "Nudelbox<br>")).replace("&lt;br&gt;", "<br>") : esc(e.nr)}</span>
+      <span class="t">${m.sayName ? "" : esc(m.name)}${e.note ? `<em>✏️ ${esc(e.note)}</em>` : ""}</span>
+      <span class="ck"></span></li>`; }).join("") : `<li style="cursor:default;color:var(--muted);justify-content:center">Noch nichts zum Vorlesen.</li>`;
+  $("#roCount").textContent = cnt ? `${cnt} Gerichte` : "";
+  $("#roTotal").textContent = eur(people().reduce((a, p) => a + sumP(p), 0));
+  $("#payList").innerHTML = people().map(p => `<div class="line"><span class="n">${p.n === me ? "👤 " : ""}${esc(p.n)}</span><span class="pr" style="color:var(--ink)">${eur(sumP(p))}</span></div>`).join("") || `<div style="color:var(--muted)">–</div>`;
+}
+function shareText() {
+  const who = people().map(p => p.n).join(", ");
+  return `🥢 Asia Le Bestellung · bisher: ${who || "noch keiner"} (${countAll()} Gerichte). Pack deins dazu und schick den neuen Link zurück:`;
+}
+function orderText() {
+  const pn = $("#pickupName").value.trim();
+  return `🥢 Bestellung ${SHOP.name}\n` + aggregate().map(e => { const m = byNr[e.nr]; return `${e.q}x ${m.sayName ? m.name : "Nr. " + e.nr + " " + m.name}${e.note ? " (" + e.note + ")" : ""}`; }).join("\n")
+    + (pn ? `\nAbholname: ${pn}` : "") + `\nGesamt: ${$("#roTotal").textContent}\n\n💶 Wer zahlt was:\n` + people().map(p => `• ${p.n}: ${eur(sumP(p))}`).join("\n");
+}
+
+// ---------- Rendering: dice / last ----------
+function renderLast() {
+  const last = (store.get("last", []) || []).filter(x => byNr[x[0]]);
+  $("#lastCard").classList.toggle("hidden", !last.length);
+  $("#lastList").innerHTML = last.map((x, i) => lineHTML(x, i, false)).join("");
+}
+function spin(fromFav) {
+  let pool = filtered({ q: "", budget });
+  if (fromFav) pool = pool.filter(m => favs.has(m.nr));
+  pool = pool.filter(m => m.cat !== "Beilagen");
+  if (!pool.length) return toast(fromFav ? "Noch keine Favoriten ⭐" : "Nichts passt zu den Filtern");
+  const ic = $("#dieIc"); $("#takeIt").classList.add("hidden");
+  let t = 0;
+  const tick = () => {
+    pick = pool[Math.floor(Math.random() * pool.length)];
+    $("#dice").innerHTML = `<div class="pnr">${pick.sayName ? "🥡" : esc(pick.nr)}</div><div class="pname">${esc(pick.name)}</div><div style="color:var(--muted)">${esc(pick.desc)}</div><div class="meta" style="justify-content:center"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    if (++t < 16) setTimeout(tick, 35 + t * t * 1.4); else { $("#takeIt").classList.remove("hidden"); buzz(); }
+  };
+  tick();
+}
+
+// ---------- Rendering: infos / chrome ----------
+function renderInfos() {
+  const s = status(), today = new Date().getDay();
+  const pill = $("#statusPill"); pill.className = "pill " + (s.open ? "open" : "closed"); pill.querySelector("span").textContent = s.short;
+  $("#infoStatus").innerHTML = (s.open ? "🟢 " : "🔴 ") + esc(s.text);
+  const rowsIdx = [[1, 2, 3, 4, 5], [6], [0]];
+  $("#hours").innerHTML = SHOP.hoursText.map(([d, t], i) => `<tr class="${rowsIdx[i].includes(today) ? "today" : ""}"><td>${esc(d)}${rowsIdx[i].includes(today) ? " · heute" : ""}</td><td>${esc(t)}</td></tr>`).join("");
+}
+function renderChrome() {
+  $("#whoBtn").textContent = "👤 " + (me || "Name");
+  const p = myP(), mc = p ? p.i.reduce((a, x) => a + x[1], 0) : 0, all = countAll();
+  $("#tabBadge").classList.toggle("hidden", !all); $("#tabBadge").textContent = all;
+  $("#cartMine").textContent = mc ? `Du: ${mc}× · ${eur(sumP(p))}` : `Gruppe: ${all} Gerichte`;
+  $("#cartGrp").textContent = people().length ? `👥 ${people().map(p => p.n).join(", ")}` : "";
+  const v = $(".view.on").id;
+  $("#cart").classList.toggle("show", all > 0 && (v === "v-karte" || v === "v-wuerfeln"));
+}
+function render() { renderChips(); renderMenu(); renderHits(); renderOrder(); renderCall(); renderLast(); renderChrome(); }
+
+// ---------- Navigation ----------
+function show(v, push = true) {
+  $$(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  $$(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+  if (v === "infos" && !$("#map").src) $("#map").src = "https://www.google.com/maps?q=" + encodeURIComponent(SHOP.name + ", " + SHOP.address) + "&z=16&output=embed";
+  if (v === "infos") renderInfos();
+  store.set("tab", v); renderChrome(); window.scrollTo({ top: 0 });
+}
+
+// ---------- Events ----------
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-f],[data-c],[data-inc],[data-dec],[data-copy],[data-zoom],#emptyReset");
+  if (!t) return;
+  const d = t.dataset;
+  if (d.add) { const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
+  else if (d.sub) sub(d.sub);
+  else if (d.fav) toggleFav(d.fav);
+  else if (d.open) openItem(d.open);
+  else if (d.go) show(d.go);
+  else if (d.f) { active.has(d.f) ? active.delete(d.f) : active.add(d.f); renderChips(); renderMenu(); }
+  else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); if ($("#v-karte").classList.contains("on")) window.scrollTo({ top: $(".searchbar").offsetTop - 56 }); }
+  else if (d.inc !== undefined) { const p = myP(); p.i[+d.inc][1]++; buzz(); commit(); }
+  else if (d.dec !== undefined) { const p = myP(); const x = p.i[+d.dec]; if (--x[1] <= 0) p.i.splice(+d.dec, 1); buzz(); commit(); }
+  else if (d.copy) { const src = group.find(p => p.n === d.copy); needName(() => { const p = mine(); src.i.forEach(([nr, q, n]) => { const ex = p.i.find(x => x[0] === nr && x[2] === n); ex ? ex[1] += q : p.i.push([nr, q, n]); }); commit(); toast("Übernommen ✓"); }); }
+  else if (d.zoom !== undefined) { $("#lbImg").src = t.src; $("#lbImg").classList.remove("z"); $("#lightbox").showModal(); }
+  else if (t.id === "emptyReset") resetFilters();
+});
+function resetFilters() { active.clear(); cat = ""; query = ""; $("#q").value = ""; $("#qClr").classList.add("hidden"); renderChips(); renderMenu(); renderHits(); }
+$$(".tabs button").forEach(b => b.onclick = () => show(b.dataset.v));
+$("#whoBtn").onclick = () => openName();
+let qT;
+$("#q").addEventListener("input", e => { query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter") { const r = filtered(); if (r.length === 1) { openItem(r[0].nr); } e.target.blur(); } });
+$("#qClr").onclick = () => { $("#q").value = ""; query = ""; $("#qClr").classList.add("hidden"); renderMenu(); renderHits(); $("#q").focus(); };
+$("#resReset").onclick = resetFilters;
+$("#readout").onclick = e => { const li = e.target.closest("li[data-k]"); if (!li) return; const k = li.dataset.k; done.has(k) ? done.delete(k) : done.add(k); store.set("done", [...done]); li.classList.toggle("done"); buzz(); };
+$("#share").onclick = async () => {
+  const p = myP(); if (p && p.i.length) store.set("last", p.i);
+  const url = shareUrl(), text = shareText();
+  if (navigator.share) { try { await navigator.share({ title: "Asia Le Bestellung", text, url }); return; } catch (err) { if (err.name === "AbortError") return; } }
+  copy(text + "\n" + url, "Link kopiert, jetzt in die Gruppe einfügen ✓");
+};
+$("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
+$("#reset").onclick = () => { if (confirm("Ganze Gruppenbestellung löschen und neu anfangen?")) { group = []; done.clear(); store.set("done", []); commit(); toast("Neue Bestellung ✓"); } };
+$("#spin").onclick = () => spin(false);
+$("#spinFav").onclick = () => spin(true);
+$("#takeIt").onclick = () => { if (pick) { pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
+$("#budget").oninput = e => { budget = +e.target.value; $("#budgetLbl").textContent = budget ? "bis " + eur(budget) : "egal"; };
+$("#repeatLast").onclick = () => needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); commit(); toast("Wie letztes Mal ✓"); });
+$("#copyText").onclick = () => copy(orderText(), "Bestellung kopiert ✓");
+$("#pickupName").value = store.get("pickup", "");
+$("#pickupName").oninput = e => store.set("pickup", e.target.value);
+$("#callBtn").onclick = () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); };
+$("#lbImg").onclick = e => e.target.classList.toggle("z");
+$("#lbClose").onclick = () => $("#lightbox").close();
+async function copy(text, msg) { try { await navigator.clipboard.writeText(text); toast(msg); } catch { prompt("Kopieren:", text); } }
+window.addEventListener("hashchange", () => { const g = readHash(); if (g) { group = g; store.set("group", group); render(); show("bestellung"); } });
+
+// ---------- Init ----------
+const tel = "tel:" + SHOP.phone;
+$("#callBtn").href = tel; $("#callBtn2").href = tel;
+$("#phoneLbl").textContent = SHOP.phoneDisplay + " · " + SHOP.address;
+$("#addr").innerHTML = esc(SHOP.street) + "<br>" + esc(SHOP.city);
+$("#routeBtn").href = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(SHOP.name + ", " + SHOP.address);
+$("#alList").innerHTML = Object.entries(ALG).map(([k, v]) => `<b>${esc(k)}</b><span>${esc(v)}</span>`).join("");
+$("#budget").max = Math.ceil(Math.max(...MENU.map(m => m.price)));
+renderInfos(); setInterval(renderInfos, 60000);
+const fromLink = location.hash.startsWith("#o=");
+if (fromLink) store.set("group", group);
+render();
+show(fromLink ? "bestellung" : (store.get("tab", "karte") === "anrufen" && !countAll() ? "karte" : store.get("tab", "karte")));
+if (fromLink) toast(`Bestellung von ${people().map(p => p.n).join(", ") || "der Gruppe"} geladen 👥`);
+if (!me) setTimeout(() => openName(), fromLink ? 900 : 600);
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 })();
 </script>
 </body>
