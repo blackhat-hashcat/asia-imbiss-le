@@ -233,12 +233,50 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .inp:focus{border-color:var(--gold)}
 
 /* ---------- Dice ---------- */
-.dice{text-align:center;padding:24px 10px 10px;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.dice .big{font-size:3.4rem;display:block;transition:transform .4s}
-.dice .big.roll{animation:roll .5s ease}
-@keyframes roll{0%{transform:rotate(0) scale(1)}50%{transform:rotate(200deg) scale(1.2)}100%{transform:rotate(360deg) scale(1)}}
-.dice .pnr{font-family:var(--display);color:var(--gold);font-size:2.2rem;line-height:1}
-.dice .pname{font-weight:700;font-size:1.15rem;margin:6px 0 2px}
+/* ---------- Spielautomat ---------- */
+.slot{margin:12px 0;border-radius:26px;padding:12px 12px 14px;background:radial-gradient(120% 80% at 50% 0%,#5a0d14 0%,#2a0709 55%,#160405 100%);border:2px solid #c9921c;box-shadow:0 0 0 4px #3a2208,0 0 30px rgba(255,182,39,.25),inset 0 0 40px rgba(0,0,0,.6);position:relative;overflow:hidden}
+.slot.win{animation:winflash .25s 4 alternate}
+@keyframes winflash{to{box-shadow:0 0 0 4px #ffb627,0 0 60px rgba(255,182,39,.8),inset 0 0 40px rgba(0,0,0,.6)}}
+.marquee{display:flex;align-items:center;gap:8px;justify-content:center;background:linear-gradient(#1a0506,#0d0203);border:1px solid #c9921c;border-radius:14px;padding:8px 10px;margin-bottom:12px}
+.marquee b{font-family:var(--display);font-size:1.15rem;letter-spacing:2px;background:linear-gradient(180deg,#fff3c4,#ffb627 55%,#b86e00);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 18px rgba(255,182,39,.35);white-space:nowrap}
+.bulbs{flex:1;height:10px;background:radial-gradient(circle,#ffe08a 0 3px,transparent 3.5px) 0 50%/14px 10px repeat-x;animation:bulbs .8s steps(2) infinite;filter:drop-shadow(0 0 4px #ffb627)}
+.bulbs:last-child{animation-delay:.4s}
+@keyframes bulbs{50%{background-image:radial-gradient(circle,#ff5a36 0 3px,transparent 3.5px)}}
+.slot.spinning .bulbs{animation-duration:.25s}
+.cabinet{display:flex;gap:10px;align-items:stretch}
+.reels{flex:1;display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:8px;position:relative;background:#0b0203;padding:8px;border-radius:16px;border:1px solid #6b4a10;box-shadow:inset 0 6px 16px rgba(0,0,0,.8)}
+.reel{position:relative;height:92px;overflow:hidden;border-radius:12px;background:linear-gradient(180deg,#d9d2c4 0%,#fffaf0 30%,#fffaf0 70%,#d9d2c4 100%);box-shadow:inset 0 10px 14px rgba(0,0,0,.35),inset 0 -10px 14px rgba(0,0,0,.35)}
+.strip{position:absolute;left:0;right:0;top:0;will-change:transform}
+.strip div{height:92px;display:grid;place-items:center;font-family:var(--display);font-size:1.7rem;color:#2a0709;text-align:center;line-height:1}
+.reel:nth-child(1) .strip div{font-size:2.3rem}
+.reel:nth-child(2) .strip div{color:#b81d2a;font-size:1.9rem}
+.reel:nth-child(3) .strip div{font-size:1.05rem;font-family:var(--body);font-weight:800}
+.rl{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(42,7,9,.45);pointer-events:none}
+.payline{position:absolute;left:2px;right:2px;top:50%;height:2px;background:linear-gradient(90deg,transparent,#ff3b3b,transparent);opacity:.55;pointer-events:none}
+.lever{flex:none;width:34px;position:relative;padding:0}
+.lever i{position:absolute;left:50%;bottom:14px;width:8px;height:62%;margin-left:-4px;border-radius:6px;background:linear-gradient(90deg,#8a8a8a,#f0f0f0,#8a8a8a);transform-origin:bottom center;transition:transform .25s}
+.lever b{position:absolute;left:50%;width:30px;height:30px;margin-left:-15px;top:6%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8a8a,#d4001a 60%,#7a000f);box-shadow:0 4px 10px rgba(0,0,0,.6);transition:top .25s}
+.lever::after{content:"";position:absolute;left:50%;bottom:4px;width:24px;height:16px;margin-left:-12px;border-radius:6px;background:linear-gradient(#7a5410,#3a2208)}
+.lever.pulled i{transform:scaleY(.35)}
+.lever.pulled b{top:58%}
+.result{min-height:118px;margin-top:12px;border-radius:16px;background:rgba(0,0,0,.35);border:1px dashed rgba(255,182,39,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px}
+.result .rhint{color:#e8c98a;font-weight:600}
+.result .jack{font-family:var(--display);font-size:1.5rem;letter-spacing:1px;background:linear-gradient(180deg,#fff3c4,#ffb627 55%,#b86e00);-webkit-background-clip:text;background-clip:text;color:transparent;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+.result .pname{font-weight:800;font-size:1.12rem;margin:4px 0 2px;color:#fff}
+.result .pdesc{color:#d8bfa0;font-size:.88rem}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.slotbtns{display:flex;gap:8px;margin-top:12px}
+.spinbtn{flex:1.4;background:linear-gradient(180deg,#ffd35a,#ffb627 50%,#d98a00);color:#3a1d00;border:0;font-family:var(--display);font-size:1.15rem;letter-spacing:1px;box-shadow:0 5px 0 #8a5400,0 10px 24px rgba(255,182,39,.35);border-radius:16px}
+.spinbtn:active{transform:translateY(4px);box-shadow:0 1px 0 #8a5400}
+.spinbtn:disabled{opacity:.6}
+.favtog{flex:1;background:rgba(0,0,0,.35);border-color:#6b4a10;color:#e8c98a;font-size:.9rem}
+.favtog[aria-pressed="true"]{background:#ffb627;color:#3a1d00;border-color:#ffb627}
+.slot #takeIt{margin-top:10px}
+.spinbtn,.favtog{white-space:nowrap}
+@media (max-width:400px){.spinbtn{font-size:1rem}.favtog{font-size:.8rem;padding:10px 8px}.marquee b{font-size:.95rem;letter-spacing:1px}}
+.coins{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.coins i{position:absolute;top:-30px;font-style:normal;font-size:1.3rem;animation:coin 1.6s ease-in forwards}
+@keyframes coin{to{transform:translateY(520px) rotate(720deg);opacity:0}}
 .range{width:100%;accent-color:var(--gold);touch-action:pan-y;height:32px}
 
 /* ---------- Info ---------- */
@@ -320,7 +358,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
         <h1>Hunger?<br><span>Vorbestellen.</span></h1>
         <p>Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.</p>
         <div class="row">
-          <button class="btn gold sm" data-go="wuerfeln">🎲 Ich weiß nicht, was ich will</button>
+          <button class="btn gold sm" data-go="wuerfeln">🎰 Ich weiß nicht, was ich will</button>
         </div>
       </div>
     </div>
@@ -349,12 +387,22 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
   <!-- ================= WÜRFELN ================= -->
   <section class="view" id="v-wuerfeln">
     <h2 class="title">Was esse ich heute?</h2>
-    <p class="sub">Keine Lust zu entscheiden? Der Würfel hält sich an deine Filter.</p>
-    <div class="card">
-      <div class="dice" id="dice"><span class="big" id="dieIc">🎲</span><div class="muted" style="color:var(--muted)">Tippe auf „Würfeln“</div></div>
-      <div class="btns">
-        <button class="btn red" id="spin">🎲 Würfeln</button>
-        <button class="btn" id="spinFav">⭐ Aus Favoriten</button>
+    <p class="sub">Hebel ziehen und das Glück entscheiden lassen. Der Automat hält sich an deine Filter.</p>
+    <div class="slot" id="slot">
+      <div class="marquee"><span class="bulbs"></span><b>ASIA&nbsp;LE&nbsp;SLOTS</b><span class="bulbs"></span></div>
+      <div class="cabinet">
+        <div class="reels" id="reels">
+          <div class="reel"><div class="strip" id="r0"><div>🍜</div></div><span class="rl">Sorte</span></div>
+          <div class="reel"><div class="strip" id="r1"><div>?</div></div><span class="rl">Nummer</span></div>
+          <div class="reel"><div class="strip" id="r2"><div>€</div></div><span class="rl">Preis</span></div>
+          <div class="payline"></div>
+        </div>
+        <button class="lever" id="lever" aria-label="Hebel ziehen"><i></i><b></b></button>
+      </div>
+      <div class="result" id="dice"><div class="rhint">Zieh den Hebel 🍀</div></div>
+      <div class="slotbtns">
+        <button class="btn spinbtn" id="spin">🎰 Drehen</button>
+        <button class="btn favtog" id="spinFav" aria-pressed="false">⭐ Nur Favoriten</button>
       </div>
       <button class="btn jade block hidden" id="takeIt">✅ Nehm ich</button>
     </div>
@@ -461,7 +509,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
   <nav class="tabs">
     <div class="wrap">
       <button data-v="karte" class="on"><span class="e">🍜</span>Karte</button>
-      <button data-v="wuerfeln"><span class="e">🎲</span>Würfeln</button>
+      <button data-v="wuerfeln"><span class="e">🎰</span>Zufall</button>
       <button data-v="bestellung"><span class="e">🧾</span>Bestellung<span class="bd hidden" id="tabBadge"></span></button>
       <button data-v="anrufen"><span class="e">📞</span>Anrufen</button>
       <button data-v="infos"><span class="e">📍</span>Infos</button>
@@ -1089,19 +1137,44 @@ function renderLast() {
   $("#lastCard").classList.toggle("hidden", !last.length);
   $("#lastList").innerHTML = last.map((x, i) => lineHTML(x, i, false)).join("");
 }
-function spin(fromFav) {
+let spinning = false, favOnly = false;
+function reelHTML(items) { return items.map(x => `<div>${x}</div>`).join(""); }
+function spin() {
+  if (spinning) return;
   let pool = filtered({ q: "" });
-  if (fromFav) pool = pool.filter(m => favs.has(m.nr));
+  if (favOnly) pool = pool.filter(m => favs.has(m.nr));
   pool = pool.filter(m => m.cat !== "Beilagen");
-  if (!pool.length) return toast(fromFav ? "Noch keine Favoriten ⭐" : "Nichts passt zu den Filtern");
-  const ic = $("#dieIc"); $("#takeIt").classList.add("hidden");
-  let t = 0;
-  const tick = () => {
-    pick = pool[Math.floor(Math.random() * pool.length)];
-    $("#dice").innerHTML = `<div class="pnr">${pick.sayName ? "🥡" : esc(pick.nr)}</div><div class="pname">${esc(pick.name)}</div><div style="color:var(--muted)">${esc(pick.desc)}</div><div class="meta" style="justify-content:center"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
-    if (++t < 16) setTimeout(tick, 35 + t * t * 1.4); else { $("#takeIt").classList.remove("hidden"); buzz(); $("#takeIt").scrollIntoView({ block: "nearest", behavior: "smooth" }); }
-  };
-  tick();
+  if (!pool.length) return toast(favOnly ? "Noch keine Favoriten ⭐" : "Nichts passt zu den Filtern");
+  pick = pool[Math.floor(Math.random() * pool.length)];
+  spinning = true; $("#spin").disabled = true; $("#takeIt").classList.add("hidden");
+  const slot = $("#slot"); slot.classList.remove("win"); slot.classList.add("spinning");
+  const lev = $("#lever"); lev.classList.add("pulled"); setTimeout(() => lev.classList.remove("pulled"), 350);
+  $("#dice").innerHTML = `<div class="rhint">🎰 Rien ne va plus …</div>`;
+  const rnd = a => a[Math.floor(Math.random() * a.length)];
+  const icons = CATS.map(c => c.icon), nrs = MENU.map(m => m.sayName ? "🥡" : m.nr), prices = MENU.map(m => eur(m.price));
+  const finals = [catIcon[pick.cat], pick.sayName ? "🥡" : pick.nr, eur(pick.price)];
+  const H = $("#reels .reel").offsetHeight || 92;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  [icons, nrs, prices].forEach((src, i) => {
+    const n = reduce ? 1 : 18 + i * 7;
+    const items = Array.from({ length: n }, () => rnd(src)).concat([finals[i]]);
+    const st = $("#r" + i);
+    st.style.transition = "none"; st.style.transform = "translateY(0)"; st.innerHTML = reelHTML(items);
+    void st.offsetHeight;
+    const dur = reduce ? 0 : 1100 + i * 550;
+    st.style.transition = `transform ${dur}ms cubic-bezier(.12,.68,.2,1.02)`;
+    st.style.transform = `translateY(${-(items.length - 1) * H}px)`;
+    setTimeout(() => buzz(), dur);
+  });
+  const total = reduce ? 50 : 1100 + 2 * 550 + 150;
+  setTimeout(() => {
+    spinning = false; $("#spin").disabled = false; slot.classList.remove("spinning"); slot.classList.add("win");
+    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div><div class="pname">${pick.sayName ? "" : esc(pick.nr) + " · "}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    $("#takeIt").classList.remove("hidden");
+    try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
+    if (!reduce) { const c = document.createElement("div"); c.className = "coins"; c.innerHTML = Array.from({ length: 16 }, () => `<i style="left:${Math.random() * 96}%;animation-delay:${Math.random() * .5}s">${rnd(["🪙", "✨", "🥢", "⭐"])}</i>`).join(""); slot.appendChild(c); setTimeout(() => c.remove(), 2400); }
+    $("#takeIt").scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, total);
 }
 
 // ---------- Rendering: infos / chrome ----------
@@ -1205,8 +1278,9 @@ $("#share").onclick = async () => {
 };
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
-$("#spin").onclick = () => spin(false);
-$("#spinFav").onclick = () => spin(true);
+$("#spin").onclick = () => spin();
+$("#lever").onclick = () => spin();
+$("#spinFav").onclick = e => { favOnly = !favOnly; e.currentTarget.setAttribute("aria-pressed", favOnly); };
 $("#takeIt").onclick = () => { if (pick) { pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
 $("#repeatLast").onclick = () => needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); commit(); toast("Wie letztes Mal ✓"); });
 $("#copyText").onclick = () => copy(orderText(), "Bestellung kopiert ✓");
