@@ -388,48 +388,6 @@ body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infin
 .sc-cover.gone{opacity:0}
 
 
-/* ---------- Fear & Loathing Easter Eggs ---------- */
-.fx{position:fixed;inset:0;pointer-events:none;z-index:260;overflow:hidden}
-.bat{position:absolute;left:-80px;font-style:normal;animation:batfly linear both;filter:drop-shadow(0 3px 4px rgba(0,0,0,.7))}
-.wing{display:inline-block;font-weight:400;animation:flap .16s ease-in-out infinite alternate;transform-origin:50% 40%}
-@keyframes flap{from{transform:scaleY(1) scaleX(1)}to{transform:scaleY(.55) scaleX(1.08)}}
-.bat.rev{left:auto;right:-80px;animation-name:batflyrev}
-.batbox{background:radial-gradient(ellipse at 50% 30%,transparent 40%,rgba(0,0,0,.35));animation:batdim 8.6s ease both}
-@keyframes batdim{0%,100%{background-color:transparent}10%,85%{background-color:rgba(0,0,0,.18)}}
-@keyframes batflyrev{0%{transform:translate(0,0) scaleX(-1)}25%{transform:translate(-32vw,40px) rotate(-12deg)}50%{transform:translate(-62vw,-30px) rotate(14deg) scaleX(-1)}75%{transform:translate(-90vw,30px) rotate(-10deg)}99%{opacity:1}100%{transform:translate(calc(-100vw - 220px),-10px) scaleX(-1);opacity:0}}
-@keyframes batfly{0%{transform:translate(0,0) rotate(-10deg)}25%{transform:translate(32vw,-40px) rotate(12deg) scaleX(-1)}50%{transform:translate(62vw,30px) rotate(-14deg)}75%{transform:translate(90vw,-30px) rotate(10deg) scaleX(-1)}99%{opacity:1}100%{transform:translate(calc(100vw + 220px),10px) rotate(-8deg);opacity:0}}
-.carpet{position:fixed;inset:0;z-index:255;pointer-events:none;mix-blend-mode:soft-light;opacity:0;background:radial-gradient(circle at 30% 70%,rgba(255,60,40,.9),transparent 55%),radial-gradient(circle at 75% 30%,rgba(255,170,30,.8),transparent 50%),radial-gradient(circle at 50% 50%,rgba(200,40,140,.6),transparent 60%);background-size:160% 160%;animation:carpet 6s ease-in-out both}
-@keyframes carpet{0%{opacity:0;background-position:0% 0%}20%{opacity:.55}50%{opacity:.65;background-position:100% 60%}80%{opacity:.5}100%{opacity:0;background-position:40% 100%}}
-body.trip main{animation:trip 6s ease-in-out}
-@keyframes trip{0%,100%{filter:none}30%{filter:hue-rotate(-12deg) saturate(1.25)}60%{filter:hue-rotate(10deg) saturate(1.2)}}
-.shark{position:absolute;bottom:calc(var(--dock,140px) + 10px);left:-160px;display:flex;align-items:flex-end;gap:2px;font-size:3.6rem;animation:drive 5.4s cubic-bezier(.45,.05,.55,.95) forwards}
-.shark .sbats{position:relative;display:flex;gap:2px;font-size:1.9rem;align-self:flex-end;margin-bottom:26px;margin-right:-10px;animation:sbob .45s ease-in-out infinite alternate}
-.shark .sbats b:nth-child(2){transform:translateY(-14px)}
-.shark .sbats b:nth-child(2).wing{margin-top:-14px}
-.shark .sbats b:nth-child(3){font-size:1.15rem;margin-top:8px}
-@keyframes sbob{to{transform:translateY(-8px)}}
-.shark .car{display:inline-block;transform:scaleX(-1);filter:drop-shadow(0 4px 4px rgba(0,0,0,.6))}
-.shark .dust{font-size:1.2rem;opacity:.7;animation:dust .3s infinite alternate}
-@keyframes drive{to{transform:translateX(calc(100vw + 240px))}}
-@keyframes dust{to{transform:translateY(-4px) scale(1.15);opacity:.4}}
-.heat{position:absolute;left:0;right:0;bottom:0;height:70%;background:linear-gradient(0deg,rgba(255,120,30,.5),rgba(255,180,60,.15) 60%,transparent);animation:heat 6s ease-in-out both}
-@keyframes heat{0%,100%{opacity:0}30%,70%{opacity:1}}
-
-
-/* ---------- Fear & Loathing, subtil ---------- */
-.flizard{display:none;font-size:.7rem;opacity:.18;margin-left:3px;cursor:default;filter:grayscale(.6)}
-body.casino .flizard{display:inline-block}
-.flizard.flick{animation:flick .6s}
-@keyframes flick{30%{transform:rotate(-25deg) translateX(-3px);opacity:.8}60%{transform:rotate(15deg)}}
-.lonebat{position:fixed;left:-40px;z-index:240;pointer-events:none;font-style:normal;font-size:1.1rem;opacity:.35;animation:lonebat 6.5s linear forwards}
-@keyframes lonebat{0%{transform:translate(0,0)}20%{transform:translate(22vw,-14px) scaleX(-1)}45%{transform:translate(50vw,10px)}70%{transform:translate(78vw,-10px) scaleX(-1)}99%{opacity:.35}100%{transform:translate(calc(100vw + 120px),4px);opacity:0}}
-body.casino.late::before{animation:latedrift 50s linear infinite}
-@keyframes latedrift{to{filter:hue-rotate(360deg)}}
-body.casino.late .hero{animation:breathe 9s ease-in-out infinite}
-@keyframes breathe{50%{transform:scale(1.008);filter:saturate(1.15)}}
-.leaf{position:fixed;left:50%;top:40%;z-index:240;font-style:normal;font-size:1.6rem;pointer-events:none;animation:leaf 3.4s ease-out forwards}
-@keyframes leaf{0%{opacity:0;transform:translate(-50%,0) rotate(0)}15%{opacity:.8}100%{opacity:0;transform:translate(40px,-160px) rotate(220deg)}}
-
 /* ================= CASINO-DESIGN ================= */
 body.casino{--bg:#04110a;--s1:#0b2417;--s2:#10301f;--s3:#173d29;--line:#24533a;--muted:#a9c6b2;--dim:#6e917b}
 body.casino::before{background:radial-gradient(700px 500px at 50% -10%,rgba(24,110,62,.55),transparent 65%),radial-gradient(500px 400px at 110% 40%,rgba(239,51,64,.15),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 6px)}
@@ -671,7 +629,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <div class="card">
       <h3>⚠️ Allergene &amp; Zusatzstoffe</h3>
       <div class="al" id="alList"></div>
-      <p style="color:var(--dim);font-size:.8rem;margin:10px 0 0">Alle Speisen mit Geschmacksverstärker (auf Wunsch auch ohne)<span id="flLizard" class="flizard" aria-hidden="true">🦎</span>. Alle Preise in Euro inkl. MwSt. Angaben laut Flyer, ohne Gewähr.</p>
+      <p style="color:var(--dim);font-size:.8rem;margin:10px 0 0">Alle Speisen mit Geschmacksverstärker (auf Wunsch auch ohne). Alle Preise in Euro inkl. MwSt. Angaben laut Flyer, ohne Gewähr.</p>
     </div>
   </section>
 </main>
@@ -994,7 +952,6 @@ function add(nr, note = "", n = 1) {
     const lbl = `${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""}`;
     toast(CASINO ? pickOne(QUIP_ADD).replace("{x}", lbl) : `✓ ${lbl} hinzugefügt`);
     if (CASINO) chipFly(lastAddEl); lastAddEl = null;
-    flAfterAdd();
   });
 }
 function sub(nr) {
@@ -1006,7 +963,6 @@ function sub(nr) {
 }
 const buzz = () => { try { navigator.vibrate && navigator.vibrate(12); } catch {} };
 let tT; function toast(t, ms) { const el = $("#toast"); el.textContent = t; el.classList.add("on"); clearTimeout(tT); tT = setTimeout(() => el.classList.remove("on"), ms || Math.max(1600, Math.min(5000, t.length * 55))); }
-const eggToast = t => toast(t, 6000);   // Easter-Egg-Texte bleiben lange stehen
 
 // ---------- Opening hours ----------
 const DAYS = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
@@ -1116,7 +1072,7 @@ function openFilters() {
       <button type="button" class="btn red block" id="fApply" style="margin-top:18px">${n ? `${n} ${n === 1 ? "Gericht" : "Gerichte"} anzeigen` : "Keine Treffer – Filter lockern"}</button>`;
     const upd = () => { saveF(); renderChips(); renderMenu(); renderHits(); draw(); };
     box.querySelectorAll("[data-t]").forEach(b => b.onclick = () => { F[b.dataset.t] = !F[b.dataset.t]; upd(); });
-    box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { F.spice = b.dataset.sp; upd(); if (CASINO && b.dataset.sp === "fire" && flOnceKey("mesc")) { $("#filterDlg").close(); carpetTrip(); } });
+    box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { F.spice = b.dataset.sp; upd(); });
     box.querySelectorAll("[data-no]").forEach(b => b.onclick = () => { const id = b.dataset.no; F.no = F.no.includes(id) ? F.no.filter(x => x !== id) : [...F.no, id]; upd(); });
     $("#fReset").onclick = () => { F = F0(); upd(); };
     $("#fApply").onclick = () => $("#filterDlg").close();
@@ -1326,7 +1282,6 @@ function setDlCustom(kind) {
 function tickDeadline() {
   const d = round.deadline; if (!d) return;
   const left = d - Date.now(), el = $("#dlLeft");
-  if (CASINO && left > 0 && fmtLeft(left) === "4:20" && tickDeadline.leaf !== d) { tickDeadline.leaf = d; flLeaf(); }
   if (el) { if (left > 0) el.textContent = "noch " + fmtLeft(left); else if (!el.classList.contains("over")) renderDeadline(); }
   if (left <= 0 && left > -5000 && dlAlerted !== d) { dlAlerted = d; toast(C("⏱ Bestellschluss! Jetzt anrufen 📞", "🎰 Rien ne va plus! Ab ans Telefon 📞")); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} }
   renderChrome();
@@ -1551,7 +1506,7 @@ function setupScratch() {
   const check = () => {
     const d = g.getImageData(0, 0, cv.width, cv.height).data; let clear = 0, tot = 0;
     for (let i = 3; i < d.length; i += 4 * 40) { tot++; if (d[i] < 40) clear++; }
-    if (clear / tot > .5) { store.set("scratched", today()); cv.classList.add("gone"); buzz(); setTimeout(() => { $("#scratchWrap").dataset.day = ""; renderScratch(); eggToast("🎟️ Kauf das Ticket, nimm die Fahrt: " + (dishOfDay().sayName ? dishOfDay().name : dishOfDay().nr)); confetti(); }, 450); }
+    if (clear / tot > .5) { store.set("scratched", today()); cv.classList.add("gone"); buzz(); setTimeout(() => { $("#scratchWrap").dataset.day = ""; renderScratch(); toast("🎟️ Tagesempfehlung des Hauses: " + (dishOfDay().sayName ? dishOfDay().name : dishOfDay().nr), 4000); confetti(); }, 450); }
   };
   cv.addEventListener("pointerdown", e => { down = true; last = null; cv.setPointerCapture(e.pointerId); scratch(...pos(e)); });
   cv.addEventListener("pointermove", e => { if (down) scratch(...pos(e)); });
@@ -1608,9 +1563,8 @@ function spin() {
       try { navigator.vibrate && navigator.vibrate([80, 60, 80, 60, 300]); } catch {}
       setTimeout(() => setCasino(true), 1400); return;
     }
-    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${flSometimes(.12) ? flQuote() : pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
-    if (CASINO && pick.hot >= 6) setTimeout(() => { batSwarm(10); }, 500);
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
     if (!reduce) { const c = document.createElement("div"); c.className = "coins"; c.innerHTML = Array.from({ length: 16 }, () => `<i style="left:${Math.random() * 96}%;animation-delay:${Math.random() * .5}s">${rnd(["🪙", "✨", "🥢", "⭐"])}</i>`).join(""); slot.appendChild(c); setTimeout(() => c.remove(), 2400); }
     $("#takeIt").scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -1630,8 +1584,6 @@ function renderCasinoStatic() {
   $("#heroP").textContent = C("Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.", "Setzt eure Chips auf die Karte. Einer ruft an, und wenn ihr ankommt, steht der Gewinn auf dem Tisch.");
   $("#nameTitle").textContent = C("Wie heißt du? 👋", "Wie heißt du, Spieler? 🎩");
   document.body.classList.toggle("casino", CASINO);
-  document.body.classList.toggle("late", CASINO && FL_NIGHT());
-  if (CASINO && !flBatTimer) flAmbient();
   $("#brandTxt").innerHTML = C("Asia Le", `Asia Le <small class="ctag">CASINO</small>`);
   const tb = $('.tabs [data-v="bestellung"]'); if (tb) tb.childNodes[1].nodeValue = C("Bestellung", "Spieltisch");
   const tk = $('.tabs [data-v="karte"] .e'); if (tk) tk.textContent = C("🍜", "🃏");
@@ -1705,7 +1657,7 @@ document.addEventListener("click", e => {
   else if (d.paymode) { if (d.paymode === "self") { payChoose = false; patchRound({ payer: "" }); } else { payChoose = true; if (round.payer) patchRound({ payer: "" }); else renderPay(); } }
   else if (d.payer) { payChoose = false; if (d.payer === me) bumpFlag("payer", true); if (d.payer === me && myPP()) { const p = myP(); if (p) p.pp = myPP(); } patchRound({ payer: d.payer }); if (live && d.payer === me) pushMine(); }
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
-  else if (d.mode) { patchRound({ mode: d.mode }); if (CASINO && d.mode === "mit" && flOnceKey("shark")) { redShark(); } }
+  else if (d.mode) { patchRound({ mode: d.mode }); }
   else if (d.filter !== undefined) openFilters();
   else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); dealAnim(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
@@ -1735,7 +1687,6 @@ $("#share").onclick = async () => {
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin();
-$("#flLizard").addEventListener("click", e => { e.stopPropagation(); flLizard(); });
 // ---------- Easter Egg: Suche "jackpot" oder 7-7-7 am Automaten ----------
 let casinoCooldown = 0;
 function setCasino(v) {
@@ -1744,72 +1695,6 @@ function setCasino(v) {
   if (v) casinoIntro(); else toast("🥢 Casino geschlossen. Zurück im Imbiss.");
 }
 let eggTaps = [];
-// ---------- Fear & Loathing Easter Eggs (nur im Casino-Modus) ----------
-const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-function batSwarm(n = 22) {
-  if (reduceMotion()) return;
-  const box = document.createElement("div"); box.className = "fx batbox";
-  box.innerHTML = Array.from({ length: n }, (_, i) => `<i class="bat ${i % 2 ? "rev" : ""}" style="top:${2 + Math.random() * 80}%;animation-delay:${Math.random() * 2.4}s;animation-duration:${3.2 + Math.random() * 2.6}s;font-size:${1.6 + Math.random() * 2.6}rem"><b class="wing" style="animation-delay:-${Math.random().toFixed(2)}s">🦇</b></i>`).join("");
-  document.body.appendChild(box); try { navigator.vibrate && navigator.vibrate([30, 40, 30, 40, 30, 40, 60]); } catch {}
-  setTimeout(() => box.remove(), 8800);
-}
-function carpetTrip() {
-  if (reduceMotion()) return;
-  const o = document.createElement("div"); o.className = "carpet"; document.body.appendChild(o);
-  document.body.classList.add("trip"); setTimeout(() => { document.body.classList.remove("trip"); o.remove(); }, 6200);
-}
-function redShark() {
-  if (reduceMotion()) return;
-  const c = document.createElement("div"); c.className = "fx";
-  c.innerHTML = `<div class="shark"><span class="sbats"><b class="wing">🦇</b><b class="wing" style="animation-delay:-.07s">🦇</b><b class="wing" style="animation-delay:-.11s">🦇</b></span><span class="dust">💨💨</span><span class="car">🚗</span></div><div class="heat"></div>`;
-  document.body.appendChild(c); setTimeout(() => c.remove(), 6200);
-}
-
-// ---------- Fear & Loathing: das Easter Egg im Easter Egg (selten & subtil) ----------
-const FL_QUOTES = [
-  "Wir können hier nicht anhalten. Das ist Fledermausland!",
-  "Kauf das Ticket, nimm die Fahrt.",
-  "Zu seltsam zum Leben, zu selten zum Sterben.",
-  "Als dein Anwalt rate ich dir: Nimm die S11.",
-  "Zwei Tüten Gras, 75 Kügelchen Meskalin … und eine Nudelbox.",
-  "Da geht er hin. Einer von Gottes eigenen Prototypen.",
-  "Kein Grund zur Sorge. Das ist nur der Teppich.",
-];
-const FL_NIGHT = () => { const h = new Date().getHours(); return h >= 22 || h < 5; };
-let flBatTimer = 0;
-function flAmbient() {   // gelegentlich flattert eine einzelne, halbtransparente Fledermaus oben vorbei
-  clearTimeout(flBatTimer);
-  if (!CASINO) { flBatTimer = 0; return; }
-  flBatTimer = setTimeout(() => {
-    if (CASINO && !document.hidden && !reduceMotion() && Math.random() < .35) {
-      const b = document.createElement("i"); b.className = "lonebat"; b.innerHTML = '<b class="wing">🦇</b>';
-      b.style.top = (60 + Math.random() * 140) + "px"; document.body.appendChild(b); setTimeout(() => b.remove(), 7000);
-    }
-    flAmbient();
-  }, 40000 + Math.random() * 50000);
-}
-function flSometimes(chance) { return CASINO && Math.random() < chance; }
-function flQuote() { return pickOne(FL_QUOTES); }
-function flLizard() {
-  if (!CASINO) return;
-  eggToast("🦎 " + flQuote());
-  const l = $("#flLizard"); l.classList.remove("flick"); void l.offsetWidth; l.classList.add("flick");
-}
-function flLeaf() {   // 4:20 im Countdown
-  if (reduceMotion()) return;
-  const b = document.createElement("i"); b.className = "leaf"; b.textContent = "🍃"; document.body.appendChild(b); setTimeout(() => b.remove(), 3500);
-}
-
-
-// ---------- Fear & Loathing, über die App verteilt (nur im Casino) ----------
-const flOnce = {};   // pro Runde/Tag nur einmal
-function flOnceKey(k) { const key = k + "|" + (round.started || today()); if (flOnce[key]) return false; flOnce[key] = 1; return true; }
-function flAfterAdd() {
-  if (!CASINO) return;
-  const tot = people().reduce((a, x) => a + sumP(x), 0);
-  if (tot >= 100 && flOnceKey("dream")) setTimeout(() => eggToast("🇺🇸 Der amerikanische Traum: über 100 € in Nudeln."), 1600);
-}
-
 function casinoIntro() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) { toast("🎰 Willkommen im Asia Le Casino!"); return; }
   const o = document.createElement("div"); o.className = "intro";
