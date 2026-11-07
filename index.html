@@ -389,6 +389,8 @@ body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infin
 /* ---------- Fear & Loathing Easter Eggs ---------- */
 .fx{position:fixed;inset:0;pointer-events:none;z-index:260;overflow:hidden}
 .bat{position:absolute;left:-80px;font-style:normal;animation:batfly linear both;filter:drop-shadow(0 3px 4px rgba(0,0,0,.7))}
+.wing{display:inline-block;font-weight:400;animation:flap .16s ease-in-out infinite alternate;transform-origin:50% 40%}
+@keyframes flap{from{transform:scaleY(1) scaleX(1)}to{transform:scaleY(.55) scaleX(1.08)}}
 .bat.rev{left:auto;right:-80px;animation-name:batflyrev}
 .batbox{background:radial-gradient(ellipse at 50% 30%,transparent 40%,rgba(0,0,0,.35));animation:batdim 8.6s ease both}
 @keyframes batdim{0%,100%{background-color:transparent}10%,85%{background-color:rgba(0,0,0,.18)}}
@@ -1769,7 +1771,7 @@ function vegasEgg(v) {
 function batSwarm(n = 22) {
   if (reduceMotion()) return;
   const box = document.createElement("div"); box.className = "fx batbox";
-  box.innerHTML = Array.from({ length: n }, (_, i) => `<i class="bat ${i % 2 ? "rev" : ""}" style="top:${2 + Math.random() * 80}%;animation-delay:${Math.random() * 2.4}s;animation-duration:${3.2 + Math.random() * 2.6}s;font-size:${1.6 + Math.random() * 2.6}rem">🦇</i>`).join("");
+  box.innerHTML = Array.from({ length: n }, (_, i) => `<i class="bat ${i % 2 ? "rev" : ""}" style="top:${2 + Math.random() * 80}%;animation-delay:${Math.random() * 2.4}s;animation-duration:${3.2 + Math.random() * 2.6}s;font-size:${1.6 + Math.random() * 2.6}rem"><b class="wing" style="animation-delay:-${Math.random().toFixed(2)}s">🦇</b></i>`).join("");
   document.body.appendChild(box); try { navigator.vibrate && navigator.vibrate([30, 40, 30, 40, 30, 40, 60]); } catch {}
   setTimeout(() => box.remove(), 8800);
 }
@@ -1805,7 +1807,7 @@ function flAmbient() {   // gelegentlich flattert eine einzelne, halbtransparent
   if (!CASINO) { flBatTimer = 0; return; }
   flBatTimer = setTimeout(() => {
     if (CASINO && !document.hidden && !reduceMotion() && Math.random() < .35) {
-      const b = document.createElement("i"); b.className = "lonebat"; b.textContent = "🦇";
+      const b = document.createElement("i"); b.className = "lonebat"; b.innerHTML = '<b class="wing">🦇</b>';
       b.style.top = (60 + Math.random() * 140) + "px"; document.body.appendChild(b); setTimeout(() => b.remove(), 7000);
     }
     flAmbient();
