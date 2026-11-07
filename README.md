@@ -7,7 +7,7 @@ Web-App für unsere Mittagspause: Jeder sucht sich beim **Asia Imbiss Le** (Hech
 ## Funktionen
 | Tab | Was es kann |
 |---|---|
-| 🍜 **Karte** | Alle 104 Gerichte vom Flyer. Suche nach Nummer (`24` findet H24) oder Stichwort (`ente curry`). Filter: Favoriten, vegetarisch, nicht scharf, scharf, richtig scharf, ohne Erdnuss, ohne Meeresfrüchte, ohne Milch, unter 9 €. Kategorien zum Antippen. „Die Gruppe nimmt schon“ zeigt, was die anderen gewählt haben. Antippen öffnet Details, Sonderwunsch, Menge und Allergene. |
+| 🍜 **Karte** | Alle 98 Gerichte vom Flyer. Suche nach Nummer (`24` findet H24) oder Stichwort (`ente curry`). Filter: Favoriten, vegetarisch, nicht scharf, scharf, richtig scharf, ohne Erdnuss, ohne Meeresfrüchte, ohne Milch, unter 9 €. Kategorien zum Antippen. „Die Gruppe nimmt schon“ zeigt, was die anderen gewählt haben. Antippen öffnet Details, Sonderwunsch, Menge und Allergene. |
 | 🎲 **Würfeln** | Zufallsgericht mit Filtern, Kategorie und Budget. Oder „Nochmal wie letztes Mal“. |
 | 🧾 **Bestellung** | Alle Personen mit Gerichten und Betrag. Link teilen oder direkt per WhatsApp. „Ich nehm dasselbe“ übernimmt die Bestellung eines anderen. Warnt, wenn der Imbiss zu hat oder bald schließt. |
 | 📞 **Anrufen** | Ein Tipp ruft an. Die Liste ist zusammengefasst und nach Nummer sortiert, beim Vorlesen hakt man Zeilen ab. Dazu Abholname, „Wer zahlt was“ und Text zum Kopieren. |
