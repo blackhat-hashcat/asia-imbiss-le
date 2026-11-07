@@ -110,6 +110,14 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .gal::-webkit-scrollbar{display:none}
 .gal img{flex:none;height:260px;width:auto;border-radius:12px;border:1px solid var(--line);scroll-snap-align:start;cursor:zoom-in;background:var(--s2)}
 .galhint{color:var(--dim);font-size:.8rem;text-align:center}
+.howcard summary{cursor:pointer;list-style:none}
+.howcard summary::-webkit-details-marker{display:none}
+.howcard summary::after{content:"▾";float:right;color:var(--muted);transition:transform .2s}
+.howcard[open] summary::after{transform:rotate(180deg)}
+.lastcard{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,rgba(255,182,39,.1),var(--s1));border:1px solid rgba(255,182,39,.35);border-radius:16px;padding:10px 12px;margin:12px 0 0}
+.lastcard .t{flex:1;min-width:0;font-size:.88rem;line-height:1.3}
+.lastcard .t b{display:block;font-size:.95rem}
+.lastcard .t span{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 .seg.two{grid-template-columns:1fr 1fr}
 .seg.two button{font-size:.92rem;padding:11px 4px}
 .script{background:var(--s2);border-left:3px solid var(--gold);padding:10px 12px;border-radius:10px;font-size:.95rem;line-height:1.4;margin:4px 0 10px}
@@ -182,6 +190,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 
 /* ---------- Cards ---------- */
 .card{background:var(--s1);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0}
+.card.slim{padding:10px 12px}
 .card h3{margin:0 0 10px;font-size:1.05rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .card h3 .amt{color:var(--gold);font-weight:800}
 .line{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
@@ -328,6 +337,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
       <div class="chips" id="cats"></div>
     </div>
 
+    <div id="lastQuick"></div>
     <div id="hitsWrap" class="hidden">
       <div class="sech" style="margin-top:14px"><span class="ic">🔥</span><h3>Die Gruppe nimmt schon</h3></div>
       <div class="hits" id="hits"></div>
@@ -379,10 +389,10 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
     </div>
     <div class="card hidden" id="payCard"></div>
     <button class="btn block hidden" id="reset" style="margin-top:4px;color:var(--muted)">🔄 Neue Runde starten</button>
-    <div class="card">
-      <h3>So geht's</h3>
-      <ol class="howto" id="howto"></ol>
-    </div>
+    <details class="card howcard" id="howCard">
+      <summary><h3 style="display:inline">ℹ️ So geht's</h3></summary>
+      <ol class="howto" id="howto" style="margin-top:10px"></ol>
+    </details>
   </section>
 
   <!-- ================= ANRUFEN ================= -->
@@ -673,6 +683,7 @@ function newRound() {
 
 function commit() {
   group = group.filter(p => p.i.length || p.n === me);
+  { const p = myP(); if (p && p.i.length) store.set("last", p.i.map(x => [...x])); }
   if (live) { pushMine(); render(); return; }
   store.set("group", group); store.set("round", round);
   const has = group.some(p => p.i.length);
@@ -691,14 +702,21 @@ function needName(then) {
   if (me) return then();
   openName(then);
 }
-function openName(then) {
-  const d = $("#nameDlg"); $("#nameIn").value = me;
+function openName(then, preset) {
+  const d = $("#nameDlg"); $("#nameIn").value = preset !== undefined ? preset : me;
   d.onclose = () => {
+    if (d.returnValue !== "ok") return;   // Abbrechen / Wischen: nichts übernehmen
     const v = $("#nameIn").value.trim().slice(0, 20);
-    if (v && v !== me) rename(v);
+    if (v && v !== me) {
+      const taken = people().find(p => p.n.toLowerCase() === v.toLowerCase() && p.n !== me);
+      if (taken && !confirm(`„${taken.n}“ hat in dieser Runde schon bestellt.\n\nBist du das (z. B. auf einem anderen Gerät)?\n\nOK = ja, das bin ich\nAbbrechen = anderen Namen wählen`)) {
+        setTimeout(() => openName(then, (v.length < 18 ? v : v.slice(0, 17)) + " 2"), 50); return;
+      }
+      rename(taken ? taken.n : v);
+    }
     if (me && then) then();
   };
-  d.showModal(); setTimeout(() => $("#nameIn").focus(), 50);
+  d.returnValue = ""; d.showModal(); setTimeout(() => $("#nameIn").focus(), 50);
 }
 function rename(v) {
   if (live && me) live.put(keyOf(me), null);
@@ -845,6 +863,7 @@ function openFilters() {
 }
 $("#filterDlg").addEventListener("click", e => { if (e.target.id === "filterDlg") e.target.close(); });
 function renderHits() {
+  renderLastQuick();
   const tally = {};
   for (const p of people()) if (p.n !== me) for (const [nr, q] of p.i) { tally[nr] = tally[nr] || { q: 0, who: new Set() }; tally[nr].q += q; tally[nr].who.add(p.n); }
   const top = Object.entries(tally).sort((a, b) => b[1].who.size - a[1].who.size || b[1].q - a[1].q).slice(0, 8);
@@ -902,7 +921,7 @@ function lineHTML([nr, q, note], idx, editable) {
 }
 function renderOrder() {
   const ppl = people(), cnt = countAll(), tot = ppl.reduce((a, p) => a + sumP(p), 0);
-  $("#grpSub").textContent = ppl.length ? `${ppl.length} ${ppl.length === 1 ? "Person" : "Personen"} · ${cnt} Gerichte` : "Noch hat keiner was ausgesucht.";
+  $("#grpSub").textContent = ppl.length ? `${ppl.length} ${ppl.length === 1 ? "Person" : "Personen"} · ${cnt} ${cnt === 1 ? "Gericht" : "Gerichte"}` : "Noch hat keiner was ausgesucht.";
   const mineFirst = [...ppl].sort((a, b) => (b.n === me) - (a.n === me));
   $("#people").innerHTML = mineFirst.length ? mineFirst.map(p => `
     <div class="card" ${p.n === me ? 'style="border-color:rgba(255,182,39,.4)"' : ""}>
@@ -920,6 +939,7 @@ function renderOrder() {
     ? ["Gruppenlink <b>einmal</b> in die WhatsApp-Gruppe schicken (am besten anpinnen).", "Jeder öffnet denselben Link und sucht aus. Alle sehen es sofort.", "Optional: Bestellschluss setzen, dann sieht jeder den Countdown.", "Einer tippt auf 📞 und liest die Nummern vor."]
     : ["Jeder sucht sich auf der Karte was aus.", "„Link teilen“ und in die Gruppe schicken.", "Der Nächste öffnet den Link, packt seins dazu und teilt weiter.", "Wer anruft, öffnet den neuesten Link, tippt auf 📞 und liest nur noch die Nummern vor."]
   ).map(t => `<li><span>${t}</span></li>`).join("");
+  if (!howTouched) $("#howCard").open = !ppl.length;
   const s = status();
   const onlySides = ppl.length && ppl.some(p => p.i.every(([nr]) => byNr[nr].cat === "Beilagen"));
   $("#closedWarn").innerHTML = (s.open ? (s.closesIn < 30 ? `<div class="warn">⏰ <span>Achtung: nur noch ${s.closesIn} Min. geöffnet!</span></div>` : "") : `<div class="warn">🌙 <span>${esc(s.text)}.</span></div>`)
@@ -943,7 +963,7 @@ function renderCall() {
       <span class="nn ${m.sayName ? "long" : ""}">${m.sayName ? "🥡" : esc(e.nr)}</span>
       <span class="t">${m.sayName ? `<em style="font-size:1.05rem">${esc(m.name)}</em>` : esc(m.name)}${e.note ? `<em>✏️ ${esc(e.note)}</em>` : ""}</span>
       <span class="ck"></span></li>`; }).join("") : `<li style="cursor:default;color:var(--muted);justify-content:center">Noch nichts zum Vorlesen.</li>`;
-  $("#roCount").textContent = cnt ? `${cnt} Gerichte` : "";
+  $("#roCount").textContent = cnt ? `${cnt} ${cnt === 1 ? "Gericht" : "Gerichte"}` : "";
   $("#roTotal").textContent = eur(people().reduce((a, p) => a + sumP(p), 0));
   $$("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === round.mode));
   const pn = $("#pickupName").value.trim() || me, np = people().length;
@@ -955,8 +975,8 @@ function renderCall() {
 function renderLiveBox() {
   const el = $("#liveBox"); if (!el) return;
   if (live) {
-    el.innerHTML = `<div class="card"><div class="live"><span class="dotl ${liveOnline ? "" : "off"}"></span><div style="flex:1"><b>${liveOnline ? "Live-Gruppe" : "Offline"}</b><div style="color:var(--muted);font-size:.85rem">${liveOnline ? "Alle sehen Änderungen sofort." : "Änderungen werden gesendet, sobald du wieder online bist."}</div></div></div>
-      <div class="btns"><button class="btn red" data-act="shareGroup">📤 Einladen</button><a class="btn jade" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(shareText() + "\n" + shareUrl())}">WhatsApp</a></div>
+    el.innerHTML = `<div class="card slim"><div class="live"><span class="dotl ${liveOnline ? "" : "off"}"></span><div style="flex:1;min-width:0"><b>${liveOnline ? "Live-Gruppe" : "Offline"}</b><div style="color:var(--muted);font-size:.8rem">${liveOnline ? "Alle sehen Änderungen sofort" : "Wird gesendet, sobald du online bist"}</div></div>
+      <button class="btn sm red" data-act="shareGroup" aria-label="Gruppe einladen">📤 Einladen</button><a class="btn sm jade" target="_blank" rel="noopener" aria-label="Per WhatsApp einladen" href="https://wa.me/?text=${encodeURIComponent(shareText() + "\n" + shareUrl())}">WA</a></div>
       ${isStale() && people().length ? `<div class="warn" style="margin:6px 0 0">🕓 <span>Das ist noch die Runde von ${new Date(round.started).toLocaleDateString("de-DE", { weekday: "long" })}. Sobald jemand etwas hinzufügt, startet automatisch eine neue.</span></div>` : ""}</div>`;
   } else if (liveCapable) {
     el.innerHTML = `<div class="card"><h3>⚡ Live-Gruppe</h3><p style="color:var(--muted);margin:-4px 0 10px;font-size:.92rem">Ein fester Link für eure Gruppe. Jeder trägt sich ein, alle sehen es sofort. Kein Link-Weiterschicken mehr.</p><button class="btn red block" data-act="createLive">Live-Gruppe erstellen</button></div>`;
@@ -976,8 +996,10 @@ function dlPickerHTML() {
 function renderDeadline() {
   if (document.activeElement && document.activeElement.id === "dlTime") return;   // nicht beim Tippen überschreiben
   const el = $("#dlBox"); const d = round.deadline, left = d - Date.now();
+  el.classList.toggle("slim", !d && !dlEdit);
   if (!d) {
-    el.innerHTML = `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><span style="color:var(--dim);font-size:.82rem">optional</span></div>${dlPickerHTML()}`;
+    el.innerHTML = dlEdit ? `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><button class="chip" data-dledit="0">✕</button></div>${dlPickerHTML()}`
+      : `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><button class="chip" data-dledit="1">setzen</button></div>`;
   } else {
     el.innerHTML = `<div class="dlrow"><span class="lbl">⏱ Bestellschluss ${hhmm(d)} Uhr</span><button class="chip" data-dl="+5">+5 Min</button><button class="chip" data-dledit="1">ändern</button><button class="chip" data-dl="0">aus</button></div>
       <div class="dlbig ${left <= 0 ? "over" : ""}" id="dlLeft">${left > 0 ? "noch " + fmtLeft(left) : "Jetzt bestellen!"}</div>
@@ -1002,6 +1024,7 @@ function tickDeadline() {
   const d = round.deadline; if (!d) return;
   const left = d - Date.now(), el = $("#dlLeft");
   if (el) { if (left > 0) el.textContent = "noch " + fmtLeft(left); else if (!el.classList.contains("over")) renderDeadline(); }
+  if (left <= 0 && left > -5000 && dlAlerted !== d) { dlAlerted = d; toast("⏱ Bestellschluss! Jetzt anrufen 📞"); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} }
   renderChrome();
 }
 setInterval(tickDeadline, 1000);
@@ -1038,7 +1061,7 @@ function renderPay() {
   const inp = $("#ppIn");
   if (inp) inp.onchange = () => { const v = cleanPP(inp.value); inp.value = v; store.set("pp", v); const p = myP(); if (p) p.pp = v; commit(); toast(v ? "PayPal.me gespeichert ✓" : "PayPal.me entfernt"); };
 }
-let payChoose = false;
+let payChoose = false, howTouched = false, dlAlerted = 0;
 function setPaid(name, val) {
   const p = group.find(x => x.n === name); if (!p) return;
   p.paid = val;
@@ -1062,6 +1085,12 @@ function orderText() {
 }
 
 // ---------- Rendering: dice / last ----------
+function renderLastQuick() {
+  const last = (store.get("last", []) || []).filter(x => byNr[x[0]]), p = myP();
+  const show = last.length && !(p && p.i.length) && !query;
+  $("#lastQuick").innerHTML = show ? `<div class="lastcard"><span style="font-size:1.4rem">🔁</span><div class="t"><b>Wie letztes Mal?</b><span>${last.map(([nr, q]) => (q > 1 ? q + "× " : "") + (byNr[nr].sayName ? byNr[nr].name : nr)).join(", ")} · ${eur(last.reduce((a, [nr, q]) => a + byNr[nr].price * q, 0))}</span></div><button class="btn sm gold" id="lastQuickBtn">Nehmen</button></div>` : "";
+  const b = $("#lastQuickBtn"); if (b) b.onclick = () => $("#repeatLast").click();
+}
 function renderLast() {
   const last = (store.get("last", []) || []).filter(x => byNr[x[0]]);
   $("#lastCard").classList.toggle("hidden", !last.length);
@@ -1168,6 +1197,7 @@ document.addEventListener("click", e => {
 function mergeDupes(p) { const out = []; for (const x of p.i) { const ex = out.find(y => y[0] === x[0] && y[2] === x[2]); ex ? ex[1] += x[1] : out.push(x); } p.i = out; }
 function resetFilters() { F = F0(); saveF(); cat = ""; query = ""; $("#q").value = ""; $("#qClr").classList.add("hidden"); renderChips(); renderMenu(); renderHits(); }
 $$(".tabs button").forEach(b => b.onclick = () => show(b.dataset.v));
+$("#howCard summary").addEventListener("click", () => { howTouched = true; });
 $("#whoBtn").onclick = () => openName();
 let qT;
 $("#q").addEventListener("input", e => { query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
@@ -1222,7 +1252,6 @@ const lastTab = store.get("tab", "karte");
 show(newLink ? "bestellung" : newGroup ? "karte" : (lastTab === "anrufen" && !countAll() && !(liveCapable && gid) ? "karte" : lastTab));
 if (newLink) toast(`Bestellung von ${people().map(p => p.n).join(", ") || "der Gruppe"} geladen 👥`);
 if (newGroup) setTimeout(() => toast("👥 Willkommen in der Live-Gruppe!"), 300);
-if (!me) setTimeout(() => openName(), fromLink ? 900 : 600);
 if ("serviceWorker" in navigator) {
   const hadSW = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then(r => r.update()).catch(() => {});
