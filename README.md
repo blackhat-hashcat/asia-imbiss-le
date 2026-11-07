@@ -58,7 +58,8 @@ Testen ohne Firebase: `index.html?mock` simuliert die Live-Gruppe lokal im Brows
 ## Dateien
 - `config.js`: Firebase-Zugangsdaten für die Live-Gruppe (leer = Link-Modus)
 - `menu.js`: Speisekarte, Telefon, Adresse und Öffnungszeiten. Preise ändern sich? Nur hier anpassen.
-- `karte/`: Original-Scans des Flyers (`seite-*.jpg`) und zugeschnittene Spalten für die App (`spalte-1…6.jpg`)
+- `karte/original/`: Original-Scans des Flyers (400 dpi)
+- `karte/spalte-1…6.jpg`: zugeschnittene Spalten (volle Auflösung, für die Vollbildansicht), `thumb-1…6.jpg`: Vorschaubilder
 - `img/`: Fotos für die Startseite
 - `index.html`: die App
 
