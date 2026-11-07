@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Roboto+Mono:wght@700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0f0b0a; --s1:#1a1311; --s2:#241a17; --s3:#30231e; --line:#3a2a24;
@@ -19,6 +19,7 @@
   --red:#ef3340; --red2:#b81d2a; --gold:#ffb627; --jade:#2fd3a7; --chili:#ff5a36;
   --r:18px; --tab:68px;
   --display:"Dela Gothic One",system-ui,sans-serif;
+  --num:"Roboto Mono",ui-monospace,"SF Mono",Menlo,monospace;
   --body:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -159,7 +160,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .note-sec{color:var(--muted);font-size:.85rem;margin:-4px 0 8px}
 .item{display:flex;gap:12px;align-items:center;background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:10px 10px 10px 10px;margin:7px 0;position:relative;transition:border-color .2s,background .2s}
 .item.in{border-color:rgba(255,182,39,.55);background:linear-gradient(90deg,rgba(255,182,39,.08),var(--s1) 60%)}
-.nr{flex:none;min-width:52px;height:52px;padding:0 4px;border-radius:14px;background:var(--s3);display:grid;place-items:center;font-family:var(--display);font-size:.95rem;color:var(--gold);text-align:center;line-height:1}
+.nr{flex:none;min-width:52px;height:52px;padding:0 4px;border-radius:14px;background:var(--s3);display:grid;place-items:center;font-family:var(--num);font-weight:700;letter-spacing:-.5px;font-size:.95rem;color:var(--gold);text-align:center;line-height:1}
 .nr.long{font-family:var(--body);font-weight:800;font-size:.68rem;line-height:1.1}
 .info{flex:1;min-width:0;cursor:pointer}
 .iname{font-weight:700;line-height:1.25}
@@ -184,7 +185,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .hits{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 4px}
 .hits::-webkit-scrollbar{display:none}
 .hit{flex:none;width:170px;background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:left}
-.hit b{color:var(--gold);font-family:var(--display);font-size:.9rem}
+.hit b{color:var(--gold);font-family:var(--num);font-weight:700;font-size:.95rem}
 .hit .n{font-weight:600;font-size:.88rem;line-height:1.2;margin:2px 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
 .hit .w{font-size:.75rem;color:var(--muted)}
 
@@ -220,7 +221,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .ro li{display:grid;grid-template-columns:auto auto minmax(0,1fr) 28px;align-items:center;gap:10px;padding:12px 4px;border-top:1px solid var(--line);cursor:pointer;transition:opacity .2s}
 .ro li:first-child{border-top:0}
 .ro .q{font-family:var(--display);font-size:clamp(1.25rem,6vw,1.6rem);color:var(--ink)}
-.ro .nn{font-family:var(--display);font-size:clamp(1.25rem,6vw,1.6rem);color:var(--gold)}
+.ro .nn{font-family:var(--num);font-weight:700;letter-spacing:-1px;font-size:clamp(1.3rem,6.4vw,1.7rem);color:var(--gold)}
 .ro .nn.long{font-size:1.4rem}
 .ro .t{font-size:.88rem;color:var(--muted);line-height:1.25;overflow-wrap:anywhere}
 .ro .t em{display:block;color:var(--ink);font-style:normal;font-weight:700}
@@ -249,7 +250,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .strip{position:absolute;left:0;right:0;top:0;will-change:transform}
 .strip div{height:92px;display:grid;place-items:center;font-family:var(--display);font-size:1.7rem;color:#2a0709;text-align:center;line-height:1}
 .reel:nth-child(1) .strip div{font-size:2.3rem}
-.reel:nth-child(2) .strip div{color:#b81d2a;font-size:1.9rem}
+.reel:nth-child(2) .strip div{color:#b81d2a;font-size:1.75rem;font-family:var(--num);font-weight:700;letter-spacing:-1px}
 .reel:nth-child(3) .strip div{font-size:1.05rem;font-family:var(--body);font-weight:800}
 .rl{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(42,7,9,.45);pointer-events:none}
 .payline{position:absolute;left:2px;right:2px;top:50%;height:2px;background:linear-gradient(90deg,transparent,#ff3b3b,transparent);opacity:.55;pointer-events:none}
@@ -317,6 +318,8 @@ dialog::backdrop{background:rgba(0,0,0,.6);backdrop-filter:blur(3px)}
 .grab{width:42px;height:5px;border-radius:5px;background:var(--line);margin:0 auto 12px}
 .sheet h3{margin:0;font-size:1.25rem}
 .sheet .bignr{font-family:var(--display);color:var(--gold);font-size:1.1rem}
+.sheet .bignr .nrf,.nrc{font-family:var(--num);font-weight:700}
+.nr,.ro .nn,.hit b,.reel:nth-child(2) .strip div,.sheet .bignr .nrf,.nrc{font-feature-settings:"zero" 1;font-variant-numeric:slashed-zero}
 .optrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .optrow .chip{color:var(--ink)}
 .optrow .chip.on{color:var(--bg)}
@@ -924,7 +927,7 @@ function openItem(nr) {
   const draw = () => {
     const q = qtyOf(myP(), nr);
     box.innerHTML = `<div class="grab"></div>
-      <div class="bignr">${m.sayName ? "🥡 Nudelbox" : "Nr. " + esc(m.nr)} · ${catIcon[m.cat]} ${esc(m.cat)}</div>
+      <div class="bignr">${m.sayName ? "🥡 Nudelbox" : `Nr. <span class="nrf">${esc(m.nr)}</span>`} · ${catIcon[m.cat]} ${esc(m.cat)}</div>
       <h3 style="margin-top:4px">${esc(m.name)}</h3>
       ${m.desc ? `<div style="color:var(--muted);margin-top:2px">${esc(m.desc)}</div>` : ""}
       <div class="meta" style="margin-top:8px"><span class="price" style="font-size:1.2rem;color:var(--gold)">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">vegetarisch</span>` : ""}${hotHTML(m.hot)}${m.hot ? `<span class="badge-s">Schärfe ${m.hot}/6</span>` : ""}</div>
@@ -955,7 +958,7 @@ $("#nameDlg").addEventListener("click", e => { if (e.target.id === "nameDlg") e.
 // ---------- Rendering: order ----------
 function lineHTML([nr, q, note], idx, editable) {
   const m = byNr[nr];
-  const nm = `<b style="color:var(--gold)">${m.sayName ? "🥡" : esc(nr)}</b> ${esc(m.name)}${note ? `<small>✏️ ${esc(note)}</small>` : ""}`;
+  const nm = `<b class="nrc" style="color:var(--gold)">${m.sayName ? "🥡" : esc(nr)}</b> ${esc(m.name)}${note ? `<small>✏️ ${esc(note)}</small>` : ""}`;
   if (!editable) return `<div class="line"><span class="q">${q}×</span><span class="n">${nm}</span><span class="pr">${eur(m.price * q)}</span></div>`;
   return `<div class="line ed"><span class="q">${q}×</span><div class="n">${nm}
     <div class="lctl"><span class="pr">${eur(m.price * q)}</span><button class="mini del" data-note="${idx}">✏️ Wunsch</button><button class="mini" data-dec="${idx}" aria-label="weniger">−</button><button class="mini" data-inc="${idx}" aria-label="mehr">+</button></div></div></div>`;
@@ -1169,7 +1172,7 @@ function spin() {
   const total = reduce ? 50 : 1100 + 2 * 550 + 150;
   setTimeout(() => {
     spinning = false; $("#spin").disabled = false; slot.classList.remove("spinning"); slot.classList.add("win");
-    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div><div class="pname">${pick.sayName ? "" : esc(pick.nr) + " · "}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div><div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
     if (!reduce) { const c = document.createElement("div"); c.className = "coins"; c.innerHTML = Array.from({ length: 16 }, () => `<i style="left:${Math.random() * 96}%;animation-delay:${Math.random() * .5}s">${rnd(["🪙", "✨", "🥢", "⭐"])}</i>`).join(""); slot.appendChild(c); setTimeout(() => c.remove(), 2400); }
