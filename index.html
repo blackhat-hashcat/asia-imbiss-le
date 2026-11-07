@@ -385,6 +385,24 @@ body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infin
 .sc-cover{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;transition:opacity .4s}
 .sc-cover.gone{opacity:0}
 
+
+/* ---------- Fear & Loathing Easter Eggs ---------- */
+.fx{position:fixed;inset:0;pointer-events:none;z-index:260;overflow:hidden}
+.bat{position:absolute;left:-60px;font-style:normal;animation:batfly linear forwards;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+@keyframes batfly{0%{transform:translate(0,0) rotate(-10deg)}25%{transform:translate(30vw,-40px) rotate(12deg) scaleX(-1)}50%{transform:translate(60vw,30px) rotate(-14deg)}75%{transform:translate(85vw,-30px) rotate(10deg) scaleX(-1)}100%{transform:translate(115vw,10px) rotate(-8deg)}}
+.carpet{position:fixed;inset:0;z-index:255;pointer-events:none;mix-blend-mode:color-dodge;opacity:.55;background:repeating-conic-gradient(from 0deg,#ff2d6f 0 15deg,#ffb627 15deg 30deg,#1fd1a1 30deg 45deg,#6b2dff 45deg 60deg);background-size:80px 80px;animation:carpet 4.2s ease-in-out both}
+@keyframes carpet{0%{opacity:0;transform:scale(1)}15%{opacity:.55}50%{transform:scale(1.15) rotate(6deg);background-size:110px 110px}85%{opacity:.55}100%{opacity:0;transform:scale(1) rotate(0)}}
+body.trip main{animation:trip 4.2s ease-in-out}
+@keyframes trip{0%,100%{filter:none;transform:none}20%{filter:hue-rotate(90deg) saturate(1.6);transform:skewX(2deg)}40%{filter:hue-rotate(200deg) saturate(2);transform:skewX(-3deg) scale(1.01)}60%{filter:hue-rotate(300deg);transform:skewY(1.5deg)}80%{filter:hue-rotate(40deg);transform:skewX(-1deg)}}
+.shark{position:absolute;bottom:calc(var(--dock,140px) + 10px);left:-120px;display:flex;align-items:flex-end;gap:2px;font-size:2.6rem;animation:drive 3.6s cubic-bezier(.45,.05,.55,.95) forwards}
+.shark .car{display:inline-block;transform:scaleX(-1);filter:drop-shadow(0 4px 4px rgba(0,0,0,.6))}
+.shark .dust{font-size:1.2rem;opacity:.7;animation:dust .3s infinite alternate}
+@keyframes drive{to{transform:translateX(calc(100vw + 240px))}}
+@keyframes dust{to{transform:translateY(-4px) scale(1.15);opacity:.4}}
+.heat{position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(0deg,rgba(255,150,40,.28),transparent);animation:heat 4s ease-in-out both}
+@keyframes heat{0%,100%{opacity:0}30%,70%{opacity:1}}
+body.hawaii .top{background:repeating-linear-gradient(45deg,rgba(255,90,140,.35) 0 14px,rgba(255,182,39,.3) 14px 28px,rgba(31,209,161,.3) 28px 42px),rgba(4,17,10,.9)}
+
 /* ================= CASINO-DESIGN ================= */
 body.casino{--bg:#04110a;--s1:#0b2417;--s2:#10301f;--s3:#173d29;--line:#24533a;--muted:#a9c6b2;--dim:#6e917b}
 body.casino::before{background:radial-gradient(700px 500px at 50% -10%,rgba(24,110,62,.55),transparent 65%),radial-gradient(500px 400px at 110% 40%,rgba(239,51,64,.15),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 6px)}
@@ -1435,7 +1453,7 @@ function openProfile() {
   const top = (arr, key, fmt, filt = () => true) => arr.filter(filt).sort((a, b) => b[key] - a[key]).slice(0, 3).map((x, i) => `<div class="rk"><span>${["🥇", "🥈", "🥉"][i]}</span><b>${x.n === me ? "Du" : esc(x.n)}</b><span>${fmt(x)}</span></div>`).join("") || `<div class="rk" style="color:var(--dim)">noch keine Daten</div>`;
   const gFav = (() => { const c = {}; for (const ppl of Object.values(groupHist || {})) for (const v of Object.values(ppl || {})) (v.i || []).forEach(([nr, q]) => { if (byNr[nr]) c[nr] = (c[nr] || 0) + q; }); const f = Object.entries(c).sort((a, b) => b[1] - a[1])[0]; return f ? byNr[f[0]] : null; })();
   $("#profBox").innerHTML = `<div class="grab"></div>
-    <div class="phead"><div class="avatar">${esc(me.slice(0, 1).toUpperCase())}</div><div style="flex:1;min-width:0"><h3>${esc(me)}</h3><div class="lvl">Level ${lv.idx} · ${lv.name}</div></div><button type="button" class="chip" id="profName">✏️ Name</button></div>
+    <div class="phead"><div class="avatar">${/^(raoul|gonzo|duke)/i.test(me) ? "🌺" : esc(me.slice(0, 1).toUpperCase())}</div><div style="flex:1;min-width:0"><h3>${esc(me)}</h3><div class="lvl">Level ${lv.idx} · ${lv.name}</div></div><button type="button" class="chip" id="profName">✏️ Name</button></div>
     <div class="chipbank"><span class="pchip"></span><div><b>${fmtChips(s.chips)}</b><small>Chips</small></div></div>
     <div class="bar"><i style="width:${prog}%"></i></div>
     <div class="barlbl">${lv.next ? `Noch ${lv.next - s.visits} ${lv.next - s.visits === 1 ? "Besuch" : "Besuche"} bis <b>${lv.nextName}</b>` : "Höchstes Level. Das Haus verneigt sich. 👑"}</div>
@@ -1556,6 +1574,7 @@ function spin() {
     spinning = false; $("#spin").disabled = false; slot.classList.remove("spinning"); slot.classList.add("win");
     $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
+    if (CASINO && pick.hot >= 6) setTimeout(() => { batSwarm(10); toast("🦇 Sechs Chilis. Willkommen im Fledermaus-Land."); }, 500);
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
     if (!reduce) { const c = document.createElement("div"); c.className = "coins"; c.innerHTML = Array.from({ length: 16 }, () => `<i style="left:${Math.random() * 96}%;animation-delay:${Math.random() * .5}s">${rnd(["🪙", "✨", "🥢", "⭐"])}</i>`).join(""); slot.appendChild(c); setTimeout(() => c.remove(), 2400); }
     $("#takeIt").scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -1665,7 +1684,7 @@ $("#howCard summary").addEventListener("click", () => { howTouched = true; });
 $("#whoBtn").onclick = () => CASINO ? openProfile() : openName();
 $("#profDlg").addEventListener("click", e => { if (e.target.id === "profDlg") e.target.close(); });
 let qT;
-$("#q").addEventListener("input", e => { if (/^(jackpot|777|casino)$/i.test(e.target.value.trim())) { e.target.value = ""; e.target.blur(); setCasino(!CASINO); } query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
+$("#q").addEventListener("input", e => { if (/^(jackpot|777|casino)$/i.test(e.target.value.trim())) { e.target.value = ""; e.target.blur(); setCasino(!CASINO); } if (CASINO && vegasEgg(e.target.value)) { e.target.value = ""; e.target.blur(); } query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") { const r = filtered(); if (r.length === 1) { openItem(r[0].nr); } e.target.blur(); } });
 $("#qClr").onclick = () => { $("#q").value = ""; query = ""; $("#qClr").classList.add("hidden"); renderMenu(); renderHits(); $("#q").focus(); };
 $("#readout").onclick = e => { const li = e.target.closest("li[data-k]"); if (!li) return; const k = li.dataset.k; done.has(k) ? done.delete(k) : done.add(k); store.set("done", [...done]); li.classList.toggle("done"); buzz(); };
@@ -1689,6 +1708,35 @@ $(".brand").addEventListener("click", () => {
   const lg = $(".brand .logo"); lg.classList.remove("wiggle"); void lg.offsetWidth; lg.classList.add("wiggle");
   if (eggTaps.length >= 5) { eggTaps = []; setCasino(!CASINO); }
 });
+// ---------- Fear & Loathing Easter Eggs (nur im Casino-Modus) ----------
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+function vegasEgg(v) {
+  const q = norm(v.trim());
+  if (/^(bat ?country|fledermaus(land)?|fledermaeuse|fledermause)$/.test(q)) { batSwarm(); toast("🦇 Nicht anhalten. Hier ist Fledermaus-Land!"); return true; }
+  if (/^(lizard|lizards|echse|eidechse|echsen)$/.test(q)) { carpetTrip(); toast("🦎 Der Hotelteppich hat gerade gezwinkert …"); return true; }
+  if (/^(las ?vegas|vegas|wueste|wuste|barstow)$/.test(q)) { redShark(); toast("🌵 Irgendwo bei Barstow, am Rand der Wüste …"); return true; }
+  if (/^(gonzo|raoul|duke|hawaii(hemd)?)$/.test(q)) { const on = document.body.classList.toggle("hawaii"); toast(on ? "🌺 Hawaiihemd an. Sonnenbrille auf. Notizblock bereit." : "👔 Hawaiihemd wieder im Schrank."); return true; }
+  if (/^(american ?dream|amerikanischer ?traum)$/.test(q)) { toast("🇺🇸 Gesucht: der amerikanische Traum. Gefunden: H42 mit sechs Chilis."); setTimeout(() => openItem("H42"), 600); return true; }
+  return false;
+}
+function batSwarm(n = 14) {
+  if (reduceMotion()) return;
+  const box = document.createElement("div"); box.className = "fx";
+  box.innerHTML = Array.from({ length: n }, () => `<i class="bat" style="top:${5 + Math.random() * 70}%;animation-delay:${Math.random() * 1.2}s;animation-duration:${1.8 + Math.random() * 1.4}s;font-size:${1.4 + Math.random() * 1.6}rem">🦇</i>`).join("");
+  document.body.appendChild(box); try { navigator.vibrate && navigator.vibrate([20, 30, 20, 30, 20]); } catch {}
+  setTimeout(() => box.remove(), 4200);
+}
+function carpetTrip() {
+  if (reduceMotion()) return;
+  const o = document.createElement("div"); o.className = "carpet"; document.body.appendChild(o);
+  document.body.classList.add("trip"); setTimeout(() => { document.body.classList.remove("trip"); o.remove(); }, 4200);
+}
+function redShark() {
+  if (reduceMotion()) return;
+  const c = document.createElement("div"); c.className = "fx";
+  c.innerHTML = `<div class="shark"><span class="dust">💨💨</span><span class="car">🚗</span></div><div class="heat"></div>`;
+  document.body.appendChild(c); setTimeout(() => c.remove(), 4300);
+}
 function casinoIntro() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) { toast("🎰 Willkommen im Asia Le Casino!"); return; }
   const o = document.createElement("div"); o.className = "intro";
