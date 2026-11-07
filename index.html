@@ -1117,7 +1117,7 @@ function openFilters() {
       <button type="button" class="btn red block" id="fApply" style="margin-top:18px">${n ? `${n} ${n === 1 ? "Gericht" : "Gerichte"} anzeigen` : "Keine Treffer – Filter lockern"}</button>`;
     const upd = () => { saveF(); renderChips(); renderMenu(); renderHits(); draw(); };
     box.querySelectorAll("[data-t]").forEach(b => b.onclick = () => { F[b.dataset.t] = !F[b.dataset.t]; upd(); });
-    box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { F.spice = b.dataset.sp; upd(); if (CASINO && b.dataset.sp === "fire" && flOnceKey("mesc")) { $("#filterDlg").close(); carpetTrip(); eggToast("🌈 So scharf, dass die Farben anfangen zu singen."); } });
+    box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { F.spice = b.dataset.sp; upd(); if (CASINO && b.dataset.sp === "fire" && flOnceKey("mesc")) { $("#filterDlg").close(); carpetTrip(); } });
     box.querySelectorAll("[data-no]").forEach(b => b.onclick = () => { const id = b.dataset.no; F.no = F.no.includes(id) ? F.no.filter(x => x !== id) : [...F.no, id]; upd(); });
     $("#fReset").onclick = () => { F = F0(); upd(); };
     $("#fApply").onclick = () => $("#filterDlg").close();
@@ -1611,7 +1611,7 @@ function spin() {
     }
     $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${flSometimes(.12) ? flQuote() : pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
-    if (CASINO && pick.hot >= 6) setTimeout(() => { batSwarm(10); eggToast("🦇 Sechs Chilis. Willkommen im Fledermaus-Land."); }, 500);
+    if (CASINO && pick.hot >= 6) setTimeout(() => { batSwarm(10); }, 500);
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
     if (!reduce) { const c = document.createElement("div"); c.className = "coins"; c.innerHTML = Array.from({ length: 16 }, () => `<i style="left:${Math.random() * 96}%;animation-delay:${Math.random() * .5}s">${rnd(["🪙", "✨", "🥢", "⭐"])}</i>`).join(""); slot.appendChild(c); setTimeout(() => c.remove(), 2400); }
     $("#takeIt").scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -1806,7 +1806,6 @@ function stareReset() {
     const els = [$("#hero"), $("#list")];
     els.forEach(el => { el.classList.remove("melt"); void el.offsetWidth; el.classList.add("melt"); });
     setTimeout(() => els.forEach(el => el.classList.remove("melt")), 7000);
-    eggToast("🌀 " + pickOne(["Du starrst jetzt schon eine Weile auf die Karte. Das Essen fängt an zu atmen. Ganz ruhig.", "Kein Grund zur Panik. Das ist nur das Meskalin."]));
   }, 45000);
 }
 ["pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, stareReset, { passive: true }));
@@ -1827,7 +1826,6 @@ function flOnceKey(k) { const key = k + "|" + (round.started || today()); if (fl
 const BAT_DISH = { nr: "S66", name: "Fledermaus süß-sauer", desc: "Spezialität aus dem Wüstenland · solange Vorrat reicht", price: 6.66, cat: "Spezialitäten", hot: 3, veg: false, al: "", fake: true };
 function batDish() {
   batSwarm(16);
-  eggToast(pickOne(["🦇 Wir können hier nicht anhalten. Das ist Fledermausland!", "🦇 Leider aus. Die letzte ist gerade weggeflogen.", "🦇 Der Koch sagt: Nicht in diesem Land."]));
 }
 function flAfterAdd() {
   if (!CASINO) return;
@@ -1837,7 +1835,7 @@ function flAfterAdd() {
 let avTaps = [];
 function flAvatar() {   // 3× aufs Profilbild: Hawaiihemd
   const now = Date.now(); avTaps = avTaps.filter(t => now - t < 1500); avTaps.push(now);
-  if (avTaps.length >= 3) { avTaps = []; const on = document.body.classList.toggle("hawaii"); eggToast(on ? "🌺 Hawaiihemd an. Sonnenbrille auf. Notizblock bereit." : "👔 Hawaiihemd wieder im Schrank."); }
+  if (avTaps.length >= 3) { avTaps = []; document.body.classList.toggle("hawaii"); }
 }
 
 function casinoIntro() {
