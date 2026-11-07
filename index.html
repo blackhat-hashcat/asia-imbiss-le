@@ -263,6 +263,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .result{min-height:118px;margin-top:12px;border-radius:16px;background:rgba(0,0,0,.35);border:1px dashed rgba(255,182,39,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px}
 .result .rhint{color:#e8c98a;font-weight:600}
 .result .jack{font-family:var(--display);font-size:1.5rem;letter-spacing:1px;background:linear-gradient(180deg,#fff3c4,#ffb627 55%,#b86e00);-webkit-background-clip:text;background-clip:text;color:transparent;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+.result .quip{color:#e8c98a;font-style:italic;font-size:.88rem;margin-top:2px}
 .result .pname{font-weight:800;font-size:1.12rem;margin:4px 0 2px;color:#fff}
 .result .pdesc{color:#d8bfa0;font-size:.88rem}
 @keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
@@ -358,8 +359,8 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
   <section class="view on" id="v-karte">
     <div class="hero" id="hero">
       <div class="in">
-        <h1>Hunger?<br><span>Vorbestellen.</span></h1>
-        <p>Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.</p>
+        <h1 id="heroH">Hunger?<br><span>Vorbestellen.</span></h1>
+        <p id="heroP">Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.</p>
         <div class="row">
           <button class="btn gold sm" data-go="wuerfeln">🎰 Ich weiß nicht, was ich will</button>
         </div>
@@ -424,7 +425,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 
   <!-- ================= BESTELLUNG ================= -->
   <section class="view" id="v-bestellung">
-    <h2 class="title">Gruppenbestellung</h2>
+    <h2 class="title" id="grpTitle">Gruppenbestellung</h2>
     <p class="sub" id="grpSub">Noch leer.</p>
     <div id="liveBox"></div>
     <div id="closedWarn"></div>
@@ -475,6 +476,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
   <section class="view" id="v-infos">
     <h2 class="title">Asia Imbiss Le</h2>
     <p class="sub" id="infoStatus"></p>
+    <div class="card slim"><div class="live" style="gap:12px"><span style="font-size:1.5rem">🎰</span><div style="flex:1"><b>Casino-Modus</b><div style="color:var(--muted);font-size:.8rem">Sprüche statt normaler Texte</div></div><button class="btn sm favtog" id="casinoTog" aria-pressed="true">An</button></div></div>
     <div class="card">
       <h3>🕒 Öffnungszeiten</h3>
       <table class="hours" id="hours"></table>
@@ -524,7 +526,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 <dialog id="nameDlg" class="sheet">
   <form method="dialog" class="box">
     <div class="grab"></div>
-    <h3>Wie heißt du? 👋</h3>
+    <h3 id="nameTitle">Wie heißt du? 👋</h3>
     <p style="color:var(--muted);margin:6px 0 12px;font-size:.92rem">Damit die Gruppe sieht, wer was nimmt, und am Ende jeder weiß, was er zahlt.</p>
     <input class="inp" id="nameIn" maxlength="20" placeholder="Dein Name" autocomplete="given-name" enterkeyhint="done">
     <button class="btn red block" value="ok" style="margin-top:12px">Los geht's</button>
@@ -573,6 +575,13 @@ const store = {
 const alTokens = m => m.al ? m.al.split(",").map(s => s.trim()).filter(Boolean) : [];
 const hasAl = (m, codes) => alTokens(m).some(t => codes.includes(t));
 const isLong = nr => nr.length > 4;
+
+// ---------- Casino-Modus (nur Texte/Sprüche, abschaltbar unter Infos) ----------
+let CASINO = store.get("casino", true);
+const C = (normal, casino) => CASINO ? casino : normal;
+const pickOne = a => a[Math.floor(Math.random() * a.length)];
+const QUIP_ADD = ["Einsatz platziert: {x} 🎲", "Chips auf {x} gesetzt 🪙", "All in auf {x}! 🃏", "{x} – das Haus nickt anerkennend 🎩", "Gute Wahl. Das Haus gewinnt trotzdem. ({x}) 😏", "{x} liegt auf dem Tisch ♠️"];
+const QUIP_JACK = ["Das Haus empfiehlt.", "Glückwunsch! Bezahlen musst du trotzdem.", "Die Walzen haben gesprochen.", "Kein Zurück. (Doch, eigentlich schon.)", "Fortuna hat Hunger.", "Heute ist dein Glückstag. Vermutlich."];
 
 // ---------- Filters ----------
 const SPICE = [["any", "Egal"], ["mild", "😌 Mild"], ["hot", "🌶️ Scharf"], ["fire", "🔥 Sehr scharf"]];
@@ -785,7 +794,8 @@ function add(nr, note = "", n = 1) {
     ex ? ex[1] += n : p.i.push([nr, n, note]);
     buzz(); commit();
     const m = byNr[nr];
-    toast(`✓ ${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""} hinzugefügt`);
+    const lbl = `${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""}`;
+    toast(CASINO ? pickOne(QUIP_ADD).replace("{x}", lbl) : `✓ ${lbl} hinzugefügt`);
   });
 }
 function sub(nr) {
@@ -965,14 +975,16 @@ function lineHTML([nr, q, note], idx, editable) {
 }
 function renderOrder() {
   const ppl = people(), cnt = countAll(), tot = ppl.reduce((a, p) => a + sumP(p), 0);
-  $("#grpSub").textContent = ppl.length ? `${ppl.length} ${ppl.length === 1 ? "Person" : "Personen"} · ${cnt} ${cnt === 1 ? "Gericht" : "Gerichte"}` : "Noch hat keiner was ausgesucht.";
+  $("#grpTitle").textContent = C("Gruppenbestellung", "Der Spieltisch");
+  $("#grpSub").textContent = ppl.length ? C(`${ppl.length} ${ppl.length === 1 ? "Person" : "Personen"} · ${cnt} ${cnt === 1 ? "Gericht" : "Gerichte"}`, `${ppl.length} ${ppl.length === 1 ? "Spieler" : "Spieler"} · ${cnt} ${cnt === 1 ? "Einsatz" : "Einsätze"} auf dem Tisch`) : C("Noch hat keiner was ausgesucht.", "Noch keine Einsätze. Die Croupière gähnt.");
+  $("#reset").textContent = C("🔄 Neue Runde starten", "🔄 Neue Runde, neues Glück");
   const mineFirst = [...ppl].sort((a, b) => (b.n === me) - (a.n === me));
   $("#people").innerHTML = mineFirst.length ? mineFirst.map(p => `
     <div class="card" ${p.n === me ? 'style="border-color:rgba(255,182,39,.4)"' : ""}>
       <h3><span>${p.n === me ? "👤 Du" : "🙂 " + esc(p.n)}</span><span class="amt">${eur(sumP(p))}</span></h3>
       ${p.i.map((x, i) => lineHTML(x, i, p.n === me)).join("")}
       ${p.n !== me ? `<button class="btn sm block" style="margin-top:8px" data-copy="${esc(p.n)}">➕ Ich nehm dasselbe</button>` : ""}
-    </div>`).join("") : `<div class="empty"><span class="big">🧾</span>Noch leer. Such dir was auf der Karte aus!<br><button class="btn red sm" style="margin-top:12px" data-go="karte">Zur Karte</button></div>`;
+    </div>`).join("") : `<div class="empty"><span class="big">${C("🧾", "🃏")}</span>${C("Noch leer. Such dir was auf der Karte aus!", "Der Tisch ist leer. Faites vos jeux!")}<br><button class="btn red sm" style="margin-top:12px" data-go="karte">Zur Karte</button></div>`;
   $("#grpFoot").classList.toggle("hidden", !ppl.length);
   $("#shareBtns").classList.toggle("hidden", !!live);
   $("#reset").classList.toggle("hidden", !ppl.length);
@@ -1009,6 +1021,7 @@ function renderCall() {
       <span class="ck"></span></li>`; }).join("") : `<li style="cursor:default;color:var(--muted);justify-content:center">Noch nichts zum Vorlesen.</li>`;
   $("#roCount").textContent = cnt ? `${cnt} ${cnt === 1 ? "Gericht" : "Gerichte"}` : "";
   $("#roTotal").textContent = eur(people().reduce((a, p) => a + sumP(p), 0));
+  $("#callBtn").textContent = C("📞 Jetzt anrufen", "📞 Einsätze telefonisch platzieren");
   $$("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === round.mode));
   const pn = $("#pickupName").value.trim() || me, np = people().length;
   $("#pickupName").placeholder = me || "z. B. Müller";
@@ -1045,8 +1058,8 @@ function renderDeadline() {
     el.innerHTML = dlEdit ? `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><button class="chip" data-dledit="0">✕</button></div>${dlPickerHTML()}`
       : `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><button class="chip" data-dledit="1">setzen</button></div>`;
   } else {
-    el.innerHTML = `<div class="dlrow"><span class="lbl">⏱ Bestellschluss ${hhmm(d)} Uhr</span><button class="chip" data-dl="+5">+5 Min</button><button class="chip" data-dledit="1">ändern</button><button class="chip" data-dl="0">aus</button></div>
-      <div class="dlbig ${left <= 0 ? "over" : ""}" id="dlLeft">${left > 0 ? "noch " + fmtLeft(left) : "Jetzt bestellen!"}</div>
+    el.innerHTML = `<div class="dlrow"><span class="lbl">${C(`⏱ Bestellschluss ${hhmm(d)} Uhr`, `⏱ Rien ne va plus um ${hhmm(d)}`)}</span><button class="chip" data-dl="+5">+5 Min</button><button class="chip" data-dledit="1">ändern</button><button class="chip" data-dl="0">aus</button></div>
+      <div class="dlbig ${left <= 0 ? "over" : ""}" id="dlLeft">${left > 0 ? "noch " + fmtLeft(left) : C("Jetzt bestellen!", "Nichts geht mehr!")}</div>
       ${dlEdit ? dlPickerHTML() : ""}
       ${left <= 0 ? `<button class="btn gold block" data-go="anrufen" style="margin-top:8px">📞 Zum Anrufen</button>` : ""}`;
   }
@@ -1068,7 +1081,7 @@ function tickDeadline() {
   const d = round.deadline; if (!d) return;
   const left = d - Date.now(), el = $("#dlLeft");
   if (el) { if (left > 0) el.textContent = "noch " + fmtLeft(left); else if (!el.classList.contains("over")) renderDeadline(); }
-  if (left <= 0 && left > -5000 && dlAlerted !== d) { dlAlerted = d; toast("⏱ Bestellschluss! Jetzt anrufen 📞"); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} }
+  if (left <= 0 && left > -5000 && dlAlerted !== d) { dlAlerted = d; toast(C("⏱ Bestellschluss! Jetzt anrufen 📞", "🎰 Rien ne va plus! Ab ans Telefon 📞")); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} }
   renderChrome();
 }
 setInterval(tickDeadline, 1000);
@@ -1078,16 +1091,16 @@ function renderPay() {
   el.classList.toggle("hidden", !ppl.length);
   if (!ppl.length) return;
   const payer = round.payer && group.find(p => p.n === round.payer) ? round.payer : (round.payer || "");
-  let h = `<h3>💶 Bezahlen</h3>
-    <div class="seg two"><button data-paymode="self" class="${payer ? "" : "on"}">💵 Jeder zahlt selbst</button><button data-paymode="one" class="${payer ? "on" : ""}">🙋 Einer legt aus</button></div>`;
+  let h = `<h3>${C("💶 Bezahlen", "💶 Die Kasse")}</h3>
+    <div class="seg two"><button data-paymode="self" class="${payer ? "" : "on"}">${C("💵 Jeder zahlt selbst", "💵 Jeder für sich")}</button><button data-paymode="one" class="${payer ? "on" : ""}">${C("🙋 Einer legt aus", "🏦 Einer ist die Bank")}</button></div>`;
   if (!payer) {
     h += `<div style="margin-top:10px">${ppl.map(p => `<div class="payrow"><span class="n">${p.n === me ? "👤 " : ""}${esc(p.n)}</span><span class="pr">${eur(sumP(p))}</span></div>`).join("")}</div>`;
-    if (payChoose) h = h.replace('<div style="margin-top:10px">', `<label class="lb">Wer legt aus?</label><div class="fgrid">${ppl.map(p => `<button class="tog" data-payer="${esc(p.n)}">${p.n === me ? "🙋 Ich" : esc(p.n)}</button>`).join("")}</div><div style="margin-top:10px">`);
+    if (payChoose) h = h.replace('<div style="margin-top:10px">', `<label class="lb">${C("Wer legt aus?", "Wer spielt die Bank?")}</label><div class="fgrid">${ppl.map(p => `<button class="tog" data-payer="${esc(p.n)}">${p.n === me ? "🙋 Ich" : esc(p.n)}</button>`).join("")}</div><div style="margin-top:10px">`);
     el.innerHTML = h; return;
   }
   const payerP = group.find(p => p.n === payer), pp = payer === me ? myPP() : (payerP && payerP.pp) || "";
   const others = ppl.filter(p => p.n !== payer), open = others.filter(p => !p.paid), openSum = open.reduce((a, p) => a + sumP(p), 0);
-  h += `<div style="margin:12px 0 4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span><b>${payer === me ? "Du legst" : esc(payer) + " legt"}</b> aus</span><button class="chip" data-paymode="one" style="margin-left:auto">ändern</button></div>`;
+  h += `<div style="margin:12px 0 4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span>${CASINO ? `<b>${payer === me ? "Du bist" : esc(payer) + " ist"}</b> die Bank 🏦` : `<b>${payer === me ? "Du legst" : esc(payer) + " legt"}</b> aus`}</span><button class="chip" data-paymode="one" style="margin-left:auto">ändern</button></div>`;
   if (payer === me) {
     h += `<label class="lb">Dein PayPal.me-Name, damit die anderen dir zurückzahlen können</label>
       <input class="inp" id="ppIn" placeholder="z. B. maxmustermann" value="${esc(pp)}" autocomplete="off" autocapitalize="off" spellcheck="false">
@@ -1095,12 +1108,12 @@ function renderPay() {
   } else {
     const myRow = others.find(p => p.n === me);
     if (myRow && !myRow.paid) h += pp
-      ? `<a class="btn paybtn" href="${payUrl(pp, sumP(myRow))}" target="_blank" rel="noopener">💸 ${eur(sumP(myRow))} an ${esc(payer)} per PayPal</a><div style="color:var(--dim);font-size:.78rem;text-align:center">Tipp danach unten auf „offen“, damit ${esc(payer)} sieht, dass du bezahlt hast.</div>`
+      ? `<a class="btn paybtn" href="${payUrl(pp, sumP(myRow))}" target="_blank" rel="noopener">💸 ${eur(sumP(myRow))} an ${esc(payer)} per PayPal</a><div style="color:var(--dim);font-size:.78rem;text-align:center">Tipp danach unten auf „${C("offen", "schuldet")}“, damit ${esc(payer)} sieht, dass du bezahlt hast.</div>`
       : `<div class="warn">ℹ️ <span>${esc(payer)} hat noch keinen PayPal.me-Namen eingetragen. Du schuldest ${esc(payer)} <b>${eur(sumP(myRow))}</b>.</span></div>`;
     if (myRow && myRow.paid) h += `<div class="warn" style="background:rgba(47,211,167,.1);border-color:rgba(47,211,167,.35);color:var(--jade)">✓ <span>Du hast ${esc(payer)} bezahlt. Danke!</span></div>`;
   }
-  h += `<div style="margin-top:10px">${others.map(p => `<div class="payrow"><span class="n">${p.n === me ? "👤 Du" : esc(p.n)}</span><span class="pr">${eur(sumP(p))}</span>${(p.n === me || payer === me) ? `<button class="st ${p.paid ? "ok" : "open"}" data-paid="${esc(p.n)}">${p.paid ? "✓ bezahlt" : "offen"}</button>` : `<span class="st ${p.paid ? "ok" : "open"}">${p.paid ? "✓ bezahlt" : "offen"}</span>`}</div>`).join("") || `<div style="color:var(--muted)">Nur du hast bestellt.</div>`}</div>
-    ${others.length ? `<div style="margin-top:8px;color:var(--muted);font-size:.88rem">${open.length ? `Noch offen: <b style="color:var(--ink)">${eur(openSum)}</b> von ${open.length} ${open.length === 1 ? "Person" : "Personen"}` : "🎉 Alle haben bezahlt."}</div>` : ""}`;
+  h += `<div style="margin-top:10px">${others.map(p => `<div class="payrow"><span class="n">${p.n === me ? "👤 Du" : esc(p.n)}</span><span class="pr">${eur(sumP(p))}</span>${(p.n === me || payer === me) ? `<button class="st ${p.paid ? "ok" : "open"}" data-paid="${esc(p.n)}">${p.paid ? C("✓ bezahlt", "✓ beglichen") : C("offen", "schuldet")}</button>` : `<span class="st ${p.paid ? "ok" : "open"}">${p.paid ? C("✓ bezahlt", "✓ beglichen") : C("offen", "schuldet")}</span>`}</div>`).join("") || `<div style="color:var(--muted)">Nur du hast bestellt.</div>`}</div>
+    ${others.length ? `<div style="margin-top:8px;color:var(--muted);font-size:.88rem">${open.length ? `Noch offen: <b style="color:var(--ink)">${eur(openSum)}</b> von ${open.length} ${open.length === 1 ? "Person" : "Personen"}` : C("🎉 Alle haben bezahlt.", "🎉 Alle Schulden beglichen. Die Bank ist zufrieden.")}</div>` : ""}`;
   el.innerHTML = h;
   const inp = $("#ppIn");
   if (inp) inp.onchange = () => { const v = cleanPP(inp.value); inp.value = v; store.set("pp", v); const p = myP(); if (p) p.pp = v; commit(); toast(v ? "PayPal.me gespeichert ✓" : "PayPal.me entfernt"); };
@@ -1172,7 +1185,7 @@ function spin() {
   const total = reduce ? 50 : 1100 + 2 * 550 + 150;
   setTimeout(() => {
     spinning = false; $("#spin").disabled = false; slot.classList.remove("spinning"); slot.classList.add("win");
-    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div><div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
     if (!reduce) { const c = document.createElement("div"); c.className = "coins"; c.innerHTML = Array.from({ length: 16 }, () => `<i style="left:${Math.random() * 96}%;animation-delay:${Math.random() * .5}s">${rnd(["🪙", "✨", "🥢", "⭐"])}</i>`).join(""); slot.appendChild(c); setTimeout(() => c.remove(), 2400); }
@@ -1188,11 +1201,18 @@ function renderInfos() {
   const rowsIdx = [[1, 2, 3, 4, 5], [6], [0]];
   $("#hours").innerHTML = SHOP.hoursText.map(([d, t], i) => `<tr class="${rowsIdx[i].includes(today) ? "today" : ""}"><td>${esc(d)}${rowsIdx[i].includes(today) ? " · heute" : ""}</td><td>${esc(t)}</td></tr>`).join("");
 }
+function renderCasinoStatic() {
+  $("#heroH").innerHTML = C("Hunger?<br><span>Vorbestellen.</span>", "Faites vos jeux!<br><span>Hunger gewinnt.</span>");
+  $("#heroP").textContent = C("Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.", "Setzt eure Chips auf die Karte. Einer ruft an, und wenn ihr ankommt, steht der Gewinn auf dem Tisch.");
+  $("#nameTitle").textContent = C("Wie heißt du? 👋", "Wie heißt du, Spieler? 🎩");
+  const t = $("#casinoTog"); if (t) { t.setAttribute("aria-pressed", CASINO); t.textContent = CASINO ? "An" : "Aus"; }
+}
 function renderChrome() {
+  renderCasinoStatic();
   $("#whoBtn").textContent = "👤 " + (me || "Name");
   const p = myP(), mc = p ? p.i.reduce((a, x) => a + x[1], 0) : 0, all = countAll();
   $("#tabBadge").classList.toggle("hidden", !all); $("#tabBadge").textContent = all;
-  $("#cartMine").textContent = mc ? `Du: ${mc}× · ${eur(sumP(p))}` : `Gruppe: ${all} Gerichte`;
+  $("#cartMine").textContent = mc ? C(`Du: ${mc}× · ${eur(sumP(p))}`, `Dein Einsatz: ${mc}× · ${eur(sumP(p))}`) : C(`Gruppe: ${all} Gerichte`, `Am Tisch: ${all} Chips`);
   const dl = round.deadline ? (round.deadline > Date.now() ? ` · ⏱ ${fmtLeft(round.deadline - Date.now())}` : " · ⏱ Schluss!") : "";
   $("#cartGrp").textContent = (people().length ? `👥 ${people().map(p => p.n).join(", ")}` : "") + dl;
   const v = $(".view.on").id;
@@ -1282,6 +1302,7 @@ $("#share").onclick = async () => {
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin();
+$("#casinoTog").onclick = () => { CASINO = !CASINO; store.set("casino", CASINO); render(); toast(CASINO ? "🎰 Casino-Modus an. Viel Glück!" : "Casino-Modus aus"); };
 $("#lever").onclick = () => spin();
 $("#spinFav").onclick = e => { favOnly = !favOnly; e.currentTarget.setAttribute("aria-pressed", favOnly); };
 $("#takeIt").onclick = () => { if (pick) { pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
