@@ -403,6 +403,11 @@ body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infin
 body.trip main{animation:trip 6s ease-in-out}
 @keyframes trip{0%,100%{filter:none}30%{filter:hue-rotate(-12deg) saturate(1.25)}60%{filter:hue-rotate(10deg) saturate(1.2)}}
 .shark{position:absolute;bottom:calc(var(--dock,140px) + 10px);left:-160px;display:flex;align-items:flex-end;gap:2px;font-size:3.6rem;animation:drive 5.4s cubic-bezier(.45,.05,.55,.95) forwards}
+.shark .sbats{position:relative;display:flex;gap:2px;font-size:1.9rem;align-self:flex-end;margin-bottom:26px;margin-right:-10px;animation:sbob .45s ease-in-out infinite alternate}
+.shark .sbats b:nth-child(2){transform:translateY(-14px)}
+.shark .sbats b:nth-child(2).wing{margin-top:-14px}
+.shark .sbats b:nth-child(3){font-size:1.15rem;margin-top:8px}
+@keyframes sbob{to{transform:translateY(-8px)}}
 .shark .car{display:inline-block;transform:scaleX(-1);filter:drop-shadow(0 4px 4px rgba(0,0,0,.6))}
 .shark .dust{font-size:1.2rem;opacity:.7;animation:dust .3s infinite alternate}
 @keyframes drive{to{transform:translateX(calc(100vw + 240px))}}
@@ -1756,7 +1761,7 @@ function carpetTrip() {
 function redShark() {
   if (reduceMotion()) return;
   const c = document.createElement("div"); c.className = "fx";
-  c.innerHTML = `<div class="shark"><span class="dust">💨💨</span><span class="car">🚗</span></div><div class="heat"></div>`;
+  c.innerHTML = `<div class="shark"><span class="sbats"><b class="wing">🦇</b><b class="wing" style="animation-delay:-.07s">🦇</b><b class="wing" style="animation-delay:-.11s">🦇</b></span><span class="dust">💨💨</span><span class="car">🚗</span></div><div class="heat"></div>`;
   document.body.appendChild(c); setTimeout(() => c.remove(), 6200);
 }
 
