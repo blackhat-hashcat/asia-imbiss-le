@@ -398,10 +398,10 @@ body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infin
 @keyframes batdim{0%,100%{background-color:transparent}10%,85%{background-color:rgba(0,0,0,.18)}}
 @keyframes batflyrev{0%{transform:translate(0,0) scaleX(-1)}25%{transform:translate(-32vw,40px) rotate(-12deg)}50%{transform:translate(-62vw,-30px) rotate(14deg) scaleX(-1)}75%{transform:translate(-90vw,30px) rotate(-10deg)}99%{opacity:1}100%{transform:translate(calc(-100vw - 220px),-10px) scaleX(-1);opacity:0}}
 @keyframes batfly{0%{transform:translate(0,0) rotate(-10deg)}25%{transform:translate(32vw,-40px) rotate(12deg) scaleX(-1)}50%{transform:translate(62vw,30px) rotate(-14deg)}75%{transform:translate(90vw,-30px) rotate(10deg) scaleX(-1)}99%{opacity:1}100%{transform:translate(calc(100vw + 220px),10px) rotate(-8deg);opacity:0}}
-.carpet{position:fixed;inset:-10%;z-index:255;pointer-events:none;mix-blend-mode:difference;opacity:.75;background:repeating-conic-gradient(from 0deg,#ff2d6f 0 15deg,#ffb627 15deg 30deg,#1fd1a1 30deg 45deg,#6b2dff 45deg 60deg);background-size:80px 80px;animation:carpet 7s ease-in-out both}
-@keyframes carpet{0%{opacity:0;transform:scale(1) rotate(0)}12%{opacity:.75}35%{transform:scale(1.25) rotate(12deg);background-size:120px 120px}60%{transform:scale(.95) rotate(-10deg);background-size:60px 60px}85%{opacity:.7}100%{opacity:0;transform:scale(1.1) rotate(0)}}
-body.trip main,body.trip .top,body.trip .tabs{animation:trip 7s ease-in-out}
-@keyframes trip{0%,100%{filter:none;transform:none}15%{filter:hue-rotate(120deg) saturate(2.2);transform:skewX(4deg) scale(1.02)}35%{filter:hue-rotate(240deg) saturate(2.6) contrast(1.2);transform:skewX(-6deg) skewY(2deg) scale(.98)}55%{filter:hue-rotate(330deg) saturate(2) blur(.8px);transform:skewY(-3deg) rotate(1.5deg)}75%{filter:hue-rotate(60deg) saturate(1.8);transform:skewX(3deg) scale(1.03)}90%{filter:hue-rotate(180deg);transform:skewX(-2deg)}}
+.carpet{position:fixed;inset:0;z-index:255;pointer-events:none;mix-blend-mode:soft-light;opacity:0;background:radial-gradient(circle at 30% 70%,rgba(255,60,40,.9),transparent 55%),radial-gradient(circle at 75% 30%,rgba(255,170,30,.8),transparent 50%),radial-gradient(circle at 50% 50%,rgba(200,40,140,.6),transparent 60%);background-size:160% 160%;animation:carpet 6s ease-in-out both}
+@keyframes carpet{0%{opacity:0;background-position:0% 0%}20%{opacity:.55}50%{opacity:.65;background-position:100% 60%}80%{opacity:.5}100%{opacity:0;background-position:40% 100%}}
+body.trip main{animation:trip 6s ease-in-out}
+@keyframes trip{0%,100%{filter:none}30%{filter:hue-rotate(-12deg) saturate(1.25)}60%{filter:hue-rotate(10deg) saturate(1.2)}}
 .shark{position:absolute;bottom:calc(var(--dock,140px) + 10px);left:-160px;display:flex;align-items:flex-end;gap:2px;font-size:3.6rem;animation:drive 5.4s cubic-bezier(.45,.05,.55,.95) forwards}
 .shark .car{display:inline-block;transform:scaleX(-1);filter:drop-shadow(0 4px 4px rgba(0,0,0,.6))}
 .shark .dust{font-size:1.2rem;opacity:.7;animation:dust .3s infinite alternate}
@@ -422,7 +422,7 @@ body.casino .flizard{display:inline-block}
 .lonebat{position:fixed;left:-40px;z-index:240;pointer-events:none;font-style:normal;font-size:1.1rem;opacity:.35;animation:lonebat 6.5s linear forwards}
 @keyframes lonebat{0%{transform:translate(0,0)}20%{transform:translate(22vw,-14px) scaleX(-1)}45%{transform:translate(50vw,10px)}70%{transform:translate(78vw,-10px) scaleX(-1)}99%{opacity:.35}100%{transform:translate(calc(100vw + 120px),4px);opacity:0}}
 .hero.melt,#list.melt{animation:melt 7s ease-in-out}
-@keyframes melt{0%,100%{filter:none;transform:none}20%{filter:saturate(1.8) hue-rotate(25deg);transform:scale(1.02) skewX(1.5deg)}45%{filter:saturate(2.2) hue-rotate(-30deg) blur(.6px);transform:scale(.985) skewY(-1.5deg)}70%{filter:saturate(1.6) hue-rotate(60deg);transform:scale(1.015) skewX(-1deg)}}
+@keyframes melt{0%,100%{filter:none;transform:none}25%{filter:saturate(1.15);transform:scale(1.006)}50%{filter:saturate(1.05);transform:scale(.996)}75%{filter:saturate(1.15) hue-rotate(6deg);transform:scale(1.005)}}
 body.casino.late::before{animation:latedrift 50s linear infinite}
 @keyframes latedrift{to{filter:hue-rotate(360deg)}}
 body.casino.late .hero{animation:breathe 9s ease-in-out infinite}
@@ -1761,7 +1761,7 @@ function batSwarm(n = 22) {
 function carpetTrip() {
   if (reduceMotion()) return;
   const o = document.createElement("div"); o.className = "carpet"; document.body.appendChild(o);
-  document.body.classList.add("trip"); setTimeout(() => { document.body.classList.remove("trip"); o.remove(); }, 7000);
+  document.body.classList.add("trip"); setTimeout(() => { document.body.classList.remove("trip"); o.remove(); }, 6200);
 }
 function redShark() {
   if (reduceMotion()) return;
