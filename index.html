@@ -546,7 +546,7 @@ const NO_ALL = [
   { id: "sweet", label: "🍬 Süßungsmittel", codes: ["N"], g: "zs" },
 ];
 const optOk = (m, codes) => !m.opts || !m.optAl || m.opts.some(o => !(m.optAl[o] || []).some(c => codes.includes(c)));   // Sauce: mind. eine Sorte passt
-const NO = NO_ALL.filter(n => MENU.some(m => hasAl(m, n.codes) || Object.values(m.optAl || {}).flat().some(c => n.codes.includes(c))))
+const NO = NO_ALL.filter(n => n.g === "al").filter(n => MENU.some(m => hasAl(m, n.codes) || Object.values(m.optAl || {}).flat().some(c => n.codes.includes(c))))
   .map(n => ({ ...n, test: m => !hasAl(m, n.codes) && optOk(m, n.codes) }));
 const MAXP = Math.ceil(Math.max(...MENU.map(m => m.price)));
 const F0 = () => ({ fav: false, veg: false, spice: "any", no: [], max: 0 });
@@ -584,7 +584,7 @@ const fromHash = readHash();
 let group = fromHash ? fromHash.p : store.get("group", []);
 let round = Object.assign(R0(), fromHash ? fromHash.r : store.get("round", {}));
 let F = Object.assign(F0(), store.get("filters", {})), cat = "", query = "", pick = null;
-F.no = (F.no || []).filter(id => NO.some(n => n.id === id));
+F.no = (F.no || []).filter(id => NO.some(n => n.id === id)); F.max = 0;
 let done = new Set(store.get("done", []));
 
 function cleanPP(v) { return String(v || "").replace(/^.*paypal\.me\//i, "").replace(/[^A-Za-z0-9]/g, "").slice(0, 30); }
@@ -844,18 +844,11 @@ function openFilters() {
         <button type="button" class="tog ${F.fav ? "on" : ""}" data-t="fav">⭐ Meine Favoriten</button></div></div>
       <div class="fsec"><h4>Schärfe</h4><div class="seg">${SPICE.map(([k, l]) => `<button type="button" class="${F.spice === k ? "on" : ""}" data-sp="${k}">${l}</button>`).join("")}</div></div>
       <div class="fsec"><h4>Allergien &amp; Unverträglichkeiten: ohne …</h4><div class="fgrid">${NO.filter(x => x.g === "al").map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div></div>
-      <div class="fsec"><h4>Zusatzstoffe: ohne …</h4><div class="fgrid">${NO.filter(x => x.g === "zs").map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div>
-        <p class="fnote">🧂 Geschmacksverstärker ist in fast allen Gerichten, gibt's laut Imbiss aber <b>auf Wunsch auch ohne</b>: beim Gericht als Sonderwunsch „ohne Geschmacksverstärker“ wählen.</p></div>
-      <p class="fnote">⚠️ Angaben laut Flyer, ohne Gewähr. Bei starken Allergien bitte beim Bestellen nachfragen.</p>
-      <div class="fsec"><h4>Max. Preis: <span style="color:var(--gold)">${F.max ? "bis " + eur(F.max) : "egal"}</span></h4>
-        <input type="range" class="range" id="fMax" min="0" max="${MAXP}" step="0.5" value="${F.max}"></div>
       <button type="button" class="btn red block" id="fApply" style="margin-top:18px">${n ? `${n} ${n === 1 ? "Gericht" : "Gerichte"} anzeigen` : "Keine Treffer – Filter lockern"}</button>`;
     const upd = () => { saveF(); renderChips(); renderMenu(); renderHits(); draw(); };
     box.querySelectorAll("[data-t]").forEach(b => b.onclick = () => { F[b.dataset.t] = !F[b.dataset.t]; upd(); });
     box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { F.spice = b.dataset.sp; upd(); });
     box.querySelectorAll("[data-no]").forEach(b => b.onclick = () => { const id = b.dataset.no; F.no = F.no.includes(id) ? F.no.filter(x => x !== id) : [...F.no, id]; upd(); });
-    const r = $("#fMax"); r.oninput = () => { F.max = +r.value; box.querySelector(".fsec:last-of-type h4 span").textContent = F.max ? "bis " + eur(F.max) : "egal"; };
-    r.onchange = upd;
     $("#fReset").onclick = () => { F = F0(); upd(); };
     $("#fApply").onclick = () => $("#filterDlg").close();
   };
