@@ -409,20 +409,15 @@ body.trip main{animation:trip 6s ease-in-out}
 @keyframes dust{to{transform:translateY(-4px) scale(1.15);opacity:.4}}
 .heat{position:absolute;left:0;right:0;bottom:0;height:70%;background:linear-gradient(0deg,rgba(255,120,30,.5),rgba(255,180,60,.15) 60%,transparent);animation:heat 6s ease-in-out both}
 @keyframes heat{0%,100%{opacity:0}30%,70%{opacity:1}}
-body.hawaii .top{background:repeating-linear-gradient(45deg,rgba(255,90,140,.35) 0 14px,rgba(255,182,39,.3) 14px 28px,rgba(31,209,161,.3) 28px 42px),rgba(4,17,10,.9)}
 
 
 /* ---------- Fear & Loathing, subtil ---------- */
-body.casino .item[data-nr="S66"] .iname::after{content:" 🦇";font-size:.8rem;opacity:.6}
-body.casino .item[data-nr="S66"]{opacity:.92}
 .flizard{display:none;font-size:.7rem;opacity:.18;margin-left:3px;cursor:default;filter:grayscale(.6)}
 body.casino .flizard{display:inline-block}
 .flizard.flick{animation:flick .6s}
 @keyframes flick{30%{transform:rotate(-25deg) translateX(-3px);opacity:.8}60%{transform:rotate(15deg)}}
 .lonebat{position:fixed;left:-40px;z-index:240;pointer-events:none;font-style:normal;font-size:1.1rem;opacity:.35;animation:lonebat 6.5s linear forwards}
 @keyframes lonebat{0%{transform:translate(0,0)}20%{transform:translate(22vw,-14px) scaleX(-1)}45%{transform:translate(50vw,10px)}70%{transform:translate(78vw,-10px) scaleX(-1)}99%{opacity:.35}100%{transform:translate(calc(100vw + 120px),4px);opacity:0}}
-.hero.melt,#list.melt{animation:melt 7s ease-in-out}
-@keyframes melt{0%,100%{filter:none;transform:none}25%{filter:saturate(1.15);transform:scale(1.006)}50%{filter:saturate(1.05);transform:scale(.996)}75%{filter:saturate(1.15) hue-rotate(6deg);transform:scale(1.005)}}
 body.casino.late::before{animation:latedrift 50s linear infinite}
 @keyframes latedrift{to{filter:hue-rotate(360deg)}}
 body.casino.late .hero{animation:breathe 9s ease-in-out infinite}
@@ -1081,7 +1076,6 @@ function renderMenu() {
   }
   const groups = {};
   items.forEach(m => (groups[m.cat] = groups[m.cat] || []).push(m));
-  if (CASINO && !query && !activeFilters(F).length && groups["Spezialitäten"]) groups["Spezialitäten"].splice(4, 0, BAT_DISH);
   $("#list").innerHTML = CATS.filter(c => groups[c.id]).map(c => `
     <div class="sec" id="sec-${esc(c.id)}">
       <div class="sech"><span class="ic">${c.icon}</span><h3>${esc(c.id)}</h3><span class="cnt">${groups[c.id].length}</span></div>
@@ -1484,7 +1478,7 @@ function openProfile() {
   const top = (arr, key, fmt, filt = () => true) => arr.filter(filt).sort((a, b) => b[key] - a[key]).slice(0, 3).map((x, i) => `<div class="rk"><span>${["🥇", "🥈", "🥉"][i]}</span><b>${x.n === me ? "Du" : esc(x.n)}</b><span>${fmt(x)}</span></div>`).join("") || `<div class="rk" style="color:var(--dim)">noch keine Daten</div>`;
   const gFav = (() => { const c = {}; for (const ppl of Object.values(groupHist || {})) for (const v of Object.values(ppl || {})) (v.i || []).forEach(([nr, q]) => { if (byNr[nr]) c[nr] = (c[nr] || 0) + q; }); const f = Object.entries(c).sort((a, b) => b[1] - a[1])[0]; return f ? byNr[f[0]] : null; })();
   $("#profBox").innerHTML = `<div class="grab"></div>
-    <div class="phead"><div class="avatar" onclick="window.__flAvatar && window.__flAvatar()">${/^(raoul|gonzo|duke)/i.test(me) ? "🌺" : esc(me.slice(0, 1).toUpperCase())}</div><div style="flex:1;min-width:0"><h3>${esc(me)}</h3><div class="lvl">Level ${lv.idx} · ${lv.name}</div></div><button type="button" class="chip" id="profName">✏️ Name</button></div>
+    <div class="phead"><div class="avatar">${esc(me.slice(0, 1).toUpperCase())}</div><div style="flex:1;min-width:0"><h3>${esc(me)}</h3><div class="lvl">Level ${lv.idx} · ${lv.name}</div></div><button type="button" class="chip" id="profName">✏️ Name</button></div>
     <div class="chipbank"><span class="pchip"></span><div><b>${fmtChips(s.chips)}</b><small>Chips</small></div></div>
     <div class="bar"><i style="width:${prog}%"></i></div>
     <div class="barlbl">${lv.next ? `Noch ${lv.next - s.visits} ${lv.next - s.visits === 1 ? "Besuch" : "Besuche"} bis <b>${lv.nextName}</b>` : "Höchstes Level. Das Haus verneigt sich. 👑"}</div>
@@ -1632,9 +1626,7 @@ function renderCasinoStatic() {
   $("#nameTitle").textContent = C("Wie heißt du? 👋", "Wie heißt du, Spieler? 🎩");
   document.body.classList.toggle("casino", CASINO);
   document.body.classList.toggle("late", CASINO && FL_NIGHT());
-  if (CASINO && /^(raoul|gonzo|duke)/i.test(me || "")) document.body.classList.add("hawaii"); else if (!CASINO) document.body.classList.remove("hawaii");
   if (CASINO && !flBatTimer) flAmbient();
-  if (CASINO && !stareT) stareReset();
   $("#brandTxt").innerHTML = C("Asia Le", `Asia Le <small class="ctag">CASINO</small>`);
   const tb = $('.tabs [data-v="bestellung"]'); if (tb) tb.childNodes[1].nodeValue = C("Bestellung", "Spieltisch");
   const tk = $('.tabs [data-v="karte"] .e'); if (tk) tk.textContent = C("🍜", "🃏");
@@ -1693,7 +1685,6 @@ document.addEventListener("click", e => {
   const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-act],[data-wheel],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
   if (!t) return;
   const d = t.dataset;
-  if (d.add === "S66" || d.open === "S66") { batDish(); return; }
   if (d.add) { lastAddEl = t.getBoundingClientRect(); const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
   else if (d.sub) sub(d.sub);
   else if (d.fav) toggleFav(d.fav);
@@ -1739,7 +1730,6 @@ $("#share").onclick = async () => {
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin();
-window.__flAvatar = flAvatar;
 $("#flLizard").addEventListener("click", e => { e.stopPropagation(); flLizard(); });
 // ---------- Easter Egg: Suche "jackpot" oder 7-7-7 am Automaten ----------
 let casinoCooldown = 0;
@@ -1795,20 +1785,6 @@ function flAmbient() {   // gelegentlich flattert eine einzelne, halbtransparent
 }
 function flSometimes(chance) { return CASINO && Math.random() < chance; }
 function flQuote() { return pickOne(FL_QUOTES); }
-// Eigene Mechanik "Starren": wer im Casino 45 s untätig auf die Karte schaut, dem fängt das Essen an zu atmen
-let stareT = 0;
-function stareReset() {
-  clearTimeout(stareT);
-  if (!CASINO) return;
-  stareT = setTimeout(() => {
-    if (!CASINO || document.hidden || !$("#v-karte").classList.contains("on") || document.querySelector("dialog[open]")) return stareReset();
-    if (!flOnceKey("stare")) return;
-    const els = [$("#hero"), $("#list")];
-    els.forEach(el => { el.classList.remove("melt"); void el.offsetWidth; el.classList.add("melt"); });
-    setTimeout(() => els.forEach(el => el.classList.remove("melt")), 7000);
-  }, 45000);
-}
-["pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, stareReset, { passive: true }));
 function flLizard() {
   if (!CASINO) return;
   eggToast("🦎 " + flQuote());
@@ -1823,19 +1799,10 @@ function flLeaf() {   // 4:20 im Countdown
 // ---------- Fear & Loathing, über die App verteilt (nur im Casino) ----------
 const flOnce = {};   // pro Runde/Tag nur einmal
 function flOnceKey(k) { const key = k + "|" + (round.started || today()); if (flOnce[key]) return false; flOnce[key] = 1; return true; }
-const BAT_DISH = { nr: "S66", name: "Fledermaus süß-sauer", desc: "Spezialität aus dem Wüstenland · solange Vorrat reicht", price: 6.66, cat: "Spezialitäten", hot: 3, veg: false, al: "", fake: true };
-function batDish() {
-  batSwarm(16);
-}
 function flAfterAdd() {
   if (!CASINO) return;
   const tot = people().reduce((a, x) => a + sumP(x), 0);
   if (tot >= 100 && flOnceKey("dream")) setTimeout(() => eggToast("🇺🇸 Der amerikanische Traum: über 100 € in Nudeln."), 1600);
-}
-let avTaps = [];
-function flAvatar() {   // 3× aufs Profilbild: Hawaiihemd
-  const now = Date.now(); avTaps = avTaps.filter(t => now - t < 1500); avTaps.push(now);
-  if (avTaps.length >= 3) { avTaps = []; document.body.classList.toggle("hawaii"); }
 }
 
 function casinoIntro() {

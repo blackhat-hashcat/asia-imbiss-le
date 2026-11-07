@@ -1,6 +1,6 @@
 // Network-first ohne HTTP-Cache: immer die neueste Version laden,
 // offline auf die zuletzt geladene zurückfallen.
-const C = "ail-v36";
+const C = "ail-v37";
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", e => e.waitUntil(
   caches.keys().then(ks => Promise.all(ks.filter(k => k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())
