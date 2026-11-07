@@ -109,6 +109,28 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .gal::-webkit-scrollbar{display:none}
 .gal img{flex:none;height:260px;width:auto;border-radius:12px;border:1px solid var(--line);scroll-snap-align:start;cursor:zoom-in;background:var(--s2)}
 .galhint{color:var(--dim);font-size:.8rem;text-align:center}
+.seg.two{grid-template-columns:1fr 1fr}
+.seg.two button{font-size:.92rem;padding:11px 4px}
+.script{background:var(--s2);border-left:3px solid var(--gold);padding:10px 12px;border-radius:10px;font-size:.95rem;line-height:1.4;margin:4px 0 10px}
+.script.end{margin:10px 0 0}
+.st{font-size:.72rem;font-weight:800;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.st.ok{background:rgba(47,211,167,.15);color:var(--jade)}
+.st.open{background:rgba(239,51,64,.15);color:#ff8a92}
+.st.me{background:rgba(255,182,39,.15);color:var(--gold)}
+.live{display:flex;align-items:center;gap:10px}
+.live .dotl{width:10px;height:10px;border-radius:50%;background:var(--jade);box-shadow:0 0 10px var(--jade);flex:none;animation:pulse 2s infinite}
+.live .dotl.off{background:#ff9f43;box-shadow:0 0 10px #ff9f43}
+@keyframes pulse{50%{opacity:.4}}
+.dlrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dlrow .lbl{font-weight:700;margin-right:auto}
+.dlbig{font-family:var(--display);font-size:2rem;color:var(--gold);line-height:1;margin:6px 0 2px}
+.dlbig.over{color:var(--red)}
+.paybtn{width:100%;margin:10px 0 4px;font-size:1.05rem;padding:14px;background:#0070e0;border-color:transparent;color:#fff}
+.payrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.payrow:first-child{border-top:0}
+.payrow .n{flex:1;min-width:0;font-weight:600}
+.payrow .pr{font-weight:800}
+.payrow button.st{cursor:pointer;border:0}
 .lbnav{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:64px;border-radius:12px;background:rgba(0,0,0,.6);color:#fff;font-size:1.6rem;font-weight:800;z-index:2}
 .lbnav.prev{left:8px}.lbnav.next{right:8px}
 #lbCount{position:fixed;top:calc(18px + env(safe-area-inset-top));left:16px;color:#fff;background:rgba(0,0,0,.6);padding:6px 12px;border-radius:999px;font-weight:700;font-size:.85rem;z-index:2}
@@ -336,25 +358,23 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
   <section class="view" id="v-bestellung">
     <h2 class="title">Gruppenbestellung</h2>
     <p class="sub" id="grpSub">Noch leer.</p>
+    <div id="liveBox"></div>
     <div id="closedWarn"></div>
+    <div class="card" id="dlBox"></div>
     <div id="people"></div>
     <div id="grpFoot" class="hidden">
       <div class="total"><span>Gesamt</span><span id="grpTotal">0,00 €</span></div>
-      <div class="btns">
+      <div class="btns" id="shareBtns">
         <button class="btn red" id="share">📤 Link teilen</button>
         <a class="btn jade" id="waBtn" target="_blank" rel="noopener">WhatsApp</a>
       </div>
       <button class="btn gold block" data-go="anrufen">📞 Weiter zum Anrufen</button>
-      <button class="btn block" id="reset" style="margin-top:8px;color:var(--muted)">🗑️ Neue Bestellung starten</button>
     </div>
+    <div class="card hidden" id="payCard"></div>
+    <button class="btn block hidden" id="reset" style="margin-top:4px;color:var(--muted)">🔄 Neue Runde starten</button>
     <div class="card">
       <h3>So geht's</h3>
-      <ol class="howto">
-        <li>Jeder sucht sich auf der Karte was aus.</li>
-        <li>„Link teilen“ und in die Gruppe schicken.</li>
-        <li>Der Nächste öffnet den Link, packt seins dazu und teilt weiter.</li>
-        <li>Wer anruft, öffnet den neuesten Link, tippt auf 📞 und liest nur noch die Nummern vor.</li>
-      </ol>
+      <ol class="howto" id="howto"></ol>
     </div>
   </section>
 
@@ -364,20 +384,22 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
       <a class="btn red callbtn" id="callBtn" href="#">📞 Jetzt anrufen</a>
       <div style="color:var(--muted);margin-top:8px;font-size:.9rem" id="phoneLbl"></div>
     </div>
-    <div class="card">
-      <h3><span>Zum Vorlesen</span><span class="amt" id="roCount"></span></h3>
-      <p style="color:var(--dim);font-size:.82rem;margin:-4px 0 6px">Tipp beim Vorlesen auf eine Zeile, dann wird sie abgehakt.</p>
-      <ul class="ro" id="readout"></ul>
+    <div class="seg two" id="modeSeg" style="margin-bottom:4px">
+      <button data-mode="hier">🍽️ Vor Ort essen</button>
+      <button data-mode="mit">🥡 Mitnehmen</button>
     </div>
     <div class="card">
-      <h3>Name für die Abholung</h3>
+      <h3><span>Zum Vorlesen</span><span class="amt" id="roCount"></span></h3>
+      <div class="script" id="scriptTop"></div>
+      <ul class="ro" id="readout"></ul>
+      <div class="script end">„Das wär's, danke, bis gleich!“</div>
+      <p style="color:var(--dim);font-size:.8rem;margin:8px 0 0">Tipp beim Vorlesen auf eine Zeile, dann wird sie abgehakt.</p>
+    </div>
+    <div class="card">
+      <h3>Name für die Bestellung</h3>
       <input class="inp" id="pickupName" placeholder="z. B. Müller" autocomplete="name">
     </div>
     <div class="total"><span>Gesamt</span><span id="roTotal">0,00 €</span></div>
-    <div class="card">
-      <h3>Wer zahlt was</h3>
-      <div id="payList"></div>
-    </div>
     <button class="btn block" id="copyText">📋 Bestellung als Text kopieren</button>
   </section>
 
@@ -463,7 +485,8 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 
 <div class="toast" id="toast"></div>
 
-<script src="menu.js?v=5"></script>
+<script src="menu.js?v=6"></script>
+<script src="config.js?v=6"></script>
 <script>
 (() => {
 "use strict";
@@ -521,29 +544,116 @@ function saveF() { store.set("filters", F); }
 // ---------- State ----------
 let me = store.get("name", "");
 let favs = new Set(store.get("favs", []));
-let group = readHash() || store.get("group", []);
+function R0() { return { payer: "", mode: "hier", deadline: 0, started: 0 }; }
+const fromHash = readHash();
+let group = fromHash ? fromHash.p : store.get("group", []);
+let round = Object.assign(R0(), fromHash ? fromHash.r : store.get("round", {}));
 let F = Object.assign(F0(), store.get("filters", {})), cat = "", query = "", pick = null;
 let done = new Set(store.get("done", []));
 
+function cleanPP(v) { return String(v || "").replace(/^.*paypal\.me\//i, "").replace(/[^A-Za-z0-9]/g, "").slice(0, 30); }
+function cleanPeople(arr) {
+  return (Array.isArray(arr) ? arr : []).filter(p => p && typeof p.n === "string" && p.n.trim())
+    .map(p => ({ n: p.n.slice(0, 20), i: (Array.isArray(p.i) ? p.i : []).filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 50), String(x[2] || "").slice(0, 60)]), paid: !!p.paid, pp: cleanPP(p.pp), ts: +p.ts || 0 }));
+}
+function cleanRound(r) { r = r || {}; return { payer: String(r.payer || "").slice(0, 20), mode: r.mode === "mit" ? "mit" : "hier", deadline: +r.deadline || 0, started: +r.started || 0 }; }
 function readHash() {
   const m = location.hash.match(/^#o=(.+)$/); if (!m) return null;
   try {
     const g = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))));
-    return Array.isArray(g) ? g.filter(p => p && typeof p.n === "string" && Array.isArray(p.i))
-      .map(p => ({ n: p.n.slice(0, 20), i: p.i.filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 50), String(x[2] || "").slice(0, 60)]) })) : null;
+    return Array.isArray(g) ? { p: cleanPeople(g), r: R0() } : { p: cleanPeople(g.p), r: cleanRound(g.r) };
   } catch { return null; }
 }
-const hashOf = () => "#o=" + btoa(unescape(encodeURIComponent(JSON.stringify(group.filter(p => p.i.length))))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-const shareUrl = () => location.origin + location.pathname + hashOf();
+const hashOf = () => "#o=" + btoa(unescape(encodeURIComponent(JSON.stringify({ p: group.filter(p => p.i.length).map(({ n, i, paid, pp }) => ({ n, i, paid, pp })), r: { payer: round.payer, mode: round.mode, deadline: round.deadline } })))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const baseUrl = () => location.origin + location.pathname;
+const shareUrl = () => live ? baseUrl() + "?g=" + gid : baseUrl() + hashOf();
+
+// ---------- Live-Gruppe (Firebase) ----------
+const CFG = window.FIREBASE_CONFIG, QS = new URLSearchParams(location.search), MOCK = QS.has("mock");
+const liveCapable = !!(CFG || MOCK);
+if (MOCK && QS.get("as")) me = QS.get("as").slice(0, 20);   // nur Testmodus: Person simulieren
+let gid = (QS.get("g") || (fromHash ? "" : store.get("gid", "")) || "").replace(/[^a-z0-9-]/gi, "").slice(0, 40);
+let live = null, liveOnline = false, liveReady = false, lastRaw = null;
+const keyOf = n => n.replace(/[.#$\[\]\/]/g, "_").slice(0, 40) || "_";
+const myPP = () => cleanPP(store.get("pp", ""));
+const STALE = 10 * 3600e3;
+const isStale = () => round.started && Date.now() - round.started > STALE;
+
+async function firebaseAdapter(cfg, g) {
+  const V = "10.12.2";
+  const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+  const D = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-database.js`);
+  const db = D.getDatabase(initializeApp(cfg));
+  const P = x => D.ref(db, `groups/${g}${x ? "/" + x : ""}`);
+  return {
+    listen(cb) { D.onValue(P("round"), s => cb(s.val() || {})); D.onValue(D.ref(db, ".info/connected"), s => setOnline(!!s.val())); },
+    put: (k, v) => D.set(P(`round/people/${k}`), v),
+    patch: o => D.update(P("round"), o),
+    newRound: prev => D.update(P(""), Object.assign({ round: { started: Date.now() } }, prev ? { last: prev } : {})),
+  };
+}
+function mockAdapter(g) {   // Testmodus (?mock): simuliert die Datenbank im localStorage
+  const K = "mockdb_" + g, cbs = [];
+  const read = () => { try { return JSON.parse(localStorage.getItem(K)) || {}; } catch { return {}; } };
+  const emit = d => cbs.forEach(cb => cb(JSON.parse(JSON.stringify(d.round || {}))));
+  const write = d => { localStorage.setItem(K, JSON.stringify(d)); emit(d); };
+  const setPath = (o, path, v) => { const ks = path.split("/"); let t = o; ks.slice(0, -1).forEach(k => t = t[k] = t[k] || {}); v === null ? delete t[ks.at(-1)] : t[ks.at(-1)] = v; };
+  addEventListener("storage", e => { if (e.key === K) emit(read()); });
+  return {
+    listen(cb) { cbs.push(cb); setOnline(true); setTimeout(() => cb(read().round || {}), 0); },
+    put(k, v) { const d = read(); setPath(d, `round/people/${k}`, v); write(d); },
+    patch(o) { const d = read(); d.round = d.round || {}; for (const k in o) setPath(d.round, k, o[k]); write(d); },
+    newRound(prev) { const d = read(); if (prev) d.last = prev; d.round = { started: Date.now() }; write(d); },
+  };
+}
+function setOnline(v) { liveOnline = v; renderLiveBox(); }
+async function connectLive() {
+  if (!liveCapable || !gid) return;
+  try {
+    live = MOCK ? mockAdapter(gid) : await firebaseAdapter(CFG, gid);
+    store.set("gid", gid);
+    if (!QS.get("g")) history.replaceState(null, "", baseUrl() + "?g=" + gid + (MOCK ? "&mock" + (QS.get("as") ? "&as=" + encodeURIComponent(me) : "") : ""));
+    live.listen(r => {
+      lastRaw = r; liveReady = true;
+      group = cleanPeople(Object.values(r.people || {})).sort((a, b) => a.ts - b.ts);
+      round = cleanRound(r);
+      if (!round.started) live.patch({ started: Date.now() });
+      render();
+    });
+  } catch (e) { live = null; console.warn("Live-Gruppe nicht verfügbar", e); toast("Live-Gruppe gerade nicht erreichbar"); render(); }
+}
+function createLiveGroup() {
+  const mineNow = myP();
+  gid = "le-" + Math.random().toString(36).slice(2, 8) + Math.random().toString(36).slice(2, 6);
+  history.replaceState(null, "", baseUrl() + "?g=" + gid + (MOCK ? "&mock" : ""));
+  connectLive().then(() => { if (live && mineNow && mineNow.i.length) { group = [mineNow]; pushMine(); } shareGroup(); });
+}
+function pushMine() {
+  if (!live || !me) return;
+  const p = myP();
+  const keep = p && (p.i.length || (round.payer === me && myPP()));
+  live.put(keyOf(me), keep ? { n: me, i: p.i, paid: !!p.paid, pp: myPP(), ts: p.ts || Date.now() } : null);
+}
+function patchRound(o) {
+  Object.assign(round, o);
+  if (live) live.patch(o); else commit();
+  render();
+}
+function newRound() {
+  if (live) { live.newRound(lastRaw && lastRaw.people ? lastRaw : null); }
+  else { group = []; round = R0(); commit(); }
+  done.clear(); store.set("done", []);
+}
 
 function commit() {
   group = group.filter(p => p.i.length || p.n === me);
-  store.set("group", group);
+  if (live) { pushMine(); render(); return; }
+  store.set("group", group); store.set("round", round);
   const has = group.some(p => p.i.length);
-  history.replaceState(null, "", has ? hashOf() : location.pathname);
+  history.replaceState(null, "", has ? baseUrl() + hashOf() : baseUrl());
   render();
 }
-const mine = () => { let p = group.find(p => p.n === me); if (!p) { p = { n: me, i: [] }; group.push(p); } return p; };
+const mine = () => { let p = group.find(p => p.n === me); if (!p) { p = { n: me, i: [], ts: Date.now() }; group.push(p); } return p; };
 const myP = () => group.find(p => p.n === me);
 const qtyOf = (p, nr) => p ? p.i.filter(x => x[0] === nr).reduce((a, x) => a + x[1], 0) : 0;
 const sumP = p => p.i.reduce((a, [nr, q]) => a + byNr[nr].price * q, 0);
@@ -564,6 +674,8 @@ function openName(then) {
   d.showModal(); setTimeout(() => $("#nameIn").focus(), 50);
 }
 function rename(v) {
+  if (live && me) live.put(keyOf(me), null);
+  if (round.payer && round.payer === me) round.payer = v;
   const old = myP(), clash = group.find(p => p.n === v);
   if (old && clash && old !== clash) { clash.i.push(...old.i); group = group.filter(p => p !== old); }
   else if (old) old.n = v;
@@ -572,6 +684,7 @@ function rename(v) {
 
 function add(nr, note = "", n = 1) {
   needName(() => {
+    if (live && isStale()) { newRound(); group = []; round = Object.assign(R0(), { started: Date.now() }); }
     const p = mine(), ex = p.i.find(x => x[0] === nr && x[2] === note);
     ex ? ex[1] += n : p.i.push([nr, n, note]);
     buzz(); commit();
@@ -765,8 +878,15 @@ function renderOrder() {
       ${p.n !== me ? `<button class="btn sm block" style="margin-top:8px" data-copy="${esc(p.n)}">➕ Ich nehm dasselbe</button>` : ""}
     </div>`).join("") : `<div class="empty"><span class="big">🧾</span>Noch leer. Such dir was auf der Karte aus!<br><button class="btn red sm" style="margin-top:12px" data-go="karte">Zur Karte</button></div>`;
   $("#grpFoot").classList.toggle("hidden", !ppl.length);
+  $("#shareBtns").classList.toggle("hidden", !!live);
+  $("#reset").classList.toggle("hidden", !ppl.length);
   $("#grpTotal").textContent = eur(tot);
   $("#waBtn").href = "https://wa.me/?text=" + encodeURIComponent(shareText() + "\n" + shareUrl());
+  renderLiveBox(); renderDeadline(); renderPay();
+  $("#howto").innerHTML = (live
+    ? ["Gruppenlink <b>einmal</b> in die WhatsApp-Gruppe schicken (am besten anpinnen).", "Jeder öffnet denselben Link und sucht aus. Alle sehen es sofort.", "Optional: Bestellschluss setzen, dann sieht jeder den Countdown.", "Einer tippt auf 📞 und liest die Nummern vor."]
+    : ["Jeder sucht sich auf der Karte was aus.", "„Link teilen“ und in die Gruppe schicken.", "Der Nächste öffnet den Link, packt seins dazu und teilt weiter.", "Wer anruft, öffnet den neuesten Link, tippt auf 📞 und liest nur noch die Nummern vor."]
+  ).map(t => `<li><span>${t}</span></li>`).join("");
   const s = status();
   const onlySides = ppl.length && ppl.some(p => p.i.every(([nr]) => byNr[nr].cat === "Beilagen"));
   $("#closedWarn").innerHTML = (s.open ? (s.closesIn < 30 ? `<div class="warn">⏰ <span>Achtung: nur noch ${s.closesIn} Min. geöffnet!</span></div>` : "") : `<div class="warn">🌙 <span>${esc(s.text)}.</span></div>`)
@@ -792,16 +912,95 @@ function renderCall() {
       <span class="ck"></span></li>`; }).join("") : `<li style="cursor:default;color:var(--muted);justify-content:center">Noch nichts zum Vorlesen.</li>`;
   $("#roCount").textContent = cnt ? `${cnt} Gerichte` : "";
   $("#roTotal").textContent = eur(people().reduce((a, p) => a + sumP(p), 0));
-  $("#payList").innerHTML = people().map(p => `<div class="line"><span class="n">${p.n === me ? "👤 " : ""}${esc(p.n)}</span><span class="pr" style="color:var(--ink)">${eur(sumP(p))}</span></div>`).join("") || `<div style="color:var(--muted)">–</div>`;
+  $$("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === round.mode));
+  const pn = $("#pickupName").value.trim() || me, np = people().length;
+  $("#pickupName").placeholder = me || "z. B. Müller";
+  $("#scriptTop").textContent = `„Hallo! Ich möchte gern vorbestellen, ${round.mode === "mit" ? "zum Mitnehmen" : `wir essen vor Ort${np > 1 ? `, ${np} Personen` : ""}`}${pn ? `, auf den Namen ${pn}` : ""}:“`;
+}
+
+// ---------- Live-Box, Bestellschluss, Bezahlen ----------
+function renderLiveBox() {
+  const el = $("#liveBox"); if (!el) return;
+  if (live) {
+    el.innerHTML = `<div class="card"><div class="live"><span class="dotl ${liveOnline ? "" : "off"}"></span><div style="flex:1"><b>${liveOnline ? "Live-Gruppe" : "Offline"}</b><div style="color:var(--muted);font-size:.85rem">${liveOnline ? "Alle sehen Änderungen sofort." : "Änderungen werden gesendet, sobald du wieder online bist."}</div></div></div>
+      <div class="btns"><button class="btn red" data-act="shareGroup">📤 Einladen</button><a class="btn jade" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(shareText() + "\n" + shareUrl())}">WhatsApp</a></div>
+      ${isStale() && people().length ? `<div class="warn" style="margin:6px 0 0">🕓 <span>Das ist noch die Runde von ${new Date(round.started).toLocaleDateString("de-DE", { weekday: "long" })}. Sobald jemand etwas hinzufügt, startet automatisch eine neue.</span></div>` : ""}</div>`;
+  } else if (liveCapable) {
+    el.innerHTML = `<div class="card"><h3>⚡ Live-Gruppe</h3><p style="color:var(--muted);margin:-4px 0 10px;font-size:.92rem">Ein fester Link für eure Gruppe. Jeder trägt sich ein, alle sehen es sofort. Kein Link-Weiterschicken mehr.</p><button class="btn red block" data-act="createLive">Live-Gruppe erstellen</button></div>`;
+  } else el.innerHTML = "";
+}
+function fmtLeft(ms) { const s = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
+function renderDeadline() {
+  const el = $("#dlBox"); const d = round.deadline, left = d - Date.now();
+  if (!d) {
+    el.innerHTML = `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span>${[5, 10, 15].map(m => `<button class="chip" data-dl="${m}">in ${m} Min</button>`).join("")}</div>`;
+  } else {
+    el.innerHTML = `<div class="dlrow"><span class="lbl">⏱ Bestellschluss ${new Date(d).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}</span><button class="chip" data-dl="+5">+5 Min</button><button class="chip" data-dl="0">aus</button></div>
+      <div class="dlbig ${left <= 0 ? "over" : ""}" id="dlLeft">${left > 0 ? "noch " + fmtLeft(left) : "Jetzt bestellen!"}</div>
+      ${left <= 0 ? `<button class="btn gold block" data-go="anrufen" style="margin-top:8px">📞 Zum Anrufen</button>` : ""}`;
+  }
+}
+function tickDeadline() {
+  const d = round.deadline; if (!d) return;
+  const left = d - Date.now(), el = $("#dlLeft");
+  if (el) { if (left > 0) el.textContent = "noch " + fmtLeft(left); else if (!el.classList.contains("over")) renderDeadline(); }
+  renderChrome();
+}
+setInterval(tickDeadline, 1000);
+function payUrl(pp, amt) { return `https://paypal.me/${encodeURIComponent(pp)}/${amt.toFixed(2)}EUR`; }
+function renderPay() {
+  const el = $("#payCard"), ppl = people();
+  el.classList.toggle("hidden", !ppl.length);
+  if (!ppl.length) return;
+  const payer = round.payer && group.find(p => p.n === round.payer) ? round.payer : (round.payer || "");
+  let h = `<h3>💶 Bezahlen</h3>
+    <div class="seg two"><button data-paymode="self" class="${payer ? "" : "on"}">💵 Jeder zahlt selbst</button><button data-paymode="one" class="${payer ? "on" : ""}">🙋 Einer legt aus</button></div>`;
+  if (!payer) {
+    h += `<div style="margin-top:10px">${ppl.map(p => `<div class="payrow"><span class="n">${p.n === me ? "👤 " : ""}${esc(p.n)}</span><span class="pr">${eur(sumP(p))}</span></div>`).join("")}</div>`;
+    if (payChoose) h = h.replace('<div style="margin-top:10px">', `<label class="lb">Wer legt aus?</label><div class="fgrid">${ppl.map(p => `<button class="tog" data-payer="${esc(p.n)}">${p.n === me ? "🙋 Ich" : esc(p.n)}</button>`).join("")}</div><div style="margin-top:10px">`);
+    el.innerHTML = h; return;
+  }
+  const payerP = group.find(p => p.n === payer), pp = payer === me ? myPP() : (payerP && payerP.pp) || "";
+  const others = ppl.filter(p => p.n !== payer), open = others.filter(p => !p.paid), openSum = open.reduce((a, p) => a + sumP(p), 0);
+  h += `<div style="margin:12px 0 4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span><b>${payer === me ? "Du legst" : esc(payer) + " legt"}</b> aus</span><button class="chip" data-paymode="one" style="margin-left:auto">ändern</button></div>`;
+  if (payer === me) {
+    h += `<label class="lb">Dein PayPal.me-Name, damit die anderen dir zurückzahlen können</label>
+      <input class="inp" id="ppIn" placeholder="z. B. maxmustermann" value="${esc(pp)}" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div style="color:var(--dim);font-size:.78rem;margin-top:4px">Steht in deinem PayPal-Profil (paypal.me/<b>name</b>). Wird nur in eurer Gruppe angezeigt.</div>`;
+  } else {
+    const myRow = others.find(p => p.n === me);
+    if (myRow && !myRow.paid) h += pp
+      ? `<a class="btn paybtn" href="${payUrl(pp, sumP(myRow))}" target="_blank" rel="noopener">💸 ${eur(sumP(myRow))} an ${esc(payer)} per PayPal</a><div style="color:var(--dim);font-size:.78rem;text-align:center">Tipp danach unten auf „offen“, damit ${esc(payer)} sieht, dass du bezahlt hast.</div>`
+      : `<div class="warn">ℹ️ <span>${esc(payer)} hat noch keinen PayPal.me-Namen eingetragen. Du schuldest ${esc(payer)} <b>${eur(sumP(myRow))}</b>.</span></div>`;
+    if (myRow && myRow.paid) h += `<div class="warn" style="background:rgba(47,211,167,.1);border-color:rgba(47,211,167,.35);color:var(--jade)">✓ <span>Du hast ${esc(payer)} bezahlt. Danke!</span></div>`;
+  }
+  h += `<div style="margin-top:10px">${others.map(p => `<div class="payrow"><span class="n">${p.n === me ? "👤 Du" : esc(p.n)}</span><span class="pr">${eur(sumP(p))}</span>${(p.n === me || payer === me) ? `<button class="st ${p.paid ? "ok" : "open"}" data-paid="${esc(p.n)}">${p.paid ? "✓ bezahlt" : "offen"}</button>` : `<span class="st ${p.paid ? "ok" : "open"}">${p.paid ? "✓ bezahlt" : "offen"}</span>`}</div>`).join("") || `<div style="color:var(--muted)">Nur du hast bestellt.</div>`}</div>
+    ${others.length ? `<div style="margin-top:8px;color:var(--muted);font-size:.88rem">${open.length ? `Noch offen: <b style="color:var(--ink)">${eur(openSum)}</b> von ${open.length} ${open.length === 1 ? "Person" : "Personen"}` : "🎉 Alle haben bezahlt."}</div>` : ""}`;
+  el.innerHTML = h;
+  const inp = $("#ppIn");
+  if (inp) inp.onchange = () => { const v = cleanPP(inp.value); inp.value = v; store.set("pp", v); const p = myP(); if (p) p.pp = v; commit(); toast(v ? "PayPal.me gespeichert ✓" : "PayPal.me entfernt"); };
+}
+let payChoose = false;
+function setPaid(name, val) {
+  const p = group.find(x => x.n === name); if (!p) return;
+  p.paid = val;
+  if (live) live.patch({ [`people/${keyOf(name)}/paid`]: val }); else commit();
+  render();
+}
+function shareGroup() {
+  const url = shareUrl(), text = live ? "🥢 Unsere Asia-Le-Gruppe: Trag ein, was du willst, alle sehen's live:" : shareText();
+  if (navigator.share) { navigator.share({ title: "Asia Le", text, url }).catch(() => {}); return; }
+  copy(text + "\n" + url, live ? "Gruppenlink kopiert ✓" : "Link kopiert ✓");
 }
 function shareText() {
+  if (live) return "🥢 Unsere Asia-Le-Gruppe: Trag ein, was du willst, alle sehen's live:";
   const who = people().map(p => p.n).join(", ");
   return `🥢 Asia Le Bestellung · bisher: ${who || "noch keiner"} (${countAll()} Gerichte). Pack deins dazu und schick den neuen Link zurück:`;
 }
 function orderText() {
-  const pn = $("#pickupName").value.trim();
+  const pn = $("#pickupName").value.trim() || me;
   return `🥢 Bestellung ${SHOP.name}\n` + aggregate().map(e => { const m = byNr[e.nr]; return `${e.q}x ${m.sayName ? m.name : "Nr. " + e.nr + " " + m.name}${e.note ? " (" + e.note + ")" : ""}`; }).join("\n")
-    + (pn ? `\nAbholname: ${pn}` : "") + `\nGesamt: ${$("#roTotal").textContent}\n\n💶 Wer zahlt was:\n` + people().map(p => `• ${p.n}: ${eur(sumP(p))}`).join("\n");
+    + `\n${round.mode === "mit" ? "🥡 Zum Mitnehmen" : "🍽️ Vor Ort essen"}` + (pn ? `\nName: ${pn}` : "") + `\nGesamt: ${$("#roTotal").textContent}\n\n💶 ${round.payer ? round.payer + " legt aus" + (round.payer === me && myPP() ? ` (paypal.me/${myPP()})` : "") : "Wer zahlt was"}:\n` + people().filter(p => p.n !== round.payer).map(p => `• ${p.n}: ${eur(sumP(p))}`).join("\n");
 }
 
 // ---------- Rendering: dice / last ----------
@@ -838,7 +1037,8 @@ function renderChrome() {
   const p = myP(), mc = p ? p.i.reduce((a, x) => a + x[1], 0) : 0, all = countAll();
   $("#tabBadge").classList.toggle("hidden", !all); $("#tabBadge").textContent = all;
   $("#cartMine").textContent = mc ? `Du: ${mc}× · ${eur(sumP(p))}` : `Gruppe: ${all} Gerichte`;
-  $("#cartGrp").textContent = people().length ? `👥 ${people().map(p => p.n).join(", ")}` : "";
+  const dl = round.deadline ? (round.deadline > Date.now() ? ` · ⏱ ${fmtLeft(round.deadline - Date.now())}` : " · ⏱ Schluss!") : "";
+  $("#cartGrp").textContent = (people().length ? `👥 ${people().map(p => p.n).join(", ")}` : "") + dl;
   const v = $(".view.on").id;
   $("#cart").classList.toggle("show", all > 0 && (v === "v-karte" || v === "v-wuerfeln"));
 }
@@ -880,7 +1080,7 @@ function show(v, push = true) {
 
 // ---------- Events ----------
 document.addEventListener("click", e => {
-  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
+  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-act],[data-dl],[data-paymode],[data-payer],[data-paid],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
   if (!t) return;
   const d = t.dataset;
   if (d.add) { const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
@@ -889,6 +1089,13 @@ document.addEventListener("click", e => {
   else if (d.open) openItem(d.open);
   else if (d.go) show(d.go);
   else if (d.rmf) removeFilter(d.rmf);
+  else if (d.act === "shareGroup") shareGroup();
+  else if (d.act === "createLive") createLiveGroup();
+  else if (d.dl !== undefined) { const v = d.dl; patchRound({ deadline: v === "0" ? 0 : v === "+5" ? Math.max(round.deadline, Date.now()) + 5 * 60e3 : Date.now() + (+v) * 60e3 }); }
+  else if (d.paymode) { if (d.paymode === "self") { payChoose = false; patchRound({ payer: "" }); } else { payChoose = true; if (round.payer) patchRound({ payer: "" }); else renderPay(); } }
+  else if (d.payer) { payChoose = false; if (d.payer === me && myPP()) { const p = myP(); if (p) p.pp = myPP(); } patchRound({ payer: d.payer }); if (live && d.payer === me) pushMine(); }
+  else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
+  else if (d.mode) patchRound({ mode: d.mode });
   else if (d.filter !== undefined) openFilters();
   else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
@@ -914,14 +1121,14 @@ $("#share").onclick = async () => {
   copy(text + "\n" + url, "Link kopiert, jetzt in die Gruppe einfügen ✓");
 };
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
-$("#reset").onclick = () => { if (confirm("Ganze Gruppenbestellung löschen und neu anfangen?")) { group = []; done.clear(); store.set("done", []); commit(); toast("Neue Bestellung ✓"); } };
+$("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin(false);
 $("#spinFav").onclick = () => spin(true);
 $("#takeIt").onclick = () => { if (pick) { pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
 $("#repeatLast").onclick = () => needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); commit(); toast("Wie letztes Mal ✓"); });
 $("#copyText").onclick = () => copy(orderText(), "Bestellung kopiert ✓");
 $("#pickupName").value = store.get("pickup", "");
-$("#pickupName").oninput = e => store.set("pickup", e.target.value);
+$("#pickupName").oninput = e => { store.set("pickup", e.target.value); renderCall(); };
 $("#callBtn").onclick = () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); };
 // ---------- Original-Karte: Galerie + Lightbox ----------
 const SCANS = [1, 2, 3, 4, 5, 6].map(i => ({ src: `karte/spalte-${i}.jpg?v=5`, alt: ["Suppen, Vorspeisen, Reis, Nudeln", "Huhn, Rind, Ente", "Ente, Schwein, Vegetarisch, Meeresfrüchte, Spezialitäten", "Spezialitäten S05–S14, Allergene", "Beilagen, Desserts, Nudelbox", "Öffnungszeiten, Telefon, Adresse"][i - 1] }));
@@ -934,7 +1141,7 @@ document.addEventListener("keydown", e => { if (!$("#lightbox").open) return; if
 $("#lbImg").onclick = e => e.target.classList.toggle("z");
 $("#lbClose").onclick = () => $("#lightbox").close();
 async function copy(text, msg) { try { await navigator.clipboard.writeText(text); toast(msg); } catch { prompt("Kopieren:", text); } }
-window.addEventListener("hashchange", () => { const g = readHash(); if (g) { group = g; store.set("group", group); render(); show("bestellung"); } });
+window.addEventListener("hashchange", () => { if (live) return; const g = readHash(); if (g) { group = g.p; round = Object.assign(R0(), g.r); store.set("group", group); store.set("round", round); render(); show("bestellung"); } });
 
 // ---------- Init ----------
 const tel = "tel:" + SHOP.phone;
@@ -944,10 +1151,11 @@ $("#addr").innerHTML = esc(SHOP.street) + "<br>" + esc(SHOP.city);
 $("#routeBtn").href = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(SHOP.name + ", " + SHOP.address);
 $("#alList").innerHTML = Object.entries(ALG).map(([k, v]) => `<b>${esc(k)}</b><span>${esc(v)}</span>`).join("");
 renderInfos(); setInterval(renderInfos, 60000);
-const fromLink = location.hash.startsWith("#o=");
-if (fromLink) store.set("group", group);
+const fromLink = !!fromHash;
+if (fromLink) { store.set("group", group); store.set("round", round); }
+if (liveCapable && gid) { group = []; connectLive(); }
 render();
-show(fromLink ? "bestellung" : (store.get("tab", "karte") === "anrufen" && !countAll() ? "karte" : store.get("tab", "karte")));
+show(fromLink || QS.get("g") ? "bestellung" : (store.get("tab", "karte") === "anrufen" && !countAll() ? "karte" : store.get("tab", "karte")));
 if (fromLink) toast(`Bestellung von ${people().map(p => p.n).join(", ") || "der Gruppe"} geladen 👥`);
 if (!me) setTimeout(() => openName(), fromLink ? 900 : 600);
 if ("serviceWorker" in navigator) {
