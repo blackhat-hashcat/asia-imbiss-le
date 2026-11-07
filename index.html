@@ -339,6 +339,52 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 .toast{position:fixed;left:50%;bottom:calc(var(--dock,140px) + 12px);top:auto;transform:translate(-50%,20px);font-size:.92rem;box-shadow:0 8px 24px rgba(0,0,0,.4);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;z-index:100;max-width:90vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
+/* ================= CASINO: Easter Egg, Intro, Animationen ================= */
+.brand{cursor:pointer;user-select:none;-webkit-user-select:none}
+.brand .logo.wiggle{animation:wiggle .35s}
+@keyframes wiggle{25%{transform:rotate(-12deg) scale(1.08)}75%{transform:rotate(12deg) scale(1.08)}}
+.intro{position:fixed;inset:0;z-index:300;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#1b5e36,#04110a 70%);overflow:hidden;animation:ifade .3s both}
+.intro.out{animation:ifadeout .6s forwards}
+@keyframes ifade{from{opacity:0}}
+@keyframes ifadeout{to{opacity:0;transform:scale(1.08)}}
+.intro-in{text-align:center;padding:24px 20px;border:3px solid #ffb627;border-radius:28px;background:rgba(0,0,0,.45);box-shadow:0 0 60px rgba(255,182,39,.45),inset 0 0 40px rgba(255,182,39,.15);animation:izoom .7s cubic-bezier(.2,1.5,.4,1) both;max-width:86vw}
+@keyframes izoom{from{transform:scale(.3) rotate(-8deg);opacity:0}}
+.ibulbs{height:12px;background:radial-gradient(circle,#ffe08a 0 4px,transparent 4.5px) 0 50%/18px 12px repeat-x;animation:bulbs .3s steps(2) infinite;filter:drop-shadow(0 0 6px #ffb627);margin:6px 0}
+.islot{font-size:3.4rem;animation:ispin .9s ease-out}
+@keyframes ispin{from{transform:rotateY(720deg)}}
+.iw{color:#e8d9b0;font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:.8rem;margin-top:4px}
+.it{font-family:var(--display);font-size:2.4rem;line-height:1.02;background:linear-gradient(180deg,#fff3c4,#ffb627 55%,#b86e00);-webkit-background-clip:text;background-clip:text;color:transparent;margin:6px 0}
+.isub{color:#ff8a92;font-weight:800;letter-spacing:.1em}
+.intro>i{position:absolute;top:-40px;font-style:normal;font-size:1.6rem;animation:fall 2s linear forwards}
+.flychip{position:fixed;left:0;top:0;width:28px;height:28px;border-radius:50%;z-index:250;pointer-events:none;background:radial-gradient(circle,#c8102e 0 44%,#fff 45% 49%,#c8102e 50% 60%,transparent 61%),repeating-conic-gradient(#c8102e 0 22.5deg,#fff 22.5deg 45deg);box-shadow:0 4px 10px rgba(0,0,0,.5)}
+.bump{animation:bump .35s}
+@keyframes bump{40%{transform:scale(1.06)}}
+body.casino #list.dealing .item{animation:deal .5s cubic-bezier(.2,.9,.3,1.15) both}
+body.casino #list.dealing .item:nth-child(3){animation-delay:.05s}body.casino #list.dealing .item:nth-child(4){animation-delay:.1s}body.casino #list.dealing .item:nth-child(5){animation-delay:.15s}body.casino #list.dealing .item:nth-child(6){animation-delay:.2s}body.casino #list.dealing .item:nth-child(7){animation-delay:.25s}body.casino #list.dealing .item:nth-child(8){animation-delay:.3s}body.casino #list.dealing .item:nth-child(n+9){animation-delay:.35s}
+@keyframes deal{from{opacity:0;transform:translate(60px,-30px) rotate(8deg) scale(.9)}}
+body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+/* Roulette */
+.rwrap{position:relative;width:min(78vw,280px);aspect-ratio:1;margin:6px auto 4px}
+.rpointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);z-index:2;color:#ffb627;font-size:1.6rem;text-shadow:0 2px 6px rgba(0,0,0,.7)}
+.wheel{position:absolute;inset:0;border-radius:50%;border:8px solid #c9921c;box-shadow:0 0 0 3px #3a2208,0 10px 30px rgba(0,0,0,.6),inset 0 0 0 3px rgba(255,255,255,.15)}
+.wheel span{position:absolute;inset:0;pointer-events:none}
+.wheel span b{position:absolute;top:9%;left:50%;transform:translateX(-50%);color:#fff;font-weight:800;font-size:.85rem;text-shadow:0 1px 3px #000,0 0 6px rgba(0,0,0,.6);white-space:nowrap;letter-spacing:.3px}
+.wheel .hub{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:1.5rem;background:radial-gradient(circle,#ffe08a,#c9921c);box-shadow:0 2px 10px rgba(0,0,0,.6)}
+.rres{text-align:center;color:var(--muted);margin:8px 0 2px;min-height:1.4em}
+.rres b{color:var(--gold)}
+[data-wheel]:disabled{opacity:.55}
+/* Rubbellos */
+.scratch{position:relative;margin:12px 0 0;border-radius:18px;overflow:hidden;border:2px dashed rgba(255,182,39,.6);background:linear-gradient(135deg,#123622,#0b2417);min-height:120px}
+.sc-under{padding:14px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.sc-lbl{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.sc-dish{font-weight:800;font-size:1.05rem}
+.sc-dish .nrc{color:var(--gold)}
+.sc-meta{color:var(--muted);font-weight:700}
+.sc-under .btn{margin-top:4px}
+.sc-cover{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;transition:opacity .4s}
+.sc-cover.gone{opacity:0}
+
 /* ================= CASINO-DESIGN ================= */
 body.casino{--bg:#04110a;--s1:#0b2417;--s2:#10301f;--s3:#173d29;--line:#24533a;--muted:#a9c6b2;--dim:#6e917b}
 body.casino::before{background:radial-gradient(700px 500px at 50% -10%,rgba(24,110,62,.55),transparent 65%),radial-gradient(500px 400px at 110% 40%,rgba(239,51,64,.15),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 6px)}
@@ -459,6 +505,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
       <div class="chips" id="cats"></div>
     </div>
 
+    <div id="scratchWrap"></div>
     <div id="lastQuick"></div>
     <div id="hitsWrap" class="hidden">
       <div class="sech" style="margin-top:14px"><span class="ic">🔥</span><h3>Die Gruppe nimmt schon</h3></div>
@@ -510,6 +557,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <div id="liveBox"></div>
     <div id="closedWarn"></div>
     <div class="card" id="dlBox"></div>
+    <div class="card hidden" id="rouletteCard"></div>
     <div id="people"></div>
     <div id="grpFoot" class="hidden">
       <div class="total"><span>Gesamt</span><span id="grpTotal">0,00 €</span></div>
@@ -556,7 +604,6 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
   <section class="view" id="v-infos">
     <h2 class="title">Asia Imbiss Le</h2>
     <p class="sub" id="infoStatus"></p>
-    <div class="card slim"><div class="live" style="gap:12px"><span style="font-size:1.5rem">🎰</span><div style="flex:1"><b>Casino-Modus</b><div style="color:var(--muted);font-size:.8rem">Sprüche statt normaler Texte</div></div><button class="btn sm favtog" id="casinoTog" aria-pressed="true">An</button></div></div>
     <div class="card">
       <h3>🕒 Öffnungszeiten</h3>
       <table class="hours" id="hours"></table>
@@ -662,7 +709,7 @@ const hasAl = (m, codes) => alTokens(m).some(t => codes.includes(t));
 const isLong = nr => nr.length > 4;
 
 // ---------- Casino-Modus (nur Texte/Sprüche, abschaltbar unter Infos) ----------
-let CASINO = store.get("casino", true);
+let CASINO = store.get("casinoEgg", false);   // verstecktes Easter Egg, standardmäßig aus
 const C = (normal, casino) => CASINO ? casino : normal;
 const pickOne = a => a[Math.floor(Math.random() * a.length)];
 const QUIP_ADD = ["Einsatz platziert: {x} 🎲", "Chips auf {x} gesetzt 🪙", "All in auf {x}! 🃏", "{x} – das Haus nickt anerkennend 🎩", "Gute Wahl. Das Haus gewinnt trotzdem. ({x}) 😏", "{x} liegt auf dem Tisch ♠️"];
@@ -737,7 +784,7 @@ function cleanPeople(arr) {
   return (Array.isArray(arr) ? arr : []).filter(p => p && typeof p.n === "string" && p.n.trim())
     .map(p => ({ n: p.n.slice(0, 20), i: (Array.isArray(p.i) ? p.i : []).filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 50), String(x[2] || "").slice(0, 60)]), paid: !!p.paid, pp: cleanPP(p.pp), ts: +p.ts || 0 }));
 }
-function cleanRound(r) { r = r || {}; return { payer: String(r.payer || "").slice(0, 20), mode: r.mode === "mit" ? "mit" : "hier", deadline: +r.deadline || 0, started: +r.started || 0 }; }
+function cleanRound(r) { r = r || {}; return { caller: String(r.caller || "").slice(0, 20), payer: String(r.payer || "").slice(0, 20), mode: r.mode === "mit" ? "mit" : "hier", deadline: +r.deadline || 0, started: +r.started || 0 }; }
 function readHash() {
   const m = location.hash.match(/^#o=(.+)$/); if (!m) return null;
   try {
@@ -876,6 +923,22 @@ function rename(v) {
   me = v; store.set("name", me); commit();
 }
 
+let lastAddEl = null;
+function chipFly(from) {
+  if (!from || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const a = from;
+  requestAnimationFrame(() => {
+    const target = $("#cart.show .in") || $('.tabs [data-v="bestellung"]'); if (!target) return;
+    const b = target.getBoundingClientRect();
+    const c = document.createElement("div"); c.className = "flychip"; document.body.appendChild(c);
+    const x0 = a.left + a.width / 2 - 14, y0 = a.top + a.height / 2 - 14, x1 = b.left + 28, y1 = b.top + b.height / 2 - 14;
+    c.animate([
+      { transform: `translate(${x0}px,${y0}px) scale(1) rotate(0)` },
+      { transform: `translate(${(x0 + x1) / 2}px,${Math.min(y0, y1) - 120}px) scale(1.25) rotate(360deg)`, offset: .45 },
+      { transform: `translate(${x1}px,${y1}px) scale(.6) rotate(720deg)`, opacity: .9 },
+    ], { duration: 700, easing: "cubic-bezier(.3,.6,.4,1)" }).onfinish = () => { c.remove(); target.classList.remove("bump"); void target.offsetWidth; target.classList.add("bump"); };
+  });
+}
 function add(nr, note = "", n = 1) {
   needName(() => {
     if (live && isStale()) { newRound(); group = []; round = Object.assign(R0(), { started: Date.now() }); }
@@ -885,6 +948,7 @@ function add(nr, note = "", n = 1) {
     const m = byNr[nr];
     const lbl = `${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""}`;
     toast(CASINO ? pickOne(QUIP_ADD).replace("{x}", lbl) : `✓ ${lbl} hinzugefügt`);
+    if (CASINO) chipFly(lastAddEl); lastAddEl = null;
   });
 }
 function sub(nr) {
@@ -955,6 +1019,11 @@ function itemHTML(m) {
 }
 
 let HAS_HIST = false;
+function dealAnim() {
+  if (!CASINO || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const l = $("#list"); l.classList.remove("dealing"); void l.offsetWidth; l.classList.add("dealing");
+  clearTimeout(dealAnim.t); dealAnim.t = setTimeout(() => l.classList.remove("dealing"), 1400);
+}
 function renderMenu() {
   TRIED = triedMap(); HAS_HIST = visitDays().length > 0;
   const items = filtered();
@@ -1065,6 +1134,44 @@ function lineHTML([nr, q, note], idx, editable) {
   return `<div class="line ed"><span class="q">${q}×</span><div class="n">${nm}
     <div class="lctl"><span class="pr">${eur(m.price * q)}</span><button class="mini del" data-note="${idx}">✏️ Wunsch</button><button class="mini" data-dec="${idx}" aria-label="weniger">−</button><button class="mini" data-inc="${idx}" aria-label="mehr">+</button></div></div></div>`;
 }
+let wheelSpinning = false, wheelRot = 0;
+const WHEEL_COLORS = ["#c8102e", "#14100c"];
+function renderRoulette() {
+  const el = $("#rouletteCard"), ppl = people().map(p => p.n);
+  const showIt = CASINO && ppl.length >= 2;
+  el.classList.toggle("hidden", !showIt);
+  if (!showIt || wheelSpinning) return;
+  const n = ppl.length, seg = 360 / n;
+  const grad = ppl.map((_, i) => `${i === 0 && n % 2 ? "#0f7a3d" : WHEEL_COLORS[i % 2]} ${i * seg}deg ${(i + 1) * seg}deg`).join(",");
+  el.innerHTML = `<h3>🎡 Roulette am Tisch</h3>
+    <div class="rwrap"><div class="rpointer">▼</div>
+      <div class="wheel" id="wheel" style="background:conic-gradient(${grad});transform:rotate(${wheelRot}deg)">
+        ${ppl.map((nm, i) => `<span style="transform:rotate(${(i + .5) * seg}deg)"><b>${esc(nm.slice(0, 9))}</b></span>`).join("")}
+        <i class="hub">🎲</i>
+      </div></div>
+    <div class="rres" id="rres">${round.caller ? `📞 <b>${esc(round.caller)}</b> ruft an` : ""}${round.caller && round.payer ? " · " : ""}${round.payer ? `🏦 <b>${esc(round.payer)}</b> ist die Bank` : ""}${!round.caller && !round.payer ? "Lass das Rad entscheiden." : ""}</div>
+    <div class="btns"><button class="btn red" data-wheel="caller">📞 Wer ruft an?</button><button class="btn gold" data-wheel="payer">🏦 Wer ist die Bank?</button></div>`;
+}
+function spinWheel(kind) {
+  if (wheelSpinning) return;
+  const ppl = people().map(p => p.n); if (ppl.length < 2) return;
+  const n = ppl.length, seg = 360 / n, idx = Math.floor(Math.random() * n), winner = ppl[idx];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const target = 360 - (idx + .5) * seg + (Math.random() - .5) * seg * .6;   // Segment unter den Zeiger (oben)
+  wheelRot = wheelRot - (wheelRot % 360) + (reduce ? 0 : 360 * 6) + target;
+  wheelSpinning = true;
+  const w = $("#wheel"); w.style.transition = reduce ? "none" : "transform 4.6s cubic-bezier(.12,.75,.12,1)"; w.style.transform = `rotate(${wheelRot}deg)`;
+  $("#rres").innerHTML = `🎡 ${kind === "caller" ? "Wer muss telefonieren …" : "Wer übernimmt die Bank …"}`;
+  $$("[data-wheel]").forEach(b => b.disabled = true);
+  let ticks = 0; const tick = setInterval(() => { buzz(); if (++ticks > 14) clearInterval(tick); }, 260);
+  setTimeout(() => {
+    wheelSpinning = false; clearInterval(tick);
+    if (kind === "payer") { payChoose = false; if (winner === me) bumpFlag("payer", true); patchRound({ payer: winner }); }
+    else patchRound({ caller: winner });
+    toast(kind === "caller" ? `📞 ${winner === me ? "Du rufst" : winner + " ruft"} an!` : `🏦 ${winner === me ? "Du bist" : winner + " ist"} die Bank!`);
+    confetti(); renderRoulette();
+  }, reduce ? 200 : 4700);
+}
 function renderOrder() {
   const ppl = people(), cnt = countAll(), tot = ppl.reduce((a, p) => a + sumP(p), 0);
   $("#grpTitle").textContent = C("Gruppenbestellung", "Der Spieltisch");
@@ -1082,7 +1189,7 @@ function renderOrder() {
   $("#reset").classList.toggle("hidden", !ppl.length);
   $("#grpTotal").textContent = eur(tot);
   $("#waBtn").href = "https://wa.me/?text=" + encodeURIComponent(shareText() + "\n" + shareUrl());
-  renderLiveBox(); renderDeadline(); renderPay();
+  renderLiveBox(); renderDeadline(); renderPay(); renderRoulette();
   $("#howto").innerHTML = (live
     ? ["Gruppenlink <b>einmal</b> in die WhatsApp-Gruppe schicken (am besten anpinnen).", "Jeder öffnet denselben Link und sucht aus. Alle sehen es sofort.", "Optional: Bestellschluss setzen, dann sieht jeder den Countdown.", "Einer tippt auf 📞 und liest die Nummern vor."]
     : ["Jeder sucht sich auf der Karte was aus.", "„Link teilen“ und in die Gruppe schicken.", "Der Nächste öffnet den Link, packt seins dazu und teilt weiter.", "Wer anruft, öffnet den neuesten Link, tippt auf 📞 und liest nur noch die Nummern vor."]
@@ -1113,7 +1220,7 @@ function renderCall() {
       <span class="ck"></span></li>`; }).join("") : `<li style="cursor:default;color:var(--muted);justify-content:center">Noch nichts zum Vorlesen.</li>`;
   $("#roCount").textContent = cnt ? `${cnt} ${cnt === 1 ? "Gericht" : "Gerichte"}` : "";
   $("#roTotal").textContent = eur(people().reduce((a, p) => a + sumP(p), 0));
-  $("#callBtn").textContent = C("📞 Jetzt anrufen", "📞 Einsätze telefonisch platzieren");
+  $("#callBtn").textContent = C("📞 Jetzt anrufen", round.caller ? `📞 ${round.caller === me ? "Du bist dran!" : round.caller + " ist dran"}` : "📞 Einsätze telefonisch platzieren");
   $$("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === round.mode));
   const pn = $("#pickupName").value.trim() || me, np = people().length;
   $("#pickupName").placeholder = me || "z. B. Müller";
@@ -1350,14 +1457,60 @@ function openProfile() {
         <div><div class="bt">🧭 Entdecker</div>${top(board, "unique", x => x.unique + (x.unique === 1 ? " Gericht" : " Gerichte"))}</div>
       </div>
       ${gFav ? `<div class="favline">🔥 Liebling am Tisch: <b>${gFav.sayName ? "" : esc(gFav.nr) + " "}${esc(gFav.name)}</b></div>` : ""}` : `<p class="fnote">In der Live-Gruppe gibt's auch eine Rangliste mit deinen Leuten.</p>`}
+    <button type="button" class="btn block" id="profLeave" style="margin-top:16px;color:var(--muted)">🚪 Casino verlassen</button>
     <p class="fnote">Chips sind nur zum Spaß und haben keinen Wert: +100 pro Besuch, +50 pro neuem Gericht, +75 pro Wochen-Serie.</p>`;
   $("#profName").onclick = () => { $("#profDlg").close(); openName(); };
+  $("#profLeave").onclick = () => { $("#profDlg").close(); setCasino(false); };
   const nb = $("#profNew"); if (nb) nb.onclick = () => { $("#profDlg").close(); show("wuerfeln"); newOnly = true; spin(); newOnly = false; };
   $("#profDlg").showModal();
 }
 
 // ---------- Rendering: dice / last ----------
+function dishOfDay() {
+  const pool = MENU.filter(m => !["Beilagen", "Desserts"].includes(m.cat)); let h = 0;
+  for (const ch of today()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return pool[h % pool.length];
+}
+function renderScratch() {
+  const el = $("#scratchWrap"); if (!el) return;
+  if (!CASINO || query) { el.innerHTML = ""; return; }
+  const m = dishOfDay(), done = store.get("scratched", "") === today();
+  if (el.dataset.day === today() + done && el.innerHTML) return;   // nicht bei jedem Render neu aufbauen
+  el.dataset.day = today() + done;
+  el.innerHTML = `<div class="scratch ${done ? "done" : ""}">
+    <div class="sc-under"><div class="sc-lbl">🎟️ Tagesempfehlung des Hauses</div>
+      <div class="sc-dish"><span class="nrc">${m.sayName ? "🥡" : esc(m.nr)}</span> ${esc(m.name)}</div>
+      <div class="sc-meta">${eur(m.price)} ${hotHTML(m.hot)}</div>
+      <button class="btn sm gold" data-add="${esc(m.nr)}">Setzen</button></div>
+    ${done ? "" : `<canvas class="sc-cover" id="scCanvas"></canvas>`}</div>`;
+  if (!done) setupScratch();
+}
+function setupScratch() {
+  const cv = $("#scCanvas"); if (!cv) return;
+  const r = cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+  if (!r.width) { $("#scratchWrap").dataset.day = ""; return; }   // Karte gerade nicht sichtbar: später aufbauen
+  cv.width = r.width * dpr; cv.height = r.height * dpr;
+  const g = cv.getContext("2d"); g.scale(dpr, dpr);
+  const gr = g.createLinearGradient(0, 0, r.width, r.height); gr.addColorStop(0, "#f7d774"); gr.addColorStop(.5, "#c9921c"); gr.addColorStop(1, "#f2c94c");
+  g.fillStyle = gr; g.fillRect(0, 0, r.width, r.height);
+  g.fillStyle = "rgba(255,255,255,.18)"; for (let i = 0; i < 60; i++) g.fillRect(Math.random() * r.width, Math.random() * r.height, 2, 2);
+  g.fillStyle = "#3a1d00"; g.font = "800 18px Outfit, sans-serif"; g.textAlign = "center"; g.fillText("🎟️ RUBBELN!", r.width / 2, r.height / 2 - 2);
+  g.font = "600 12px Outfit, sans-serif"; g.fillText("Tagesempfehlung des Hauses freirubbeln", r.width / 2, r.height / 2 + 18);
+  g.globalCompositeOperation = "destination-out";
+  let down = false, last = null, moves = 0;
+  const pos = e => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  const scratch = (x, y) => { g.lineWidth = 34; g.lineCap = "round"; g.beginPath(); if (last) g.moveTo(last[0], last[1]); else g.moveTo(x, y); g.lineTo(x, y); g.stroke(); last = [x, y]; if (++moves % 8 === 0) check(); };
+  const check = () => {
+    const d = g.getImageData(0, 0, cv.width, cv.height).data; let clear = 0, tot = 0;
+    for (let i = 3; i < d.length; i += 4 * 40) { tot++; if (d[i] < 40) clear++; }
+    if (clear / tot > .5) { store.set("scratched", today()); cv.classList.add("gone"); buzz(); setTimeout(() => { $("#scratchWrap").dataset.day = ""; renderScratch(); toast("🎟️ Das Haus empfiehlt: " + (dishOfDay().sayName ? dishOfDay().name : dishOfDay().nr)); confetti(); }, 450); }
+  };
+  cv.addEventListener("pointerdown", e => { down = true; last = null; cv.setPointerCapture(e.pointerId); scratch(...pos(e)); });
+  cv.addEventListener("pointermove", e => { if (down) scratch(...pos(e)); });
+  cv.addEventListener("pointerup", () => { down = false; last = null; check(); });
+}
 function renderLastQuick() {
+  renderScratch();
   const last = (store.get("last", []) || []).filter(x => byNr[x[0]]), p = myP();
   const show = last.length && !(p && p.i.length) && !query;
   $("#lastQuick").innerHTML = show ? `<div class="lastcard"><span style="font-size:1.4rem">🔁</span><div class="t"><b>Wie letztes Mal?</b><span>${last.map(([nr, q]) => (q > 1 ? q + "× " : "") + (byNr[nr].sayName ? byNr[nr].name : nr)).join(", ")} · ${eur(last.reduce((a, [nr, q]) => a + byNr[nr].price * q, 0))}</span></div><button class="btn sm gold" id="lastQuickBtn">Nehmen</button></div>` : "";
@@ -1421,7 +1574,6 @@ function renderCasinoStatic() {
   $("#heroH").innerHTML = C("Hunger?<br><span>Vorbestellen.</span>", "Faites vos jeux!<br><span>Hunger gewinnt.</span>");
   $("#heroP").textContent = C("Aussuchen, Link in die Gruppe schicken, einer ruft an, fertig, wenn ihr da seid.", "Setzt eure Chips auf die Karte. Einer ruft an, und wenn ihr ankommt, steht der Gewinn auf dem Tisch.");
   $("#nameTitle").textContent = C("Wie heißt du? 👋", "Wie heißt du, Spieler? 🎩");
-  const t = $("#casinoTog"); if (t) { t.setAttribute("aria-pressed", CASINO); t.textContent = CASINO ? "An" : "Aus"; }
   document.body.classList.toggle("casino", CASINO);
   $("#brandTxt").innerHTML = C("Asia Le", `Asia Le <small class="ctag">CASINO</small>`);
   const tb = $('.tabs [data-v="bestellung"]'); if (tb) tb.childNodes[1].nodeValue = C("Bestellung", "Spieltisch");
@@ -1472,20 +1624,22 @@ function show(v, push = true) {
   $$(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
   if (v === "infos" && !$("#map").src) $("#map").src = "https://www.google.com/maps?q=" + encodeURIComponent(SHOP.name + ", " + SHOP.address) + "&z=16&output=embed";
   if (v === "infos") renderInfos();
+  if (v === "karte") { dealAnim(); requestAnimationFrame(renderScratch); }
   $("#toast").classList.remove("on"); store.set("tab", v); renderChrome(); window.scrollTo({ top: 0 }); requestAnimationFrame(layout);
 }
 
 // ---------- Events ----------
 document.addEventListener("click", e => {
-  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-act],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
+  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-act],[data-wheel],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
   if (!t) return;
   const d = t.dataset;
-  if (d.add) { const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
+  if (d.add) { lastAddEl = t.getBoundingClientRect(); const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
   else if (d.sub) sub(d.sub);
   else if (d.fav) toggleFav(d.fav);
   else if (d.open) openItem(d.open);
   else if (d.go) show(d.go);
   else if (d.rmf) removeFilter(d.rmf);
+  else if (d.wheel) spinWheel(d.wheel);
   else if (d.act === "shareGroup") shareGroup();
   else if (d.act === "createLive") createLiveGroup();
   else if (d.dlset) setDlCustom(d.dlset);
@@ -1496,7 +1650,7 @@ document.addEventListener("click", e => {
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
   else if (d.mode) patchRound({ mode: d.mode });
   else if (d.filter !== undefined) openFilters();
-  else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
+  else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); dealAnim(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
   else if (d.inc !== undefined) { const p = myP(); p.i[+d.inc][1]++; buzz(); commit(); }
   else if (d.dec !== undefined) { const p = myP(); const x = p.i[+d.dec]; if (--x[1] <= 0) p.i.splice(+d.dec, 1); buzz(); commit(); }
@@ -1511,7 +1665,7 @@ $("#howCard summary").addEventListener("click", () => { howTouched = true; });
 $("#whoBtn").onclick = () => CASINO ? openProfile() : openName();
 $("#profDlg").addEventListener("click", e => { if (e.target.id === "profDlg") e.target.close(); });
 let qT;
-$("#q").addEventListener("input", e => { query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
+$("#q").addEventListener("input", e => { if (/^(jackpot|777|casino)$/i.test(e.target.value.trim())) { e.target.value = ""; e.target.blur(); setCasino(!CASINO); } query = e.target.value; $("#qClr").classList.toggle("hidden", !query); clearTimeout(qT); qT = setTimeout(() => { renderMenu(); renderHits(); }, 60); });
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") { const r = filtered(); if (r.length === 1) { openItem(r[0].nr); } e.target.blur(); } });
 $("#qClr").onclick = () => { $("#q").value = ""; query = ""; $("#qClr").classList.add("hidden"); renderMenu(); renderHits(); $("#q").focus(); };
 $("#readout").onclick = e => { const li = e.target.closest("li[data-k]"); if (!li) return; const k = li.dataset.k; done.has(k) ? done.delete(k) : done.add(k); store.set("done", [...done]); li.classList.toggle("done"); buzz(); };
@@ -1524,7 +1678,26 @@ $("#share").onclick = async () => {
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin();
-$("#casinoTog").onclick = () => { CASINO = !CASINO; store.set("casino", CASINO); render(); toast(CASINO ? "🎰 Casino-Modus an. Viel Glück!" : "Casino-Modus aus"); };
+// ---------- Easter Egg: 5× aufs Logo tippen oder "jackpot" suchen ----------
+function setCasino(v) {
+  CASINO = v; store.set("casinoEgg", v); render();
+  if (v) casinoIntro(); else toast("🥢 Casino geschlossen. Zurück im Imbiss.");
+}
+let eggTaps = [];
+$(".brand").addEventListener("click", () => {
+  const now = Date.now(); eggTaps = eggTaps.filter(t => now - t < 2500); eggTaps.push(now);
+  const lg = $(".brand .logo"); lg.classList.remove("wiggle"); void lg.offsetWidth; lg.classList.add("wiggle");
+  if (eggTaps.length >= 5) { eggTaps = []; setCasino(!CASINO); }
+});
+function casinoIntro() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { toast("🎰 Willkommen im Asia Le Casino!"); return; }
+  const o = document.createElement("div"); o.className = "intro";
+  o.innerHTML = `<div class="intro-in"><div class="ibulbs"></div><div class="islot">🎰</div><div class="iw">Willkommen im</div><div class="it">ASIA&nbsp;LE<br>CASINO</div><div class="isub">Faites vos jeux!</div><div class="ibulbs"></div></div>`
+    + Array.from({ length: 26 }, () => `<i style="left:${Math.random() * 100}%;animation-delay:${.3 + Math.random() * .9}s">${pickOne(["🪙", "♠️", "♦️", "♣️", "♥️", "🃏"])}</i>`).join("");
+  document.body.appendChild(o);
+  try { navigator.vibrate && navigator.vibrate([60, 40, 60, 40, 200]); } catch {}
+  o.onclick = () => o.remove(); setTimeout(() => o.classList.add("out"), 2300); setTimeout(() => o.remove(), 2900);
+}
 $("#lever").onclick = () => spin();
 $("#spinFav").onclick = e => { favOnly = !favOnly; e.currentTarget.setAttribute("aria-pressed", favOnly); };
 $("#takeIt").onclick = () => { if (pick) { bumpFlag("dice"); pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
