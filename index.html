@@ -1713,7 +1713,7 @@ document.addEventListener("click", e => {
   else if (d.paymode) { if (d.paymode === "self") { payChoose = false; patchRound({ payer: "" }); } else { payChoose = true; if (round.payer) patchRound({ payer: "" }); else renderPay(); } }
   else if (d.payer) { payChoose = false; if (d.payer === me) bumpFlag("payer", true); if (d.payer === me && myPP()) { const p = myP(); if (p) p.pp = myPP(); } patchRound({ payer: d.payer }); if (live && d.payer === me) pushMine(); }
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
-  else if (d.mode) { patchRound({ mode: d.mode }); if (CASINO && d.mode === "mit" && flOnceKey("shark")) { redShark(); eggToast("🌵 Wir waren irgendwo bei Barstow, am Rande der Wüste …"); } }
+  else if (d.mode) { patchRound({ mode: d.mode }); if (CASINO && d.mode === "mit" && flOnceKey("shark")) { redShark(); eggToast("🌵 Ab durch die Wüste nach Las Vegas. Das Essen kommt mit!"); } }
   else if (d.filter !== undefined) openFilters();
   else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); dealAnim(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
@@ -1759,7 +1759,7 @@ function vegasEgg(v) {
   const q = norm(v.trim());
   if (/^(bat ?country|fledermaus(land)?|fledermaeuse|fledermause)$/.test(q)) { batSwarm(); eggToast("🦇 Nicht anhalten. Hier ist Fledermaus-Land!"); return true; }
   if (/^(lizard|lizards|echse|eidechse|echsen)$/.test(q)) { carpetTrip(); eggToast("🦎 Der Hotelteppich hat gerade gezwinkert …"); return true; }
-  if (/^(las ?vegas|vegas|wueste|wuste|barstow)$/.test(q)) { redShark(); eggToast("🌵 Irgendwo bei Barstow, am Rand der Wüste …"); return true; }
+  if (/^(las ?vegas|vegas|wueste|wuste)$/.test(q)) { redShark(); eggToast("🌵 Mit dem roten Cabrio quer durch die Wüste nach Las Vegas …"); return true; }
   if (/^(gonzo|raoul|duke|hawaii(hemd)?)$/.test(q)) { const on = document.body.classList.toggle("hawaii"); eggToast(on ? "🌺 Hawaiihemd an. Sonnenbrille auf. Notizblock bereit." : "👔 Hawaiihemd wieder im Schrank."); return true; }
   if (/^(adrenochrom|adrenochrome)$/.test(q)) { carpetTrip(); batSwarm(18); setTimeout(redShark, 900); eggToast("🧪 " + "Das ist kein Spielzeug. … Na gut. Viel Spaß."); return true; }
   if (/^(ather|aether|ether)$/.test(q)) { document.body.classList.add("ether"); setTimeout(() => document.body.classList.remove("ether"), 7500); eggToast("🌫️ Es gibt nichts Hilfloseres als einen Mann im Äther-Rausch."); return true; }
@@ -1789,7 +1789,6 @@ function redShark() {
 
 // ---------- Fear & Loathing: das Easter Egg im Easter Egg (selten & subtil) ----------
 const FL_QUOTES = [
-  "Wir waren irgendwo bei Barstow, am Rande der Wüste, als die Drogen zu wirken begannen …",
   "Wir können hier nicht anhalten. Das ist Fledermausland!",
   "Kauf das Ticket, nimm die Fahrt.",
   "Zu seltsam zum Leben, zu selten zum Sterben.",
@@ -1826,7 +1825,7 @@ function stareReset() {
     const els = [$("#hero"), $("#list")];
     els.forEach(el => { el.classList.remove("melt"); void el.offsetWidth; el.classList.add("melt"); });
     setTimeout(() => els.forEach(el => el.classList.remove("melt")), 7000);
-    eggToast("🌀 " + pickOne(["Du starrst jetzt schon eine Weile auf die Karte. Das Essen fängt an zu atmen. Ganz ruhig.", "Bei Barstow fing es auch so an …", "Kein Grund zur Panik. Das ist nur das Meskalin."]));
+    eggToast("🌀 " + pickOne(["Du starrst jetzt schon eine Weile auf die Karte. Das Essen fängt an zu atmen. Ganz ruhig.", "Kein Grund zur Panik. Das ist nur das Meskalin."]));
   }, 45000);
 }
 ["pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, stareReset, { passive: true }));
@@ -1871,7 +1870,7 @@ function flAvatar() {   // 3× aufs Profilbild: Hawaiihemd
 function casinoIntro() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) { toast("🎰 Willkommen im Asia Le Casino!"); return; }
   const o = document.createElement("div"); o.className = "intro";
-  o.innerHTML = `<div class="intro-in"><div class="ibulbs"></div><div class="islot">🎰</div><div class="iw">Willkommen im</div><div class="it">ASIA&nbsp;LE<br>CASINO</div><div class="isub">${Math.random() < .2 ? "… irgendwo bei Barstow …" : "Faites vos jeux!"}</div><div class="ibulbs"></div></div>`
+  o.innerHTML = `<div class="intro-in"><div class="ibulbs"></div><div class="islot">🎰</div><div class="iw">Willkommen im</div><div class="it">ASIA&nbsp;LE<br>CASINO</div><div class="isub">Faites vos jeux!</div><div class="ibulbs"></div></div>`
     + Array.from({ length: 26 }, () => `<i style="left:${Math.random() * 100}%;animation-delay:${.3 + Math.random() * .9}s">${pickOne(["🪙", "♠️", "♦️", "♣️", "♥️", "🃏"])}</i>`).join("");
   document.body.appendChild(o);
   try { navigator.vibrate && navigator.vibrate([60, 40, 60, 40, 200]); } catch {}
