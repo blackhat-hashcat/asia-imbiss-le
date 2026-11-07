@@ -423,8 +423,6 @@ body.casino .flizard{display:inline-block}
 @keyframes lonebat{0%{transform:translate(0,0)}20%{transform:translate(22vw,-14px) scaleX(-1)}45%{transform:translate(50vw,10px)}70%{transform:translate(78vw,-10px) scaleX(-1)}99%{opacity:.35}100%{transform:translate(calc(100vw + 120px),4px);opacity:0}}
 .hero.melt,#list.melt{animation:melt 7s ease-in-out}
 @keyframes melt{0%,100%{filter:none;transform:none}20%{filter:saturate(1.8) hue-rotate(25deg);transform:scale(1.02) skewX(1.5deg)}45%{filter:saturate(2.2) hue-rotate(-30deg) blur(.6px);transform:scale(.985) skewY(-1.5deg)}70%{filter:saturate(1.6) hue-rotate(60deg);transform:scale(1.015) skewX(-1deg)}}
-body.ether main,body.ether .top,body.ether .tabs{animation:ether 7.5s ease-in-out}
-@keyframes ether{0%,100%{filter:none;transform:none}15%{filter:blur(2px);transform:rotate(-2deg) translateX(-10px)}35%{filter:blur(3.5px) brightness(1.15);transform:rotate(2.5deg) translateX(12px) scale(1.02)}55%{filter:blur(2.5px) saturate(.6);transform:rotate(-1.8deg) translate(-8px,6px)}75%{filter:blur(3px);transform:rotate(1.5deg) translateX(6px)}90%{filter:blur(1px);transform:rotate(-.6deg)}}
 body.casino.late::before{animation:latedrift 50s linear infinite}
 @keyframes latedrift{to{filter:hue-rotate(360deg)}}
 body.casino.late .hero{animation:breathe 9s ease-in-out infinite}
@@ -1590,13 +1588,11 @@ function spin() {
   const icons = CATS.map(c => c.icon), nrs = MENU.map(m => m.sayName ? "🥡" : m.nr), prices = MENU.map(m => eur(m.price));
   const lucky = !CASINO && (Math.random() < 1 / 50 || (MOCK && QS.has("777")));
   const finals = lucky ? ["7️⃣", "7️⃣", "7️⃣"] : [catIcon[pick.cat], pick.sayName ? "🥡" : pick.nr, eur(pick.price)];
-  const batRoll = flSometimes(.08);
   const H = $("#reels .reel").offsetHeight || 92;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   [icons, nrs, prices].forEach((src, i) => {
     const n = reduce ? 1 : 18 + i * 7;
     const items = Array.from({ length: n }, () => rnd(src)).concat([finals[i]]);
-    if (batRoll && n > 3) items.splice(items.length - 2, 1, "🦇");
     const st = $("#r" + i);
     st.style.transition = "none"; st.style.transform = "translateY(0)"; st.innerHTML = reelHTML(items);
     void st.offsetHeight;
@@ -1613,10 +1609,9 @@ function spin() {
       try { navigator.vibrate && navigator.vibrate([80, 60, 80, 60, 300]); } catch {}
       setTimeout(() => setCasino(true), 1400); return;
     }
-    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${batRoll ? "Fledermausland. Nicht anhalten." : flSometimes(.12) ? flQuote() : pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${flSometimes(.12) ? flQuote() : pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
-    if (CASINO && batRoll) setTimeout(() => { carpetTrip(); batSwarm(18); setTimeout(redShark, 900); eggToast("🧪 Adrenochrom. Das ist kein Spielzeug."); }, 500);
-    else if (CASINO && pick.hot >= 6) setTimeout(() => { batSwarm(10); eggToast("🦇 Sechs Chilis. Willkommen im Fledermaus-Land."); }, 500);
+    if (CASINO && pick.hot >= 6) setTimeout(() => { batSwarm(10); eggToast("🦇 Sechs Chilis. Willkommen im Fledermaus-Land."); }, 500);
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
     if (!reduce) { const c = document.createElement("div"); c.className = "coins"; c.innerHTML = Array.from({ length: 16 }, () => `<i style="left:${Math.random() * 96}%;animation-delay:${Math.random() * .5}s">${rnd(["🪙", "✨", "🥢", "⭐"])}</i>`).join(""); slot.appendChild(c); setTimeout(() => c.remove(), 2400); }
     $("#takeIt").scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -1783,8 +1778,6 @@ const FL_QUOTES = [
   "Als dein Anwalt rate ich dir: Nimm die S11.",
   "Zwei Tüten Gras, 75 Kügelchen Meskalin … und eine Nudelbox.",
   "Da geht er hin. Einer von Gottes eigenen Prototypen.",
-  "Ein Mann, der zu viel Äther hatte, bestellt trotzdem pünktlich.",
-  "Es gibt nichts Hilfloseres als einen Mann im Äther-Rausch. Außer einen Mann ohne Ente.",
   "Kein Grund zur Sorge. Das ist nur der Teppich.",
 ];
 const FL_NIGHT = () => { const h = new Date().getHours(); return h >= 22 || h < 5; };
@@ -1838,8 +1831,6 @@ function batDish() {
 }
 function flAfterAdd() {
   if (!CASINO) return;
-  const p = myP(), n = p ? p.i.reduce((a, x) => a + x[1], 0) : 0;
-  if (n >= 3 && flOnceKey("ether")) setTimeout(() => { document.body.classList.add("ether"); setTimeout(() => document.body.classList.remove("ether"), 7500); eggToast("🌫️ Es gibt nichts Hilfloseres als einen Mann im Äther-Rausch."); }, 900);
   const tot = people().reduce((a, x) => a + sumP(x), 0);
   if (tot >= 100 && flOnceKey("dream")) setTimeout(() => eggToast("🇺🇸 Der amerikanische Traum: über 100 € in Nudeln."), 1600);
 }
