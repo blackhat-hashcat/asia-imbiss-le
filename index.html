@@ -1385,7 +1385,7 @@ function orderText() {
 // ---------- Casino-Sound (wird im Browser erzeugt, keine Dateien) ----------
 let SOUND = store.get("sound", true), AC = null, MASTER = null;
 function audio() {
-  if (!AC) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; AC = new A(); MASTER = AC.createGain(); MASTER.gain.value = .55; MASTER.connect(AC.destination); }
+  if (!AC) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; AC = new A(); MASTER = AC.createGain(); MASTER.gain.value = .85; MASTER.connect(AC.destination); }
   if (AC.state === "suspended") AC.resume();
   return AC;
 }
@@ -1493,7 +1493,7 @@ function musicOn() {
   if (!CASINO || !SOUND || !MUSIC || document.hidden || musTimer) return;
   const a = audio(); if (!a) return;
   if (!MUS) { MUS = a.createGain(); MUS.connect(MASTER); }
-  MUS.gain.cancelScheduledValues(a.currentTime); MUS.gain.setValueAtTime(0, a.currentTime); MUS.gain.linearRampToValueAtTime(.5, a.currentTime + 2);
+  MUS.gain.cancelScheduledValues(a.currentTime); MUS.gain.setValueAtTime(0, a.currentTime); MUS.gain.linearRampToValueAtTime(.32, a.currentTime + 2);
   musNext = a.currentTime + .1; musTimer = setInterval(musSchedule, 60); musSchedule();
 }
 function musicOff() {
