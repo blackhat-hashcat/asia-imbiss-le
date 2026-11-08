@@ -92,19 +92,15 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .chip.cat.on{background:var(--gold);color:#2b1b00;border-color:var(--gold)}
 .chip.ing.on{background:var(--jade);color:#05261d;border-color:var(--jade)}
-.strip2{display:flex;flex-direction:column}
-.chips.srow2{padding:3px 16px 3px 0;gap:6px;align-items:center}
-.chips.srow2:first-child{padding-top:8px}
-.rlab{position:sticky;left:0;z-index:1;flex:none;width:80px;padding:0 4px 0 16px;align-self:stretch;display:flex;align-items:center;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);background:var(--rlbg,#100c0b)}
-.rlab::after{content:"";position:absolute;top:0;bottom:0;right:-14px;width:14px;background:linear-gradient(90deg,var(--rlbg,#100c0b),transparent);pointer-events:none}
-.rlab + .chip{margin-left:10px}
-#dCats .rlab{--rlbg:var(--s1)}
-body.casino #dCats .rlab{--rlbg:#0b2417}
+.strip2{display:flex;flex-direction:column;padding-top:5px}
+.srw{display:flex;align-items:center;margin:0 -16px}
+.srw .rlab{flex:none;width:78px;padding:0 4px 0 16px;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.chips.srow2{flex:1;min-width:0;margin:0;padding:3px 16px 3px 2px;gap:6px;align-items:center;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12px);mask-image:linear-gradient(90deg,transparent 0,#000 12px)}
+#dCats .srw{margin:0 -16px}
 .srow2 .chip{padding:6px 11px;font-size:.84rem}
 .srow2 .chip.ing{border-radius:999px}
 .srow2 .chip.cat{border-radius:10px}
 .chip.clr2{padding:6px 10px;color:var(--muted)}
-#dCats .chips.srow2{margin:0 -16px}
 .srow{display:flex;gap:8px;align-items:stretch}
 .srow .sbox{flex:1;min-width:0}
 .fbtn{flex:none;display:flex;align-items:center;gap:6px;padding:0 14px;border-radius:14px;border:1px solid var(--line);background:var(--s1);font-weight:700;font-size:.92rem;position:relative}
@@ -1153,19 +1149,18 @@ function stripHTML(afHTML = "") {
   const typItems = TYPE_CATS.map(c => ({ id: c.id, on: cat === c.id, html: on => `<button class="chip cat ${on ? "on" : ""}" data-c="${esc(c.id)}">${c.icon} ${esc(TYPE_SHORT[c.id] || c.id)}</button>` }));
   const typ = `<button class="chip cat ${cat ? "" : "on"}" data-c="">Alle</button>`
     + ordered("typ", typItems).map(x => x.html(x.on)).join("");
-  return `<div class="chips srow2"><span class="rlab">Zutat</span>${ing}</div>`
-    + `<div class="chips srow2"><span class="rlab">Gericht</span>${typ}</div>`
-    + (afHTML ? `<div class="chips srow2"><span class="rlab">Filter</span>${afHTML}</div>` : "");
+  const row = (key, lab, html) => `<div class="srw"><span class="rlab">${lab}</span><div class="chips srow2" data-row="${key}">${html}</div></div>`;
+  return row("ing", "Zutat", ing) + row("typ", "Gericht", typ) + (afHTML ? row("flt", "Filter", afHTML) : "");
 }
 function renderChips() {
   const af = activeFilters(F).filter(([k]) => !k.startsWith("meat:") && k !== "veg");   // Zutaten/Veggie stehen schon als Chips in der Leiste
   if (cat && !TYPE_CATS.some(c => c.id === cat)) cat = "";
   const afHTML = af.map(([k, l]) => `<button class="chip af" data-rmf="${esc(k)}" aria-label="${esc(l)} entfernen">${esc(l)} <b>✕</b></button>`).join("");
   const resort = stripResort, keep = {};   // Scroll-Position je Zeile behalten
-  $$(".srow2").forEach(r => keep[r.parentNode.id + r.firstElementChild.textContent] = r.scrollLeft);
+  $$(".srow2").forEach(r => keep[r.closest(".strip2").id + r.dataset.row] = r.scrollLeft);
   $("#cats").innerHTML = stripHTML(afHTML);
   $("#dCats").innerHTML = stripHTML();
-  $$(".srow2").forEach(r => r.scrollLeft = resort ? 0 : (keep[r.parentNode.id + r.firstElementChild.textContent] || 0));
+  $$(".srow2").forEach(r => r.scrollLeft = resort ? 0 : (keep[r.closest(".strip2").id + r.dataset.row] || 0));
   stripResort = false;
   for (const id of ["#fCount", "#fCount2"]) { $(id).textContent = af.length; $(id).classList.toggle("hidden", !af.length); }
   $$(".fbtn").forEach(b => b.classList.toggle("on", !!af.length));
