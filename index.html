@@ -24,6 +24,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body,button,a,input,.item,.chip{touch-action:manipulation}
+html,body{overflow-x:clip;overscroll-behavior-x:none}
 html{scroll-padding-top:var(--stick,140px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 var(--body);min-height:100dvh;
   }
@@ -46,7 +47,7 @@ a{color:inherit}
 .who{flex:none;font-weight:700;font-size:.85rem;padding:7px 12px;border-radius:999px;background:var(--s2);border:1px solid var(--line);max-width:34vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- Views ---------- */
-main.wrap{padding-bottom:calc(var(--dock,160px) + 24px)}
+main.wrap{overflow-x:clip;padding-bottom:calc(var(--dock,160px) + 24px)}
 body.dlg{overflow:hidden}
 body.kb .dock{display:none}
 .view{display:none;animation:fade .25s ease}
@@ -364,7 +365,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 @keyframes bump{40%{transform:scale(1.06)}}
 body.casino #list.dealing .item{animation:deal .5s cubic-bezier(.2,.9,.3,1.15) both}
 body.casino #list.dealing .item:nth-child(3){animation-delay:.05s}body.casino #list.dealing .item:nth-child(4){animation-delay:.1s}body.casino #list.dealing .item:nth-child(5){animation-delay:.15s}body.casino #list.dealing .item:nth-child(6){animation-delay:.2s}body.casino #list.dealing .item:nth-child(7){animation-delay:.25s}body.casino #list.dealing .item:nth-child(8){animation-delay:.3s}body.casino #list.dealing .item:nth-child(n+9){animation-delay:.35s}
-@keyframes deal{from{opacity:0;transform:translate(60px,-30px) rotate(8deg) scale(.9)}}
+@keyframes deal{from{opacity:0;transform:translateY(-18px) rotate(-2deg) scale(.96)}}
 body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infinite}
 @keyframes shimmer{to{background-position:-200% 0}}
 /* Roulette */
@@ -787,7 +788,7 @@ let done = new Set(store.get("done", []));
 function cleanPP(v) { return String(v || "").replace(/^.*paypal\.me\//i, "").replace(/[^A-Za-z0-9]/g, "").slice(0, 30); }
 function cleanPeople(arr) {
   return (Array.isArray(arr) ? arr : []).filter(p => p && typeof p.n === "string" && p.n.trim())
-    .map(p => ({ n: p.n.slice(0, 20), i: (Array.isArray(p.i) ? p.i : []).filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 50), String(x[2] || "").slice(0, 60)]), paid: !!p.paid, pp: cleanPP(p.pp), ts: +p.ts || 0 }));
+    .map(p => ({ n: p.n.slice(0, 20), i: (Array.isArray(p.i) ? p.i : []).filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 99), String(x[2] || "").slice(0, 60)]), paid: !!p.paid, pp: cleanPP(p.pp), ts: +p.ts || 0 }));
 }
 function cleanRound(r) { r = r || {}; return { caller: String(r.caller || "").slice(0, 20), payer: String(r.payer || "").slice(0, 20), mode: r.mode === "mit" ? "mit" : "hier", deadline: +r.deadline || 0, started: +r.started || 0 }; }
 function readHash() {
@@ -1121,7 +1122,7 @@ function openItem(nr) {
     box.querySelectorAll("[data-qn]").forEach(b => b.onclick = () => { note.value = note.value ? note.value + ", " + b.dataset.qn : b.dataset.qn; });
     const upd = () => { $("#nVal").textContent = n; $("#addBtn").textContent = `Hinzufügen · ${eur(m.price * n)}`; };
     $("#nMinus").onclick = () => { n = Math.max(1, n - 1); upd(); };
-    $("#nPlus").onclick = () => { n = Math.min(20, n + 1); upd(); };
+    $("#nPlus").onclick = () => { n = Math.min(99, n + 1); upd(); };
     $("#addBtn").onclick = () => { const nt = [opt, note.value.trim()].filter(Boolean).join(", "); $("#itemDlg").close(); add(nr, nt, n); };
     $("#favBtn").onclick = () => { toggleFav(nr); draw(); };
   };
