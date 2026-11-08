@@ -1111,7 +1111,7 @@ function dealAnim(withSound = true) {
   let vis = all.filter(e => { const r = e.getBoundingClientRect(); return r.bottom > 60 && r.top < innerHeight - 80; });
   if (!vis.length) vis = all.slice(0, 5);
   const delayOf = e => { const n = [...e.parentNode.children].indexOf(e) + 1; return n >= 9 ? .35 : n >= 3 ? (n - 2) * .05 : 0; };   // wie die CSS-Verzögerungen
-  dealAnim.ss = vis.length ? [setTimeout(() => sfx("deal"), 260)] : [];   // ein einzelner Karten-Sound, kein Rattern
+  dealAnim.ss = [];   // kein Sound beim Austeilen
   }));
   clearTimeout(dealAnim.t); dealAnim.t = setTimeout(() => l.classList.remove("dealing"), 1400);
 }
@@ -1538,18 +1538,20 @@ const SFX = {
   open() { bell(660, .16, .09); bell(990, .2, .08, .05); },
   close() { bell(990, .14, .08); bell(660, .18, .07, .05); },
   flutter() { noise(.7, .22, 0, 900, .6); },
+  pick() { tone(880, .09, "sine", .16); tone(1320, .12, "sine", .07, .03); },
+  unpick() { tone(660, .09, "sine", .14); },
   toggle() { noise(.012, .3, 0, 3200, 3); tone(1400, .04, "triangle", .06, .004); },
 };
 // Pegel je Sound (aus Messung kalibriert, siehe Tests): Bedien-Klicks leise, Belohnungen lauter
-const SFX_LEVEL = {"flutter":2.138,"deal":3.981,"click": 6.84, "toggle": 8.709, "tick": 5.624, "flip": 7.328, "open": 1.819, "close": 1.884, "card": 5.012, "chipLight": 8.222, "chipOff": 8.036, "chip": 3.758, "scratch": 11.75, "coin": 1.884, "star": 1.778, "unstar": 3.349, "cash": 1.567, "ring": 1.862, "whoosh": 4.365, "shuffle": 1.928, "lever": 5.012, "stop": 2.018, "denied": 1.319, "win": 1.318, "jackpot": 1.778, "intro": 1.972, "bell": 1.259};
+const SFX_LEVEL = {"pick":1.6,"unpick":1.6,"flutter":2.138,"deal":3.981,"click": 6.84, "toggle": 8.709, "tick": 5.624, "flip": 7.328, "open": 1.819, "close": 1.884, "card": 5.012, "chipLight": 8.222, "chipOff": 8.036, "chip": 3.758, "scratch": 11.75, "coin": 1.884, "star": 1.778, "unstar": 3.349, "cash": 1.567, "ring": 1.862, "whoosh": 4.365, "shuffle": 1.928, "lever": 5.012, "stop": 2.018, "denied": 1.319, "win": 1.318, "jackpot": 1.778, "intro": 1.972, "bell": 1.259};
 
 // Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
 const BTN_SFX = [
   ["[data-add],#spin,#lever,[data-wheel],.sndbtn,[data-soundrow],[data-musicrow],#casinoTog", null],
   [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
   ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
-  ["[data-c],[data-rmf],[data-f],[data-all],[data-clring],[data-meatc],[data-vegc]", "chipLight"], ["[data-fav]", "fav"],
-  ["[data-t],[data-meat],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
+  ["[data-c],[data-rmf],[data-f],[data-all],[data-clring],[data-meatc],[data-vegc]", "pickT"], ["[data-fav]", "fav"],
+  ["[data-t],[data-meat],[data-sp],[data-no]", "pickT"], ["[data-opt],[data-qn],[data-mode]", "toggle"],
   ["[data-paid]", "cash"], ["[data-payer],[data-paymode],[data-cover],[data-unby],#waBtn,.paybtn", "coin"],
   ["#callBtn,#callBtn2", "ring"], ["[data-act=shareGroup],#share,#copyText,[data-act=createLive]", "whoosh"],
   ["#reset,#resReset,#emptyReset,#fReset", "shuffle"],
@@ -1562,6 +1564,7 @@ document.addEventListener("click", e => {
   for (const [sel, name] of BTN_SFX) {
     const el = e.target.closest(sel); if (!el) continue;
     if (!name) return;
+    if (name === "pickT") { sfx(el.classList.contains("on") ? "unpick" : "pick"); return; }   // vor dem Umschalten
     if (name === "fav") { sfx(favs.has(el.dataset.fav) ? "unstar" : "star"); return; }   // vor dem Umschalten: aktueller Zustand
     sfx(name); return;
   }
