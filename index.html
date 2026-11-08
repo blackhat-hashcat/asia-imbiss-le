@@ -1468,7 +1468,7 @@ function orderText() {
 let SOUND = store.get("sound", true), AC = null, MASTER = null;
 function audio() {
   if (!AC) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; AC = new A(); MASTER = AC.createGain(); MASTER.gain.value = .85; const LIM = AC.createDynamicsCompressor(); LIM.threshold.value = -3; LIM.knee.value = 3; LIM.ratio.value = 20; LIM.attack.value = .001; LIM.release.value = .1; MASTER.connect(LIM); LIM.connect(AC.destination); }
-  if (AC.state === "suspended") AC.resume();
+  if (AC.state !== "running") AC.resume().catch(() => {});   // auch iOS-Zustand "interrupted"
   return AC;
 }
 addEventListener("pointerdown", () => { if (CASINO && SOUND) audio(); }, { passive: true });   // iOS: Ton erst nach erster Berührung
@@ -1593,8 +1593,19 @@ function musicOff() {
 }
 function musicSync() { CASINO && SOUND && MUSIC && !document.hidden ? musicOn() : musicOff(); }
 function setMusic(v) { MUSIC = v; store.set("music", v); musicSync(); renderSoundBtns(); }
-document.addEventListener("visibilitychange", musicSync);
-addEventListener("pointerdown", () => musicSync(), { passive: true });   // iOS: erst nach Berührung
+// Beim Zurückkehren in den Browser Musik sofort wieder starten (mit Wiederholungen, falls das System
+// den Ton noch kurz blockiert); jede Art von Berührung/Taste startet sie spätestens.
+let resumeTries = 0;
+function resumeAudio() {
+  musicSync();
+  if (!CASINO || !SOUND || !MUSIC || document.hidden || !AC) return;
+  if (AC.state !== "running" && resumeTries < 12) { resumeTries++; AC.resume().catch(() => {}); setTimeout(resumeAudio, 400); }
+  else resumeTries = 0;
+}
+document.addEventListener("visibilitychange", () => { resumeTries = 0; resumeAudio(); });
+addEventListener("pageshow", () => { resumeTries = 0; resumeAudio(); });
+addEventListener("focus", () => { resumeTries = 0; resumeAudio(); });
+["pointerdown", "touchstart", "touchend", "click", "keydown"].forEach(ev => addEventListener(ev, () => { if (CASINO && SOUND) { audio(); musicSync(); } }, { passive: true, capture: true }));
 
 // kleine Glitzer-Explosion an einer Stelle
 function sparkle(x, y, n = 10) {
