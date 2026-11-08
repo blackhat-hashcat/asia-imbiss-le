@@ -292,6 +292,7 @@ body.closed .qb,body.closed .mini:not(.del),body.closed [data-copy],body.closed 
 .result{height:210px;overflow:hidden;margin-top:12px;border-radius:16px;background:rgba(0,0,0,.35);border:1px dashed rgba(255,182,39,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px}
 .result .rhint{color:#e8c98a;font-weight:600}
 .result .jack{font-family:var(--display);font-size:1.5rem;letter-spacing:1px;background:linear-gradient(180deg,#fff3c4,#ffb627 55%,#b86e00);-webkit-background-clip:text;background-clip:text;color:transparent;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+.result .jack.batj{font-size:1.12rem;white-space:nowrap;-webkit-text-fill-color:initial;background:none;color:var(--gold)}
 .result .quip{color:#e8c98a;font-style:italic;font-size:.86rem;line-height:1.25;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .result .pname{font-weight:800;font-size:1.08rem;line-height:1.25;margin:4px 0 2px;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .result .pdesc{color:#d8bfa0;font-size:.85rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -316,6 +317,13 @@ body.casino .sndbtn{display:grid;place-items:center}
 @keyframes spk{to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.4);opacity:0}}
 body.casino .qb:not(.minus):hover,body.casino .qb:not(.minus):focus-visible{box-shadow:0 3px 0 #6d0010,0 0 16px rgba(255,182,39,.6)}
 body.casino .cart .in.bump{box-shadow:0 0 24px rgba(255,182,39,.55),0 10px 30px rgba(0,0,0,.5)}
+.batfx{position:fixed;inset:0;pointer-events:none;z-index:260;overflow:hidden}
+.batfx i{position:absolute;left:-90px;font-style:normal;animation:batfly linear both;filter:drop-shadow(0 3px 4px rgba(0,0,0,.7))}
+.batfx i.rev{left:auto;right:-90px;animation-name:batflyrev}
+.batfx b{display:inline-block;font-weight:400;animation:flap .16s ease-in-out infinite alternate;transform-origin:50% 40%}
+@keyframes flap{to{transform:scaleY(.55) scaleX(1.08)}}
+@keyframes batfly{25%{transform:translate(32vw,-40px) rotate(12deg)}50%{transform:translate(62vw,30px) rotate(-12deg)}75%{transform:translate(90vw,-30px) rotate(10deg)}99%{opacity:1}100%{transform:translate(calc(100vw + 240px),10px);opacity:0}}
+@keyframes batflyrev{0%{transform:scaleX(-1)}25%{transform:translate(-32vw,40px) scaleX(-1) rotate(-12deg)}50%{transform:translate(-62vw,-30px) scaleX(-1) rotate(12deg)}75%{transform:translate(-90vw,30px) scaleX(-1)}99%{opacity:1}100%{transform:translate(calc(-100vw - 240px),-10px) scaleX(-1);opacity:0}}
 .coins{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .coins i{position:absolute;top:-30px;font-style:normal;font-size:1.3rem;animation:coin 1.6s ease-in forwards}
 @keyframes coin{to{transform:translateY(520px) rotate(720deg);opacity:0}}
@@ -1529,10 +1537,11 @@ const SFX = {
   shuffle() { for (let i = 0; i < 6; i++) noise(.035, .3, i * .045, 2400 + i * 150, 1.3); },
   open() { bell(660, .16, .09); bell(990, .2, .08, .05); },
   close() { bell(990, .14, .08); bell(660, .18, .07, .05); },
+  flutter() { for (let i = 0; i < 14; i++) noise(.03, .3, i * .055 + Math.random() * .02, 1100 + Math.random() * 500, 1.2); },
   toggle() { noise(.012, .3, 0, 3200, 3); tone(1400, .04, "triangle", .06, .004); },
 };
 // Pegel je Sound (aus Messung kalibriert, siehe Tests): Bedien-Klicks leise, Belohnungen lauter
-const SFX_LEVEL = {"deal":3.981,"click": 6.84, "toggle": 8.709, "tick": 5.624, "flip": 7.328, "open": 1.819, "close": 1.884, "card": 5.012, "chipLight": 8.222, "chipOff": 8.036, "chip": 3.758, "scratch": 11.75, "coin": 1.884, "star": 1.778, "unstar": 3.349, "cash": 1.567, "ring": 1.862, "whoosh": 4.365, "shuffle": 1.928, "lever": 5.012, "stop": 2.018, "denied": 1.319, "win": 1.318, "jackpot": 1.778, "intro": 1.972, "bell": 1.259};
+const SFX_LEVEL = {"flutter":2.138,"deal":3.981,"click": 6.84, "toggle": 8.709, "tick": 5.624, "flip": 7.328, "open": 1.819, "close": 1.884, "card": 5.012, "chipLight": 8.222, "chipOff": 8.036, "chip": 3.758, "scratch": 11.75, "coin": 1.884, "star": 1.778, "unstar": 3.349, "cash": 1.567, "ring": 1.862, "whoosh": 4.365, "shuffle": 1.928, "lever": 5.012, "stop": 2.018, "denied": 1.319, "win": 1.318, "jackpot": 1.778, "intro": 1.972, "bell": 1.259};
 
 // Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
 const BTN_SFX = [
@@ -1619,6 +1628,14 @@ addEventListener("pageshow", () => { resumeTries = 0; resumeAudio(); });
 addEventListener("focus", () => { resumeTries = 0; resumeAudio(); });
 ["pointerdown", "touchstart", "touchend", "click", "keydown"].forEach(ev => addEventListener(ev, () => { if (CASINO && SOUND) { audio(); musicSync(); } }, { passive: true, capture: true }));
 
+// Fledermausschwarm mit Flügelschlag (fliegt komplett aus dem Bild)
+function batSwarm(n = 18) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = document.createElement("div"); box.className = "batfx";
+  box.innerHTML = Array.from({ length: n }, (_, i) => `<i class="${i % 2 ? "rev" : ""}" style="top:${4 + Math.random() * 78}%;animation-delay:${(Math.random() * 1.8).toFixed(2)}s;animation-duration:${(3 + Math.random() * 2).toFixed(2)}s;font-size:${(1.5 + Math.random() * 2).toFixed(2)}rem"><b style="animation-delay:-${Math.random().toFixed(2)}s">🦇</b></i>`).join("");
+  document.body.appendChild(box); setTimeout(() => box.remove(), 7200);
+  try { navigator.vibrate && navigator.vibrate([20, 30, 20, 30, 20]); } catch {}
+}
 // kleine Glitzer-Explosion an einer Stelle
 function sparkle(x, y, n = 10) {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -1830,7 +1847,8 @@ function spin() {
   const rnd = a => a[Math.floor(Math.random() * a.length)];
   const icons = CATS.map(c => c.icon), nrs = MENU.map(m => m.sayName ? "🥡" : m.nr), prices = MENU.map(m => eur(m.price));
   const lucky = !CASINO && (Math.random() < 1 / 100 || (MOCK && QS.has("777")));
-  const finals = lucky ? ["7️⃣", "7️⃣", "7️⃣"] : [catIcon[pick.cat], pick.sayName ? "🥡" : pick.nr, eur(pick.price)];
+  const batJack = CASINO && (Math.random() < 1 / 40 || (MOCK && QS.has("bat")));   // das eine Fledermaus-Easter-Egg
+  const finals = lucky ? ["7️⃣", "7️⃣", "7️⃣"] : batJack ? ["🦇", "🦇", "🦇"] : [catIcon[pick.cat], pick.sayName ? "🥡" : pick.nr, eur(pick.price)];
   const H = $("#reels .reel").offsetHeight || 92;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   [icons, nrs, prices].forEach((src, i) => {
@@ -1854,7 +1872,8 @@ function spin() {
       try { navigator.vibrate && navigator.vibrate([80, 60, 80, 60, 300]); } catch {}
       setTimeout(() => setCasino(true), 1400); return;
     }
-    $("#dice").innerHTML = `<div class="jack">JACKPOT!</div>${CASINO ? `<div class="quip">„${pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    if (batJack) { batSwarm(); sfx("flutter"); }
+    $("#dice").innerHTML = `<div class="jack${batJack ? " batj" : ""}">${batJack ? "🦇 Fledermaus-Jackpot 🦇" : "JACKPOT!"}</div>${CASINO && !batJack ? `<div class="quip">„${pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
     if (CASINO) { sfx("jackpot"); slot.classList.add("shake"); setTimeout(() => slot.classList.remove("shake"), 700); }
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
