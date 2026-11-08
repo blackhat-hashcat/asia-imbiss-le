@@ -1131,13 +1131,16 @@ function chipsHTML(sel, list, attr, onCls = "") {
 const TYPE_CATS = CATS.filter(c => !["Hühnerfleisch", "Rindfleisch", "Ente", "Schweinefleisch", "Meeresfrüchte", "Vegetarisch"].includes(c.id));
 const TYPE_SHORT = { "Gebratener Reis": "Reis", "Gebratene Nudeln": "Nudeln" };
 function stripHTML(afHTML = "") {
-  const none = !cat;
-  const ing = MEAT.map(x => `<button class="chip ing ${F.meat.includes(x.id) ? "on" : ""}" data-meatc="${x.id}">${x.label}</button>`).join("")
-    + `<button class="chip ing ${F.veg ? "on" : ""}" data-vegc>🌱 Veggie</button>`;
-  const typ = `<button class="chip cat ${none ? "on" : ""}" data-c="">Alle</button>`
-    + TYPE_CATS.map(c => `<button class="chip cat ${cat === c.id ? "on" : ""}" data-c="${esc(c.id)}">${c.icon} ${esc(TYPE_SHORT[c.id] || c.id)}</button>`).join("");
+  // Beide Zeilen: "Alle" zuerst, danach Ausgewähltes, dann der Rest
+  const ingItems = [...MEAT.map(x => ({ on: F.meat.includes(x.id), html: on => `<button class="chip ing ${on ? "on" : ""}" data-meatc="${x.id}">${x.label}</button>` })),
+    { on: F.veg, html: on => `<button class="chip ing ${on ? "on" : ""}" data-vegc>🌱 Veggie</button>` }];
   const anyIng = F.meat.length || F.veg;
-  return `<div class="chips srow2"><span class="rlab">Zutat</span>${ing}${anyIng ? `<button class="chip clr2" data-clring aria-label="Zutaten zurücksetzen">✕</button>` : ""}</div>`
+  const ing = `<button class="chip ing ${anyIng ? "" : "on"}" data-clring>Alle</button>`
+    + [...ingItems.filter(x => x.on), ...ingItems.filter(x => !x.on)].map(x => x.html(x.on)).join("");
+  const typItems = TYPE_CATS.map(c => ({ on: cat === c.id, html: on => `<button class="chip cat ${on ? "on" : ""}" data-c="${esc(c.id)}">${c.icon} ${esc(TYPE_SHORT[c.id] || c.id)}</button>` }));
+  const typ = `<button class="chip cat ${cat ? "" : "on"}" data-c="">Alle</button>`
+    + [...typItems.filter(x => x.on), ...typItems.filter(x => !x.on)].map(x => x.html(x.on)).join("");
+  return `<div class="chips srow2"><span class="rlab">Zutat</span>${ing}</div>`
     + `<div class="chips srow2"><span class="rlab">Gericht</span>${typ}</div>`
     + (afHTML ? `<div class="chips srow2"><span class="rlab">Filter</span>${afHTML}</div>` : "");
 }
@@ -1147,6 +1150,7 @@ function renderChips() {
   const afHTML = af.map(([k, l]) => `<button class="chip af" data-rmf="${esc(k)}" aria-label="${esc(l)} entfernen">${esc(l)} <b>✕</b></button>`).join("");
   $("#cats").innerHTML = stripHTML(afHTML);
   $("#dCats").innerHTML = stripHTML();
+  $$(".srow2").forEach(r => r.scrollLeft = 0);   // Auswahl steht vorne, also an den Anfang
   for (const id of ["#fCount", "#fCount2"]) { $(id).textContent = af.length; $(id).classList.toggle("hidden", !af.length); }
   $$(".fbtn").forEach(b => b.classList.toggle("on", !!af.length));
   const allAf = activeFilters(F);
