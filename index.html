@@ -945,11 +945,14 @@ function chipFly(from) {
     ], { duration: 700, easing: "cubic-bezier(.3,.6,.4,1)" }).onfinish = () => { c.remove(); target.classList.remove("bump"); void target.offsetWidth; target.classList.add("bump"); };
   });
 }
+const MAXQ = 99;
+const capLines = p => { p.i.forEach(x => { x[1] = Math.min(MAXQ, x[1]); }); };
 function add(nr, note = "", n = 1) {
   needName(() => {
     if (live && isStale()) { newRound(); group = []; round = Object.assign(R0(), { started: Date.now() }); }
     const p = mine(), ex = p.i.find(x => x[0] === nr && x[2] === note);
-    ex ? ex[1] += n : p.i.push([nr, n, note]);
+    if (ex && ex[1] >= MAXQ) { toast(`Maximal ${MAXQ}× pro Gericht`); return; }
+    ex ? ex[1] = Math.min(MAXQ, ex[1] + n) : p.i.push([nr, Math.min(MAXQ, n), note]);
     buzz(); commit();
     const m = byNr[nr];
     const lbl = `${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""}`;
@@ -1664,13 +1667,13 @@ document.addEventListener("click", e => {
   else if (d.filter !== undefined) openFilters();
   else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); dealAnim(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
-  else if (d.inc !== undefined) { const p = myP(); p.i[+d.inc][1]++; buzz(); commit(); }
+  else if (d.inc !== undefined) { const p = myP(), x = p.i[+d.inc]; if (x[1] >= MAXQ) { toast(`Maximal ${MAXQ}× pro Gericht`); return; } x[1]++; buzz(); commit(); }
   else if (d.dec !== undefined) { const p = myP(); const x = p.i[+d.dec]; if (--x[1] <= 0) p.i.splice(+d.dec, 1); buzz(); commit(); }
-  else if (d.copy) { const src = group.find(p => p.n === d.copy); needName(() => { const p = mine(); src.i.forEach(([nr, q, n]) => { const ex = p.i.find(x => x[0] === nr && x[2] === n); ex ? ex[1] += q : p.i.push([nr, q, n]); }); commit(); toast("Übernommen ✓"); }); }
+  else if (d.copy) { const src = group.find(p => p.n === d.copy); needName(() => { const p = mine(); src.i.forEach(([nr, q, n]) => { const ex = p.i.find(x => x[0] === nr && x[2] === n); ex ? ex[1] += q : p.i.push([nr, q, n]); }); capLines(p); commit(); toast("Übernommen ✓"); }); }
   else if (d.zoom !== undefined) openLb(+d.zoom);
   else if (t.id === "emptyReset") resetFilters();
 });
-function mergeDupes(p) { const out = []; for (const x of p.i) { const ex = out.find(y => y[0] === x[0] && y[2] === x[2]); ex ? ex[1] += x[1] : out.push(x); } p.i = out; }
+function mergeDupes(p) { const out = []; for (const x of p.i) { const ex = out.find(y => y[0] === x[0] && y[2] === x[2]); ex ? ex[1] += x[1] : out.push(x); } p.i = out; capLines(p); }
 function resetFilters() { F = F0(); saveF(); cat = ""; query = ""; $("#q").value = ""; $("#qClr").classList.add("hidden"); renderChips(); renderMenu(); renderHits(); }
 $$(".tabs button").forEach(b => b.onclick = () => show(b.dataset.v));
 $("#howCard summary").addEventListener("click", () => { howTouched = true; });
@@ -1711,7 +1714,7 @@ function casinoIntro() {
 $("#lever").onclick = () => spin();
 $("#spinFav").onclick = e => { favOnly = !favOnly; e.currentTarget.setAttribute("aria-pressed", favOnly); };
 $("#takeIt").onclick = () => { if (pick) { bumpFlag("dice"); pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
-$("#repeatLast").onclick = () => needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); commit(); toast("Wie letztes Mal ✓"); });
+$("#repeatLast").onclick = () => needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); capLines(mine()); commit(); toast("Wie letztes Mal ✓"); });
 $("#copyText").onclick = () => copy(orderText(), "Bestellung kopiert ✓");
 $("#pickupName").value = store.get("pickup", "");
 $("#pickupName").oninput = e => { store.set("pickup", e.target.value); renderCall(); };
