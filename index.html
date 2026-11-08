@@ -332,15 +332,16 @@ body.casino #cupBox{display:none}
 body:not(.casino) #slot{display:none}
 .cupbox{margin:12px 0;padding:14px;border-radius:24px;background:radial-gradient(120% 90% at 50% 0%,#3a1410,#1f0c0a 70%);border:1px solid rgba(255,182,39,.3);box-shadow:inset 0 0 40px rgba(0,0,0,.5)}
 .cupstage{position:relative;height:200px;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cookie{position:relative;width:170px;height:150px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
-.cookie .ck{position:absolute;inset:0;display:grid;place-items:center;font-size:7.5rem;line-height:1;transition:transform .55s cubic-bezier(.2,1.25,.35,1)}
+.cookie{position:relative;width:190px;height:152px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
+.ckdefs{position:absolute;width:0;height:0}
+.cookie .ck{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transition:transform .55s cubic-bezier(.2,1.25,.35,1)}
 .cookie .ck.l,.cookie .ck.r{opacity:0}
 .cookie.open .ck.l,.cookie.open .ck.r{opacity:1}
 .cookie.open .ck.w{opacity:0}
-.cookie .ck.l{clip-path:polygon(-30% -30%, 50% -30%, 50% 10%, 46% 18%, 54% 26%, 47% 33%, 55% 41%, 45% 50%, 53% 57%, 46% 66%, 52% 74%, 47% 82%, 51% 90%, 51% 130%, -30% 130%);transform-origin:40% 85%}
-.cookie .ck.r{clip-path:polygon(130% -30%, 50% -30%, 50% 10%, 46% 18%, 54% 26%, 47% 33%, 55% 41%, 45% 50%, 53% 57%, 46% 66%, 52% 74%, 47% 82%, 51% 90%, 51% 130%, 130% 130%);transform-origin:60% 85%}
+.cookie .ck.l{transform-origin:46% 80%}
+.cookie .ck.r{transform-origin:54% 80%}
 .cookie .crack{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.cookie .crack polyline{fill:none;stroke:#5a2e08;stroke-width:2.2;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:400;stroke-dashoffset:400;opacity:.85}
+.cookie .crack polyline{fill:none;stroke:#5a2e08;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:110;stroke-dashoffset:110;opacity:.9}
 .cookie.wobble{animation:wobble .13s ease-in-out infinite alternate}
 @keyframes wobble{from{transform:rotate(-6deg)}to{transform:rotate(6deg) scale(1.03)}}
 .cookie.press{animation:press .32s ease-in-out forwards}
@@ -348,8 +349,8 @@ body:not(.casino) #slot{display:none}
 .cookie.press .crack polyline{animation:drawcrack .3s ease-out forwards}
 @keyframes drawcrack{to{stroke-dashoffset:0}}
 .cookie.open .crack{opacity:0;transition:opacity .15s}
-.cookie.open .ck.l{transform:translate(-30px,6px) rotate(-26deg)}
-.cookie.open .ck.r{transform:translate(30px,6px) rotate(26deg)}
+.cookie.open .ck.l{transform:translate(-26px,8px) rotate(-24deg)}
+.cookie.open .ck.r{transform:translate(26px,8px) rotate(24deg)}
 .crumbs i{position:absolute;width:var(--s,5px);height:var(--s,5px);border-radius:2px;background:#d9a441;box-shadow:inset -1px -1px 0 rgba(0,0,0,.2);animation:crumb .75s cubic-bezier(.2,.6,.4,1) forwards}
 @keyframes crumb{60%{opacity:1}to{transform:translate(var(--dx),var(--dy)) rotate(260deg);opacity:0}}
 .cookie.gold{filter:drop-shadow(0 0 16px rgba(255,182,39,.9))}
@@ -620,7 +621,17 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <p class="sub" id="zufallSub">Hebel ziehen und das Glück entscheiden lassen. Der Automat hält sich an deine Filter.</p>
     <div class="cupbox" id="cupBox">
       <div class="cupstage" id="cupStage" role="button" aria-label="Glückskeks knacken">
-        <div class="cookie" id="cookie"><span class="ck w">🥠</span><span class="ck l">🥠</span><span class="ck r">🥠</span><svg class="crack" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="50,10 46,18 54,26 47,33 55,41 45,50 53,57 46,66 52,74 47,82 51,90"/></svg><div class="crumbs" id="crumbs"></div></div>
+        <div class="cookie" id="cookie"><svg class="ckdefs" width="0" height="0" aria-hidden="true"><defs>
+<linearGradient id="ckG" gradientUnits="userSpaceOnUse" x1="0" y1="24" x2="0" y2="130"><stop offset="0" stop-color="#ffdc8e"/><stop offset=".55" stop-color="#f2b552"/><stop offset="1" stop-color="#cf8a2c"/></linearGradient>
+<radialGradient id="ckF" gradientUnits="userSpaceOnUse" cx="100" cy="84" r="34"><stop offset="0" stop-color="#9a5a14" stop-opacity=".55"/><stop offset="1" stop-color="#9a5a14" stop-opacity="0"/></radialGradient>
+<clipPath id="ckCL"><polygon points="0,0 100,0 100,40 97,48 103,56 98,64 104,73 97,82 102,91 98,99 103,108 100,118 100,160 0,160"/></clipPath><clipPath id="ckCR"><polygon points="200,0 100,0 100,40 97,48 103,56 98,64 104,73 97,82 102,91 98,99 103,108 100,118 100,160 200,160"/></clipPath>
+<g id="ckArt"><path d="M100,40 C84,16 40,20 24,52 C14,74 8,100 6,124 C34,110 70,106 100,120 Z" fill="url(#ckG)" stroke="#b5701c" stroke-width="2"/><path d="M100,40 C116,16 160,20 176,52 C186,74 192,100 194,124 C166,110 130,106 100,120 Z" fill="url(#ckG)" stroke="#b5701c" stroke-width="2"/>
+<path d="M100,40 C86,62 86,100 100,120 C114,100 114,62 100,40 Z" fill="url(#ckF)"/>
+<path d="M100,42 C91,64 91,98 100,118" fill="none" stroke="#c07a22" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+<path d="M100,42 C109,64 109,98 100,118" fill="none" stroke="#c07a22" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+<ellipse cx="100" cy="118" rx="10" ry="5" fill="#7a4210" opacity=".45"/><path d="M104,116 L126,128 L121,137 L104,127 Z" fill="#fffaf0" stroke="#d9cdb4" stroke-width="1"/><g fill="none" stroke-linecap="round"><path d="M6,124 C34,110 70,106 100,120" stroke="#b06a18" stroke-width="5" opacity=".55"/><path d="M194,124 C166,110 130,106 100,120" stroke="#b06a18" stroke-width="5" opacity=".55"/><path d="M96,58 C68,58 38,80 16,114" stroke="#c47d24" stroke-width="2.5" opacity=".45"/><path d="M104,58 C132,58 162,80 184,114" stroke="#c47d24" stroke-width="2.5" opacity=".45"/><path d="M94,62 C70,64 44,84 24,112" stroke="#ffe7b0" stroke-width="1.5" opacity=".5"/><path d="M106,62 C130,64 156,84 176,112" stroke="#ffe7b0" stroke-width="1.5" opacity=".5"/></g><ellipse cx="58" cy="54" rx="22" ry="8" transform="rotate(-28 58 54)" fill="#fff" opacity=".3"/><ellipse cx="142" cy="54" rx="22" ry="8" transform="rotate(28 142 54)" fill="#fff" opacity=".3"/>
+<g fill="#a8661a" opacity=".22"><circle cx="46" cy="84" r="1.3"/><circle cx="62" cy="100" r="1.1"/><circle cx="74" cy="76" r="1"/><circle cx="30" cy="96" r="1"/><circle cx="138" cy="88" r="1.3"/><circle cx="160" cy="98" r="1.1"/><circle cx="126" cy="74" r="1"/><circle cx="164" cy="80" r="1"/></g></g>
+</defs></svg><svg class="ck w" viewBox="0 0 200 160" aria-hidden="true"><use href="#ckArt"/></svg><svg class="ck l" viewBox="0 0 200 160" aria-hidden="true"><use href="#ckArt" clip-path="url(#ckCL)"/></svg><svg class="ck r" viewBox="0 0 200 160" aria-hidden="true"><use href="#ckArt" clip-path="url(#ckCR)"/></svg><svg class="crack" viewBox="0 0 200 160" aria-hidden="true"><polyline points="100,40 97,48 103,56 98,64 104,73 97,82 102,91 98,99 103,108 100,118"/></svg><div class="crumbs" id="crumbs"></div></div>
         <div class="slip" id="slip"><span id="slipNr"></span></div>
       </div>
       <div class="cupres" id="cupRes"><div class="rhint">Tipp auf den Glückskeks und knack ihn 🥠</div></div>
@@ -1588,6 +1599,12 @@ const SFX = {
   jackpot() { [392, 523, 659, 784, 1047].forEach((f, i) => bell(f, .55, .14, i * .09)); bell(1319, 1, .1, .5); for (let i = 0; i < 8; i++) bell(1100 + Math.random() * 800, .2, .03, .55 + i * .08); },
   coin() { bell(1175, .35, .14); bell(1568, .45, .1, .06); },
   scratch() { noise(.06, .18, 0, 1000, .8); },
+  crackle() { noise(.012, .35, 0, 1900, 2.2); noise(.01, .22, .05, 1700, 2.2); },   // Keks knistert unter Druck
+  crack() {   // Keks bricht: mehrere trockene Splitter-Knacks + kurzer Körper + Krümel
+    noise(.016, .6, 0, 2000, 1.8); noise(.04, .35, 0, 900, 1.1); tone(190, .045, "sine", .22, 0, 120);
+    noise(.012, .45, .018, 2400, 2.2); noise(.014, .4, .034, 1700, 2);
+    [.07, .095, .13, .16].forEach((t, i) => noise(.008, .14 - i * .025, t, 2100 + i * 150, 3));
+  },
   intro() { [330, 392, 523, 659, 784].forEach((f, i) => bell(f, .5, .12, i * .1)); bell(1047, 1.3, .1, .55); },
   bell() { bell(659, 1.4, .22); bell(494, 1.4, .18, .45); },
   denied() { tone(200, .16, "triangle", .2); tone(150, .24, "triangle", .2, .14); },
@@ -1606,7 +1623,7 @@ const SFX = {
   toggle() { noise(.012, .3, 0, 1600, 2); tone(900, .04, "triangle", .06, .004); },
 };
 // Pegel je Sound (aus Messung kalibriert, siehe Tests): Bedien-Klicks leise, Belohnungen lauter
-const SFX_LEVEL = {"pick":2.367,"unpick":3.973,"flutter":2.066,"deal":3.936,"click":9.226,"toggle":8.317,"tick":4.572,"flip":7.943,"open":1.819,"close":1.884,"card":5.071,"chipLight":7.243,"chipOff":8.709,"chip":4.217,"scratch":14.622,"coin":1.759,"star":1.698,"unstar":3.311,"cash":1.496,"ring":1.82,"whoosh":4.415,"shuffle":2.138,"lever":5.012,"stop":1.995,"denied":1.319,"win":1.318,"jackpot":1.819,"intro":1.972,"bell":1.274,"tab":5.308};
+const SFX_LEVEL = {"pick":2.367,"unpick":3.973,"flutter":2.019,"deal":3.891,"click":6.026,"toggle":8.128,"tick":5.013,"flip":9.44,"open":1.819,"close":1.884,"card":5.69,"chipLight":8.127,"chipOff":8.511,"chip":4.027,"scratch":14.29,"coin":1.759,"star":1.698,"unstar":3.311,"cash":1.496,"ring":1.82,"whoosh":4.518,"shuffle":2.291,"lever":4.898,"stop":1.995,"denied":1.319,"win":1.318,"jackpot":1.84,"intro":1.972,"bell":1.274,"tab":5.307,"crack":3.89,"crackle":2.427};
 
 // Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
 const BTN_SFX = [
@@ -1774,11 +1791,17 @@ const CALM_SFX = {
   stop() { wood(360, .22); },
   win() { [330, 392, 494].forEach((f, i) => pluck(f, .5, .15, i * .08)); },
   jackpot() { [262, 294, 330, 392, 440, 523].forEach((f, i) => pluck(f, .7, .14, i * .08)); },
+  crackle() { noise(.012, .35, 0, 1900, 2.2); noise(.01, .22, .05, 1700, 2.2); },   // Keks knistert unter Druck
+  crack() {   // Keks bricht: mehrere trockene Splitter-Knacks + kurzer Körper + Krümel
+    noise(.016, .6, 0, 2000, 1.8); noise(.04, .35, 0, 900, 1.1); tone(190, .045, "sine", .22, 0, 120);
+    noise(.012, .45, .018, 2400, 2.2); noise(.014, .4, .034, 1700, 2);
+    [.07, .095, .13, .16].forEach((t, i) => noise(.008, .14 - i * .025, t, 2100 + i * 150, 3));
+  },
   scratch() { noise(.05, .1, 0, 900, .8); },
   shuffle() { noise(.2, .14, 0, 900, .7); },
   click() { wood(700, .14); },
 };
-const CALM_LEVEL = {"tap":2.018,"add":0.684,"remove":1.175,"pick":1.274,"unpick":1.513,"open":0.923,"close":1.096,"card":2.265,"toggle":2.239,"fav":1.035,"unfav":1.95,"success":0.684,"coin":1.011,"ring":1.071,"whoosh":6.096,"bell":0.646,"denied":1.072,"lever":2.372,"tick":4.416,"stop":2.162,"win":0.767,"jackpot":0.785,"scratch":20.652,"shuffle":7.5,"click":2.541,"tab":1.38};   // je Klang kalibriert
+const CALM_LEVEL = {"tap":2.018,"add":0.684,"remove":1.175,"pick":1.274,"unpick":1.513,"open":0.923,"close":1.096,"card":2.265,"toggle":2.239,"fav":1.035,"unfav":1.95,"success":0.684,"coin":1.011,"ring":1.071,"whoosh":6.096,"bell":0.646,"denied":1.072,"lever":2.372,"tick":4.416,"stop":2.162,"win":0.767,"jackpot":0.785,"scratch":16.98,"shuffle":7.763,"click":2.57,"tab":1.396,"crack":2.692,"crackle":1.217};   // je Klang kalibriert
 // Casino-Namen → ruhige Gegenstücke
 const CALM_MAP = { chip: "add", chipLight: "tap", chipOff: "remove", star: "fav", unstar: "unfav", cash: "coin", deal: "card", flip: "card", intro: "success", flutter: "whoosh" };
 
@@ -1996,13 +2019,13 @@ function shakeCup() {
   void ck.offsetWidth; if (!reduce) ck.classList.add("wobble");
   sfx("tap");
   setTimeout(() => {   // Druck: der Riss zeichnet sich ab
-    ck.classList.remove("wobble"); if (!reduce) ck.classList.add("press"); sfx("tick");
+    ck.classList.remove("wobble"); if (!reduce) ck.classList.add("press"); sfx("crackle");
   }, reduce ? 20 : 650);
   setTimeout(() => {   // brechen: Hälften entlang des Risses auseinander, Krümel aus dem Riss
     ck.classList.remove("press"); ck.classList.add("open");
-    $("#crumbs").innerHTML = Array.from({ length: 14 }, () => { const y = 15 + Math.random() * 70, side = Math.random() < .5 ? -1 : 1;
-      return `<i style="left:${47 + Math.random() * 7}%;top:${y}%;--s:${(3 + Math.random() * 4).toFixed(1)}px;--dx:${(side * (20 + Math.random() * 60)).toFixed(0)}px;--dy:${(15 + Math.random() * 55).toFixed(0)}px;animation-delay:${(Math.random() * .08).toFixed(2)}s"></i>`; }).join("");
-    sfx("stop"); sfx("scratch");
+    $("#crumbs").innerHTML = Array.from({ length: 14 }, () => { const y = 30 + Math.random() * 46, side = Math.random() < .5 ? -1 : 1;
+      return `<i style="left:${48 + Math.random() * 5}%;top:${y}%;--s:${(3 + Math.random() * 4).toFixed(1)}px;--dx:${(side * (20 + Math.random() * 60)).toFixed(0)}px;--dy:${(15 + Math.random() * 55).toFixed(0)}px;animation-delay:${(Math.random() * .08).toFixed(2)}s"></i>`; }).join("");
+    sfx("crack");
     try { navigator.vibrate && navigator.vibrate(golden ? [80, 60, 80, 60, 300] : 35); } catch {}
   }, reduce ? 50 : 980);
   setTimeout(() => { sl.classList.add("out"); sfx("whoosh"); }, reduce ? 80 : 1180);
