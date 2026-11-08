@@ -201,7 +201,7 @@ body.closed .qb,body.closed .mini:not(.del),body.closed [data-copy],body.closed 
 .hot{color:var(--chili);letter-spacing:-2px;font-size:.8rem}
 .whohas{font-size:.72rem;color:var(--gold);font-weight:700}
 .act{display:flex;flex-direction:column;align-items:center;gap:4px}
-.fav{display:inline-grid;place-items:center;vertical-align:-1px;margin-left:4px;width:28px;height:24px;font-size:1.05rem;line-height:1;color:var(--dim);padding:0}
+.fav{display:grid;place-items:center;margin-left:auto;width:32px;height:28px;font-size:1.15rem;line-height:1;color:var(--dim);padding:0;flex:none}
 .fav.on{color:var(--gold)}
 .step{display:flex;align-items:center;gap:6px}
 .qb{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;font-size:1.4rem;font-weight:700;line-height:1;display:grid;place-items:center;box-shadow:0 4px 12px rgba(239,51,64,.3)}
@@ -1082,9 +1082,9 @@ function itemHTML(m) {
   return `<div class="item ${q ? "in" : ""}" data-nr="${esc(m.nr)}">
     <div class="nr ${isLong(m.nr) ? "long" : ""}">${isLong(m.nr) ? "🥡" : esc(m.nr)}</div>
     <div class="info" data-open="${esc(m.nr)}">
-      <div class="iname">${esc(m.name)}<button class="fav ${favs.has(m.nr) ? "on" : ""}" data-fav="${esc(m.nr)}" aria-label="${favs.has(m.nr) ? "Favorit entfernen" : "Als Favorit merken"}">${favs.has(m.nr) ? "★" : "☆"}</button></div>
+      <div class="iname">${esc(m.name)}</div>
       ${m.desc ? `<div class="idesc">${esc(m.desc)}</div>` : ""}
-      <div class="meta"><span class="price">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">veggie</span>` : ""}${hotHTML(m.hot)}${CASINO && triedCount(m.nr) ? `<span class="badge-s tried">✓ ${triedCount(m.nr)}×</span>` : ""}${o.length ? `<span class="whohas">👥 ${esc(o.slice(0, 2).join(", "))}${o.length > 2 ? " +" + (o.length - 2) : ""}</span>` : ""}</div>
+      <div class="meta"><span class="price">${eur(m.price)}</span>${m.veg ? `<span class="badge-s veg">veggie</span>` : ""}${hotHTML(m.hot)}${CASINO && triedCount(m.nr) ? `<span class="badge-s tried">✓ ${triedCount(m.nr)}×</span>` : ""}${o.length ? `<span class="whohas">👥 ${esc(o.slice(0, 2).join(", "))}${o.length > 2 ? " +" + (o.length - 2) : ""}</span>` : ""}<button class="fav ${favs.has(m.nr) ? "on" : ""}" data-fav="${esc(m.nr)}" aria-label="${favs.has(m.nr) ? "Favorit entfernen" : "Als Favorit merken"}">${favs.has(m.nr) ? "★" : "☆"}</button></div>
     </div>
     <div class="act">
       <div class="step">${q ? `<button class="qb minus" data-sub="${esc(m.nr)}" aria-label="Eins weniger">−</button><span class="qn">${q}</span>` : ""}<button class="qb" data-add="${esc(m.nr)}" aria-label="Hinzufügen">+</button></div>
