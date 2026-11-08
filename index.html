@@ -1084,6 +1084,15 @@ let HAS_HIST = false;
 function dealAnim() {
   if (!CASINO || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const l = $("#list"); l.classList.remove("dealing"); void l.offsetWidth; l.classList.add("dealing");
+  // für jede sichtbare Karte ein "Klatsch", im Takt der Animation (Verzögerung je Karte 0,05 s, Landung nach ~0,28 s)
+  (dealAnim.ss || []).forEach(clearTimeout); dealAnim.ss = [];
+  requestAnimationFrame(() => requestAnimationFrame(() => {   // erst nach dem Scrollen zur Kategorie zählen
+  const all = [...l.querySelectorAll(".item")];
+  let vis = all.filter(e => { const r = e.getBoundingClientRect(); return r.bottom > 60 && r.top < innerHeight - 80; });
+  if (!vis.length) vis = all.slice(0, 5);
+  const delayOf = e => { const n = [...e.parentNode.children].indexOf(e) + 1; return n >= 9 ? .35 : n >= 3 ? (n - 2) * .05 : 0; };   // wie die CSS-Verzögerungen
+  dealAnim.ss = vis.slice(0, 8).map(e => setTimeout(() => sfx("deal"), (delayOf(e) + .26) * 1000));
+  }));
   clearTimeout(dealAnim.t); dealAnim.t = setTimeout(() => l.classList.remove("dealing"), 1400);
 }
 function renderMenu() {
@@ -1461,6 +1470,7 @@ const SFX = {
   chip() { noise(.035, .5, 0, 3200, 2.5); tone(2600, .04, "triangle", .1, .004); noise(.03, .35, .055, 3600, 2.5); },
   chipLight() { noise(.03, .45, 0, 3400, 2.5); tone(2900, .035, "triangle", .08, .004); },
   chipOff() { noise(.035, .45, 0, 2200, 2); tone(1500, .05, "triangle", .08, .004); },
+  deal() { const j = .9 + Math.random() * .2; noise(.022, .55, 0, 3600 * j, 1.6); noise(.05, .35, .006, 900 * j, .9); tone(180 * j, .05, "sine", .12, .004, 110); },   // Karte klatscht auf den Tisch
   card() { noise(.08, .35, 0, 1800, .9); noise(.05, .2, .03, 3200, 1.5); },
   flip() { noise(.06, .3, 0, 2600, 1.1); },
   lever() { noise(.14, .3, 0, 700, 1); tone(220, .2, "triangle", .12, 0, 90); },
@@ -1485,7 +1495,7 @@ const SFX = {
   toggle() { noise(.012, .3, 0, 3200, 3); tone(1400, .04, "triangle", .06, .004); },
 };
 // Pegel je Sound (aus Messung kalibriert, siehe Tests): Bedien-Klicks leise, Belohnungen lauter
-const SFX_LEVEL = {"click": 6.84, "toggle": 8.709, "tick": 5.624, "flip": 7.328, "open": 1.819, "close": 1.884, "card": 5.012, "chipLight": 8.222, "chipOff": 8.036, "chip": 3.758, "scratch": 11.75, "coin": 1.884, "star": 1.778, "unstar": 3.349, "cash": 1.567, "ring": 1.862, "whoosh": 4.365, "shuffle": 1.928, "lever": 5.012, "stop": 2.018, "denied": 1.319, "win": 1.318, "jackpot": 1.778, "intro": 1.972, "bell": 1.259};
+const SFX_LEVEL = {"deal":3.981,"click": 6.84, "toggle": 8.709, "tick": 5.624, "flip": 7.328, "open": 1.819, "close": 1.884, "card": 5.012, "chipLight": 8.222, "chipOff": 8.036, "chip": 3.758, "scratch": 11.75, "coin": 1.884, "star": 1.778, "unstar": 3.349, "cash": 1.567, "ring": 1.862, "whoosh": 4.365, "shuffle": 1.928, "lever": 5.012, "stop": 2.018, "denied": 1.319, "win": 1.318, "jackpot": 1.778, "intro": 1.972, "bell": 1.259};
 
 // Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
 const BTN_SFX = [
