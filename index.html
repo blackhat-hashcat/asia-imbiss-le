@@ -721,7 +721,7 @@ const isLong = nr => nr.length > 4;
 let CASINO = store.get("casinoEgg", false);   // verstecktes Easter Egg, standardmäßig aus
 const C = (normal, casino) => CASINO ? casino : normal;
 const pickOne = a => a[Math.floor(Math.random() * a.length)];
-const QUIP_ADD = ["Einsatz platziert: {x} 🎲", "Chips auf {x} gesetzt 🪙", "All in auf {x}! 🃏", "{x} – das Haus nickt anerkennend 🎩", "Gute Wahl. Das Haus gewinnt trotzdem. ({x}) 😏", "{x} liegt auf dem Tisch ♠️"];
+const QUIP_ADD = ["🪙 {x} gesetzt", "♠️ {x} liegt auf dem Tisch", "🃏 {x} ist im Spiel", "♦️ {x} – gute Karte", "🎲 Gesetzt auf {x}", "♣️ {x} notiert"];
 const QUIP_JACK = ["Das Haus empfiehlt.", "Glückwunsch! Bezahlen musst du trotzdem.", "Die Walzen haben gesprochen.", "Kein Zurück. (Doch, eigentlich schon.)", "Fortuna hat Hunger.", "Heute ist dein Glückstag. Vermutlich."];
 
 // ---------- Filters ----------
