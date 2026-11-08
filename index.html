@@ -275,12 +275,12 @@ body.closed .qb,body.closed .mini:not(.del),body.closed [data-copy],body.closed 
 .lever::after{content:"";position:absolute;left:50%;bottom:4px;width:24px;height:16px;margin-left:-12px;border-radius:6px;background:linear-gradient(#7a5410,#3a2208)}
 .lever.pulled i{transform:scaleY(.35)}
 .lever.pulled b{top:58%}
-.result{min-height:118px;margin-top:12px;border-radius:16px;background:rgba(0,0,0,.35);border:1px dashed rgba(255,182,39,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px}
+.result{height:210px;overflow:hidden;margin-top:12px;border-radius:16px;background:rgba(0,0,0,.35);border:1px dashed rgba(255,182,39,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px}
 .result .rhint{color:#e8c98a;font-weight:600}
 .result .jack{font-family:var(--display);font-size:1.5rem;letter-spacing:1px;background:linear-gradient(180deg,#fff3c4,#ffb627 55%,#b86e00);-webkit-background-clip:text;background-clip:text;color:transparent;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
-.result .quip{color:#e8c98a;font-style:italic;font-size:.88rem;margin-top:2px}
-.result .pname{font-weight:800;font-size:1.12rem;margin:4px 0 2px;color:#fff}
-.result .pdesc{color:#d8bfa0;font-size:.88rem}
+.result .quip{color:#e8c98a;font-style:italic;font-size:.86rem;line-height:1.25;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.result .pname{font-weight:800;font-size:1.08rem;line-height:1.25;margin:4px 0 2px;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.result .pdesc{color:#d8bfa0;font-size:.85rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 @keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
 .slotbtns{display:flex;gap:8px;margin-top:12px}
 .spinbtn{flex:1.4;background:linear-gradient(180deg,#ffd35a,#ffb627 50%,#d98a00);color:#3a1d00;border:0;font-family:var(--display);font-size:1.15rem;letter-spacing:1px;box-shadow:0 5px 0 #8a5400,0 10px 24px rgba(255,182,39,.35);border-radius:16px}
