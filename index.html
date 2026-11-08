@@ -91,6 +91,7 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .chip{flex:none;border:1px solid var(--line);background:var(--s1);border-radius:999px;padding:7px 12px;font-size:.86rem;font-weight:600;white-space:nowrap;color:var(--muted)}
 .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .chip.cat.on{background:var(--gold);color:#2b1b00;border-color:var(--gold)}
+.chip.ing.on{background:var(--jade);color:#05261d;border-color:var(--jade)}
 .srow{display:flex;gap:8px;align-items:stretch}
 .srow .sbox{flex:1;min-width:0}
 .fbtn{flex:none;display:flex;align-items:center;gap:6px;padding:0 14px;border-radius:14px;border:1px solid var(--line);background:var(--s1);font-weight:700;font-size:.92rem;position:relative}
@@ -780,7 +781,7 @@ const MEAT = [
   { id: "rind", label: "🐄 Rind", re: /rind/ },
   { id: "ente", label: "🦆 Ente", re: /\bente|entenfleisch|entfleisch/ },
   { id: "schwein", label: "🐖 Schwein", re: /schwein/ },
-  { id: "meer", label: "🦐 Garnelen & Krabben", re: /garnele|krabbe|hummer/ },
+  { id: "meer", label: "🦐 Garnelen", re: /garnele|krabbe|hummer/ },
   { id: "fisch", label: "🐟 Fisch", re: /fisch/ },
 ];
 MENU.forEach(m => { const t = norm(m.name + " " + m.desc); m.meat = MEAT.filter(x => x.re.test(t)).map(x => x.id); });
@@ -1115,15 +1116,26 @@ function renderMenu() {
 function chipsHTML(sel, list, attr, onCls = "") {
   return list.map(x => `<button class="chip ${onCls} ${sel(x.id) ? "on" : ""}" data-${attr}="${esc(x.id)}">${x.label}</button>`).join("");
 }
+// Gerichtsarten in der Leiste: ohne die Fleisch-/Veggie-Kategorien (die laufen über die Zutaten-Chips)
+const TYPE_CATS = CATS.filter(c => !["Hühnerfleisch", "Rindfleisch", "Ente", "Schweinefleisch", "Meeresfrüchte", "Vegetarisch"].includes(c.id));
+const TYPE_SHORT = { "Gebratener Reis": "Reis", "Gebratene Nudeln": "Nudeln" };
+function stripHTML() {
+  const none = !cat && !F.meat.length && !F.veg;
+  return `<button class="chip cat ${none ? "on" : ""}" data-all>Alle</button>`
+    + MEAT.map(x => `<button class="chip ing ${F.meat.includes(x.id) ? "on" : ""}" data-meatc="${x.id}">${x.label}</button>`).join("")
+    + `<button class="chip ing ${F.veg ? "on" : ""}" data-vegc>🌱 Veggie</button><span class="sep"></span>`
+    + TYPE_CATS.map(c => `<button class="chip cat ${cat === c.id ? "on" : ""}" data-c="${esc(c.id)}">${c.icon} ${esc(TYPE_SHORT[c.id] || c.id)}</button>`).join("");
+}
 function renderChips() {
-  const af = activeFilters(F);
-  const cl = [{ id: "", label: "Alle" }, ...CATS.map(c => ({ id: c.id, label: `${c.icon} ${c.id}` }))];
+  const af = activeFilters(F).filter(([k]) => !k.startsWith("meat:") && k !== "veg");   // Zutaten/Veggie stehen schon als Chips in der Leiste
+  if (cat && !TYPE_CATS.some(c => c.id === cat)) cat = "";
   const afHTML = af.map(([k, l]) => `<button class="chip af" data-rmf="${esc(k)}" aria-label="${esc(l)} entfernen">${esc(l)} <b>✕</b></button>`).join("");
-  $("#cats").innerHTML = (af.length ? afHTML + '<span class="sep"></span>' : "") + chipsHTML(id => cat === id, cl, "c", "cat");
-  $("#dCats").innerHTML = chipsHTML(id => cat === id, cl, "c", "cat");
+  $("#cats").innerHTML = (af.length ? afHTML + '<span class="sep"></span>' : "") + stripHTML();
+  $("#dCats").innerHTML = stripHTML();
   for (const id of ["#fCount", "#fCount2"]) { $(id).textContent = af.length; $(id).classList.toggle("hidden", !af.length); }
   $$(".fbtn").forEach(b => b.classList.toggle("on", !!af.length));
-  $("#dSum").textContent = af.length ? "Aktiv: " + af.map(x => x[1]).join(" · ") : "Keine Filter: alles ist möglich.";
+  const allAf = activeFilters(F);
+  $("#dSum").textContent = allAf.length ? "Aktiv: " + allAf.map(x => x[1]).join(" · ") : "Keine Filter: alles ist möglich.";
 }
 function openFilters() {
   const box = $("#filterBox");
@@ -1131,11 +1143,9 @@ function openFilters() {
     const n = MENU.filter(m => (!cat || m.cat === cat) && passes(m, F) && matches(m, query)).length;
     box.innerHTML = `<div class="grab"></div>
       <div class="fhead"><h3>Filter</h3><button type="button" id="fReset">Zurücksetzen</button></div>
-      <div class="fsec"><h4>Was magst du?</h4><div class="fgrid">
-        <button type="button" class="tog ${F.veg ? "on" : ""}" data-t="veg">🌱 Vegetarisch</button>
+      <div class="fsec"><h4>Meine Auswahl</h4><div class="fgrid">
         <button type="button" class="tog ${F.fav ? "on" : ""}" data-t="fav">⭐ Meine Favoriten</button>
         ${CASINO && visitDays().length ? `<button type="button" class="tog ${F.untried ? "on" : ""}" data-t="untried">✨ Noch nie probiert</button>` : ""}</div></div>
-      <div class="fsec"><h4>Was soll rein? <span style="text-transform:none;letter-spacing:0;color:var(--dim);font-weight:500">· mehrere möglich</span></h4><div class="fgrid">${MEAT.map(x => `<button type="button" class="tog ${F.meat.includes(x.id) ? "on" : ""}" data-meat="${x.id}">${x.label}</button>`).join("")}</div></div>
       <div class="fsec"><h4>Schärfe</h4><div class="seg">${SPICE.map(([k, l]) => `<button type="button" class="${F.spice === k ? "on" : ""}" data-sp="${k}">${l}</button>`).join("")}</div></div>
       <div class="fsec"><h4>Allergien &amp; Unverträglichkeiten: ohne …</h4><div class="fgrid">${NO.filter(x => x.g === "al").map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div></div>
       <button type="button" class="btn red block" id="fApply" style="margin-top:18px">${n ? `${n} ${n === 1 ? "Gericht" : "Gerichte"} anzeigen` : "Keine Treffer – Filter lockern"}</button>`;
@@ -1502,7 +1512,7 @@ const BTN_SFX = [
   ["[data-add],#spin,#lever,[data-wheel],.sndbtn,[data-soundrow],[data-musicrow],#casinoTog", null],
   [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
   ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
-  ["[data-c],[data-rmf],[data-f]", "chipLight"], ["[data-fav]", "fav"],
+  ["[data-c],[data-rmf],[data-f],[data-all],[data-meatc],[data-vegc]", "chipLight"], ["[data-fav]", "fav"],
   ["[data-t],[data-meat],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
   ["[data-paid]", "cash"], ["[data-payer],[data-paymode],[data-cover],[data-unby],#waBtn,.paybtn", "coin"],
   ["#callBtn,#callBtn2", "ring"], ["[data-act=shareGroup],#share,#copyText,[data-act=createLive]", "whoosh"],
@@ -1884,7 +1894,7 @@ function show(v, push = true) {
 
 // ---------- Events ----------
 document.addEventListener("click", e => {
-  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-act],[data-wheel],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-cover],[data-unby],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
+  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-all],[data-meatc],[data-vegc],[data-act],[data-wheel],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-cover],[data-unby],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
   if (!t) return;
   const d = t.dataset;
   if (d.add) { lastAddEl = t.getBoundingClientRect(); const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
@@ -1908,6 +1918,9 @@ document.addEventListener("click", e => {
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
   else if (d.mode) { patchRound({ mode: d.mode }); }
   else if (d.filter !== undefined) openFilters();
+  else if (d.all !== undefined) { cat = ""; F.meat = []; F.veg = false; saveF(); renderChips(); renderMenu(); renderHits(); dealAnim(); }
+  else if (d.meatc) { const id = d.meatc; F.meat = F.meat.includes(id) ? F.meat.filter(x => x !== id) : [...F.meat, id]; saveF(); renderChips(); renderMenu(); renderHits(); dealAnim(); }
+  else if (d.vegc !== undefined) { F.veg = !F.veg; saveF(); renderChips(); renderMenu(); renderHits(); dealAnim(); }
   else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); dealAnim(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
   else if ((d.note !== undefined || d.inc !== undefined || d.dec !== undefined || d.copy) && locked()) {}
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
