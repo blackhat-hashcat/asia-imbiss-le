@@ -332,17 +332,28 @@ body.casino #cupBox{display:none}
 body:not(.casino) #slot{display:none}
 .cupbox{margin:12px 0;padding:14px;border-radius:24px;background:radial-gradient(120% 90% at 50% 0%,#3a1410,#1f0c0a 70%);border:1px solid rgba(255,182,39,.3);box-shadow:inset 0 0 40px rgba(0,0,0,.5)}
 .cupstage{position:relative;height:200px;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cookie{position:relative;width:170px;height:140px;display:grid;place-items:center}
-.cookie .ck{position:absolute;font-size:7.5rem;line-height:1;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5));transition:transform .5s cubic-bezier(.2,1.4,.4,1),opacity .5s}
-.cookie .ck.l{clip-path:inset(0 50% 0 0)}
-.cookie .ck.r{clip-path:inset(0 0 0 50%)}
-.cookie.wobble{animation:wobble .14s ease-in-out infinite alternate}
-@keyframes wobble{from{transform:rotate(-7deg) scale(1)}to{transform:rotate(7deg) scale(1.04)}}
-.cookie.open .ck.l{transform:translate(-34px,8px) rotate(-24deg)}
-.cookie.open .ck.r{transform:translate(34px,8px) rotate(24deg)}
-.cookie.gold .ck{filter:drop-shadow(0 0 16px rgba(255,182,39,.9)) saturate(1.6) brightness(1.15) sepia(.4)}
-.crumbs i{position:absolute;left:50%;top:55%;width:6px;height:6px;border-radius:2px;background:#d9a441;animation:crumb .7s ease-out forwards}
-@keyframes crumb{to{transform:translate(var(--dx),var(--dy)) rotate(200deg);opacity:0}}
+.cookie{position:relative;width:170px;height:150px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
+.cookie .ck{position:absolute;inset:0;display:grid;place-items:center;font-size:7.5rem;line-height:1;transition:transform .55s cubic-bezier(.2,1.25,.35,1)}
+.cookie .ck.l,.cookie .ck.r{opacity:0}
+.cookie.open .ck.l,.cookie.open .ck.r{opacity:1}
+.cookie.open .ck.w{opacity:0}
+.cookie .ck.l{clip-path:polygon(-30% -30%, 50% -30%, 50% 10%, 46% 18%, 54% 26%, 47% 33%, 55% 41%, 45% 50%, 53% 57%, 46% 66%, 52% 74%, 47% 82%, 51% 90%, 51% 130%, -30% 130%);transform-origin:40% 85%}
+.cookie .ck.r{clip-path:polygon(130% -30%, 50% -30%, 50% 10%, 46% 18%, 54% 26%, 47% 33%, 55% 41%, 45% 50%, 53% 57%, 46% 66%, 52% 74%, 47% 82%, 51% 90%, 51% 130%, 130% 130%);transform-origin:60% 85%}
+.cookie .crack{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.cookie .crack polyline{fill:none;stroke:#5a2e08;stroke-width:2.2;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:400;stroke-dashoffset:400;opacity:.85}
+.cookie.wobble{animation:wobble .13s ease-in-out infinite alternate}
+@keyframes wobble{from{transform:rotate(-6deg)}to{transform:rotate(6deg) scale(1.03)}}
+.cookie.press{animation:press .32s ease-in-out forwards}
+@keyframes press{0%{transform:scale(1)}60%{transform:scale(.95,1.03)}100%{transform:scale(.97)}}
+.cookie.press .crack polyline{animation:drawcrack .3s ease-out forwards}
+@keyframes drawcrack{to{stroke-dashoffset:0}}
+.cookie.open .crack{opacity:0;transition:opacity .15s}
+.cookie.open .ck.l{transform:translate(-30px,6px) rotate(-26deg)}
+.cookie.open .ck.r{transform:translate(30px,6px) rotate(26deg)}
+.crumbs i{position:absolute;width:var(--s,5px);height:var(--s,5px);border-radius:2px;background:#d9a441;box-shadow:inset -1px -1px 0 rgba(0,0,0,.2);animation:crumb .75s cubic-bezier(.2,.6,.4,1) forwards}
+@keyframes crumb{60%{opacity:1}to{transform:translate(var(--dx),var(--dy)) rotate(260deg);opacity:0}}
+.cookie.gold{filter:drop-shadow(0 0 16px rgba(255,182,39,.9))}
+.cookie.gold .ck{filter:saturate(1.6) brightness(1.15) sepia(.4)}
 .slip{position:absolute;left:50%;top:50%;width:150px;height:30px;margin:-15px 0 0 -75px;border-radius:3px;background:#fffaf0;box-shadow:0 3px 8px rgba(0,0,0,.4);display:grid;place-items:center;opacity:0;transform:scaleX(.1)}
 .slip span{font-family:var(--num);font-weight:700;color:#b81d2a;font-size:1rem;letter-spacing:.5px}
 .slip.gold{background:linear-gradient(180deg,#fff3c4,#ffd35a)}
@@ -609,7 +620,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <p class="sub" id="zufallSub">Hebel ziehen und das Glück entscheiden lassen. Der Automat hält sich an deine Filter.</p>
     <div class="cupbox" id="cupBox">
       <div class="cupstage" id="cupStage" role="button" aria-label="Glückskeks knacken">
-        <div class="cookie" id="cookie"><span class="ck l">🥠</span><span class="ck r">🥠</span><div class="crumbs" id="crumbs"></div></div>
+        <div class="cookie" id="cookie"><span class="ck w">🥠</span><span class="ck l">🥠</span><span class="ck r">🥠</span><svg class="crack" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="50,10 46,18 54,26 47,33 55,41 45,50 53,57 46,66 52,74 47,82 51,90"/></svg><div class="crumbs" id="crumbs"></div></div>
         <div class="slip" id="slip"><span id="slipNr"></span></div>
       </div>
       <div class="cupres" id="cupRes"><div class="rhint">Tipp auf den Glückskeks und knack ihn 🥠</div></div>
@@ -1984,20 +1995,24 @@ function shakeCup() {
   $("#cupRes").innerHTML = `<div class="rhint">🥠 Knack …</div>`;
   void ck.offsetWidth; if (!reduce) ck.classList.add("wobble");
   sfx("tap");
-  setTimeout(() => {   // knacken
-    ck.classList.remove("wobble"); ck.classList.add("open");
-    $("#crumbs").innerHTML = Array.from({ length: 9 }, () => `<i style="--dx:${(Math.random() * 120 - 60).toFixed(0)}px;--dy:${(Math.random() * 60 + 20).toFixed(0)}px"></i>`).join("");
+  setTimeout(() => {   // Druck: der Riss zeichnet sich ab
+    ck.classList.remove("wobble"); if (!reduce) ck.classList.add("press"); sfx("tick");
+  }, reduce ? 20 : 650);
+  setTimeout(() => {   // brechen: Hälften entlang des Risses auseinander, Krümel aus dem Riss
+    ck.classList.remove("press"); ck.classList.add("open");
+    $("#crumbs").innerHTML = Array.from({ length: 14 }, () => { const y = 15 + Math.random() * 70, side = Math.random() < .5 ? -1 : 1;
+      return `<i style="left:${47 + Math.random() * 7}%;top:${y}%;--s:${(3 + Math.random() * 4).toFixed(1)}px;--dx:${(side * (20 + Math.random() * 60)).toFixed(0)}px;--dy:${(15 + Math.random() * 55).toFixed(0)}px;animation-delay:${(Math.random() * .08).toFixed(2)}s"></i>`; }).join("");
     sfx("stop"); sfx("scratch");
     try { navigator.vibrate && navigator.vibrate(golden ? [80, 60, 80, 60, 300] : 35); } catch {}
-  }, reduce ? 50 : 850);
-  setTimeout(() => { sl.classList.add("out"); sfx("whoosh"); }, reduce ? 80 : 1050);
+  }, reduce ? 50 : 980);
+  setTimeout(() => { sl.classList.add("out"); sfx("whoosh"); }, reduce ? 80 : 1180);
   setTimeout(() => {
     cupBusy = false; $("#cupShake").disabled = false;
     if (golden) { $("#cupRes").innerHTML = `<div class="jack cupj">7 · 7 · 7</div><div class="quip">„Ein goldener Keks … das Haus hat dich bemerkt.“</div>`; setTimeout(() => setCasino(true), 1500); return; }
     const m = cupPick; sfx("win");
     $("#cupRes").innerHTML = `<div class="quip">„${pickOne(COOKIE_SAYS)}“</div><div class="pname">${m.sayName ? "" : `<span class="nrc">${esc(m.nr)}</span> · `}${esc(m.name)}</div>${m.desc ? `<div class="pdesc">${esc(m.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(m.price)}</b>${hotHTML(m.hot)}${m.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#cupTake").classList.remove("hidden");
-  }, reduce ? 300 : 1900);
+  }, reduce ? 300 : 2000);
 }
 let spinTicks = 0;
 function spin() {
