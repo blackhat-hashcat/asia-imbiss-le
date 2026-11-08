@@ -154,6 +154,14 @@ body.closed .qb,body.closed .mini:not(.del),body.closed [data-copy],body.closed 
 .payrow .n{flex:1;min-width:0;font-weight:600}
 .payrow .pr{font-weight:800}
 .payrow button.st{cursor:pointer;border:0}
+.payrow{flex-wrap:wrap}
+.byl{color:var(--muted);font-size:.78rem;white-space:nowrap}
+.pra{flex-basis:100%;display:flex;justify-content:flex-end;align-items:center;gap:6px;flex-wrap:nowrap;margin-top:-2px}
+.payrow .n{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pra .mini.del{width:30px;height:30px;padding:0}
+.coverbtn{font-size:.78rem;padding:6px 10px;color:var(--ink)}
+.covered{margin-top:12px;padding:12px;border-radius:16px;background:rgba(0,112,224,.1);border:1px solid rgba(0,112,224,.4)}
+.warn.ok{background:rgba(47,211,167,.1);border-color:rgba(47,211,167,.35);color:var(--jade)}
 .lbnav{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:64px;border-radius:12px;background:rgba(0,0,0,.6);color:#fff;font-size:1.6rem;font-weight:800;z-index:2}
 .lbnav.prev{left:8px}.lbnav.next{right:8px}
 #lbCount{position:fixed;top:calc(18px + env(safe-area-inset-top));left:16px;color:#fff;background:rgba(0,0,0,.6);padding:6px 12px;border-radius:999px;font-weight:700;font-size:.85rem;z-index:2}
@@ -677,7 +685,10 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <div class="grab"></div>
     <h3 id="nameTitle">Wie heißt du? 👋</h3>
     <p style="color:var(--muted);margin:6px 0 12px;font-size:.92rem">Damit die Gruppe sieht, wer was nimmt, und am Ende jeder weiß, was er zahlt.</p>
-    <input class="inp" id="nameIn" maxlength="20" placeholder="Dein Name" autocomplete="given-name" enterkeyhint="done">
+    <input class="inp" id="nameIn" maxlength="20" placeholder="Dein Name" autocomplete="given-name" enterkeyhint="next">
+    <label class="lb" for="ppNameIn">PayPal.me-Name <span style="color:var(--dim);font-weight:400">(optional)</span></label>
+    <input class="inp" id="ppNameIn" maxlength="40" placeholder="z. B. maxmustermann" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
+    <div style="color:var(--dim);font-size:.78rem;margin-top:4px">Damit dir die anderen zurückzahlen können, wenn du für sie auslegst. Steht in deinem PayPal-Profil (paypal.me/<b>name</b>), nur in eurer Gruppe sichtbar.</div>
     <button class="btn red block" value="ok" style="margin-top:12px">Los geht's</button>
   </form>
 </dialog>
@@ -804,7 +815,7 @@ let done = new Set(store.get("done", []));
 function cleanPP(v) { return String(v || "").replace(/^.*paypal\.me\//i, "").replace(/[^A-Za-z0-9]/g, "").slice(0, 30); }
 function cleanPeople(arr) {
   return (Array.isArray(arr) ? arr : []).filter(p => p && typeof p.n === "string" && p.n.trim())
-    .map(p => ({ n: p.n.slice(0, 20), i: (Array.isArray(p.i) ? p.i : []).filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 99), String(x[2] || "").slice(0, 60)]), paid: !!p.paid, pp: cleanPP(p.pp), ts: +p.ts || 0 }));
+    .map(p => ({ n: p.n.slice(0, 20), i: (Array.isArray(p.i) ? p.i : []).filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 99), String(x[2] || "").slice(0, 60)]), paid: !!p.paid, by: String(p.by || "").slice(0, 20), pp: cleanPP(p.pp), ts: +p.ts || 0 }));
 }
 function cleanRound(r) { r = r || {}; return { caller: String(r.caller || "").slice(0, 20), payer: String(r.payer || "").slice(0, 20), mode: r.mode === "mit" ? "mit" : "hier", host: String(r.host || "").slice(0, 20), deadline: +r.deadline || 0, started: +r.started || 0 }; }
 function readHash() {
@@ -814,7 +825,7 @@ function readHash() {
     return Array.isArray(g) ? { p: cleanPeople(g), r: R0() } : { p: cleanPeople(g.p), r: cleanRound(g.r) };
   } catch { return null; }
 }
-const hashOf = () => "#o=" + btoa(unescape(encodeURIComponent(JSON.stringify({ p: group.filter(p => p.i.length).map(({ n, i, paid, pp }) => ({ n, i, paid, pp })), r: { payer: round.payer, mode: round.mode, deadline: round.deadline } })))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const hashOf = () => "#o=" + btoa(unescape(encodeURIComponent(JSON.stringify({ p: group.filter(p => p.i.length).map(({ n, i, paid, pp, by }) => ({ n, i, paid, pp, by })), r: { payer: round.payer, mode: round.mode, deadline: round.deadline } })))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const baseUrl = () => location.origin + location.pathname;
 const shareUrl = () => live ? baseUrl() + "?g=" + gid : baseUrl() + hashOf();
 
@@ -885,7 +896,7 @@ function pushMine() {
   if (!live || !me) return;
   const p = myP();
   const keep = p && (p.i.length || (round.payer === me && myPP()));
-  live.put(keyOf(me), keep ? { n: me, i: p.i, paid: !!p.paid, pp: myPP(), ts: p.ts || Date.now() } : null);
+  live.put(keyOf(me), keep ? { n: me, i: p.i, paid: !!p.paid, by: p.by || "", pp: myPP(), ts: p.ts || Date.now() } : null);
 }
 function patchRound(o) {
   Object.assign(round, o);
@@ -921,9 +932,11 @@ function needName(then) {
   openName(then);
 }
 function openName(then, preset) {
-  const d = $("#nameDlg"); $("#nameIn").value = preset !== undefined ? preset : me;
+  const d = $("#nameDlg"); $("#nameIn").value = preset !== undefined ? preset : me; $("#ppNameIn").value = myPP();
   d.onclose = () => {
     if (d.returnValue !== "ok") return;   // Abbrechen / Wischen: nichts übernehmen
+    const ppNew = cleanPP($("#ppNameIn").value);
+    if (ppNew !== myPP()) { store.set("pp", ppNew); const mp = myP(); if (mp) mp.pp = ppNew; if (me) commit(); if (ppNew) toast("PayPal.me gespeichert ✓"); }
     const v = $("#nameIn").value.trim().slice(0, 20);
     if (v && v !== me) {
       const taken = people().find(p => p.n.toLowerCase() === v.toLowerCase() && p.n !== me);
@@ -1332,18 +1345,35 @@ function renderPay() {
   const payer = round.payer && group.find(p => p.n === round.payer) ? round.payer : (round.payer || "");
   let h = `<h3>${C("💶 Bezahlen", "💶 Die Kasse")}</h3>
     <div class="seg two"><button data-paymode="self" class="${payer ? "" : "on"}">${C("💵 Jeder zahlt selbst", "💵 Jeder für sich")}</button><button data-paymode="one" class="${payer ? "on" : ""}">${C("🙋 Einer legt aus", "🏦 Einer ist die Bank")}</button></div>`;
+  const st = (p, can) => { const lbl = p.paid ? C("✓ bezahlt", "✓ beglichen") : C("offen", "schuldet"); return can ? `<button class="st ${p.paid ? "ok" : "open"}" data-paid="${esc(p.n)}">${lbl}</button>` : `<span class="st ${p.paid ? "ok" : "open"}">${lbl}</span>`; };
+  const ppOf = n => n === me ? myPP() : ((group.find(x => x.n === n) || {}).pp || "");
   if (!payer) {
-    h += `<div style="margin-top:10px">${ppl.map(p => `<div class="payrow"><span class="n">${p.n === me ? "👤 " : ""}${esc(p.n)}</span><span class="pr">${eur(sumP(p))}</span></div>`).join("")}</div>`;
-    if (payChoose) h = h.replace('<div style="margin-top:10px">', `<label class="lb">${C("Wer legt aus?", "Wer spielt die Bank?")}</label><div class="fgrid">${ppl.map(p => `<button class="tog" data-payer="${esc(p.n)}">${p.n === me ? "🙋 Ich" : esc(p.n)}</button>`).join("")}</div><div style="margin-top:10px">`);
+    if (payChoose) { h += `<label class="lb">${C("Wer legt für alle aus?", "Wer spielt die Bank?")}</label><div class="fgrid">${ppl.map(p => `<button class="tog" data-payer="${esc(p.n)}">${p.n === me ? "🙋 Ich" : esc(p.n)}</button>`).join("")}</div>`; }
+    const mine = ppl.find(p => p.n === me);
+    if (mine && mine.by && mine.by !== me) {   // jemand hat für mich ausgelegt
+      const pp = ppOf(mine.by);
+      h += mine.paid ? `<div class="warn ok" style="margin-top:12px">✓ <span>Du hast ${esc(mine.by)} zurückgezahlt. Danke!</span></div>`
+        : `<div class="covered"><div><b>${esc(mine.by)}</b> hat für dich ausgelegt: <b>${eur(sumP(mine))}</b></div>
+          ${pp ? `<a class="btn paybtn" href="${payUrl(pp, sumP(mine))}" target="_blank" rel="noopener">💸 ${eur(sumP(mine))} an ${esc(mine.by)} per PayPal</a><div class="fnote" style="text-align:center;margin-top:2px">Danach auf „${C("offen", "schuldet")}“ tippen, damit ${esc(mine.by)} es sieht.</div>`
+            : `<div class="fnote">${esc(mine.by)} hat noch kein PayPal hinterlegt. Zahl es bar oder frag nach.</div>`}</div>`;
+    }
+    const iCover = ppl.some(p => p.by === me && p.n !== me);
+    if (iCover && !myPP()) h += `<div class="warn" style="margin-top:12px">💳 <span>Du legst aus, hast aber noch kein PayPal hinterlegt. <button class="linkb" data-act="editProfile">Jetzt eintragen</button></span></div>`;
+    h += `<div style="margin-top:10px">${ppl.map(p => {
+      let right = "";
+      if (p.by && p.by !== p.n) right = p.by === me ? `<span class="byl">legst du aus</span>${st(p, true)}<button class="mini del" data-unby="${esc(p.n)}" aria-label="Auslegen zurücknehmen">✕</button>`
+        : `<span class="byl">${esc(p.by)} legt aus</span>${st(p, p.n === me)}`;
+      else if (p.n !== me) right = `<button class="chip coverbtn" data-cover="${esc(p.n)}">🙋 Ich lege aus</button>`;
+      return `<div class="payrow"><span class="n">${p.n === me ? "👤 Du" : esc(p.n)}</span><span class="pr">${eur(sumP(p))}</span>${right ? `<span class="pra">${right}</span>` : ""}</div>`;
+    }).join("")}</div>`;
     el.innerHTML = h; return;
   }
   const payerP = group.find(p => p.n === payer), pp = payer === me ? myPP() : (payerP && payerP.pp) || "";
   const others = ppl.filter(p => p.n !== payer), open = others.filter(p => !p.paid), openSum = open.reduce((a, p) => a + sumP(p), 0);
   h += `<div style="margin:12px 0 4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span>${CASINO ? `<b>${payer === me ? "Du bist" : esc(payer) + " ist"}</b> die Bank 🏦` : `<b>${payer === me ? "Du legst" : esc(payer) + " legt"}</b> aus`}</span><button class="chip" data-paymode="one" style="margin-left:auto">ändern</button></div>`;
   if (payer === me) {
-    h += `<label class="lb">Dein PayPal.me-Name, damit die anderen dir zurückzahlen können</label>
-      <input class="inp" id="ppIn" placeholder="z. B. maxmustermann" value="${esc(pp)}" autocomplete="off" autocapitalize="off" spellcheck="false">
-      <div style="color:var(--dim);font-size:.78rem;margin-top:4px">Steht in deinem PayPal-Profil (paypal.me/<b>name</b>). Wird nur in eurer Gruppe angezeigt.</div>`;
+    h += pp ? `<div class="fnote" style="margin-top:4px">💳 Die anderen zahlen dir an <b>paypal.me/${esc(pp)}</b> zurück. <button class="linkb" data-act="editProfile">ändern</button></div>`
+      : `<div class="warn" style="margin-top:8px">💳 <span>Trag dein PayPal ein, damit die anderen dir zurückzahlen können. <button class="linkb" data-act="editProfile">Jetzt eintragen</button></span></div>`;
   } else {
     const myRow = others.find(p => p.n === me);
     if (myRow && !myRow.paid) h += pp
@@ -1354,10 +1384,14 @@ function renderPay() {
   h += `<div style="margin-top:10px">${others.map(p => `<div class="payrow"><span class="n">${p.n === me ? "👤 Du" : esc(p.n)}</span><span class="pr">${eur(sumP(p))}</span>${(p.n === me || payer === me) ? `<button class="st ${p.paid ? "ok" : "open"}" data-paid="${esc(p.n)}">${p.paid ? C("✓ bezahlt", "✓ beglichen") : C("offen", "schuldet")}</button>` : `<span class="st ${p.paid ? "ok" : "open"}">${p.paid ? C("✓ bezahlt", "✓ beglichen") : C("offen", "schuldet")}</span>`}</div>`).join("") || `<div style="color:var(--muted)">Nur du hast bestellt.</div>`}</div>
     ${others.length ? `<div style="margin-top:8px;color:var(--muted);font-size:.88rem">${open.length ? `Noch offen: <b style="color:var(--ink)">${eur(openSum)}</b> von ${open.length} ${open.length === 1 ? "Person" : "Personen"}` : C("🎉 Alle haben bezahlt.", "🎉 Alle Schulden beglichen. Die Bank ist zufrieden.")}</div>` : ""}`;
   el.innerHTML = h;
-  const inp = $("#ppIn");
-  if (inp) inp.onchange = () => { const v = cleanPP(inp.value); inp.value = v; store.set("pp", v); const p = myP(); if (p) p.pp = v; commit(); toast(v ? "PayPal.me gespeichert ✓" : "PayPal.me entfernt"); };
 }
 let payChoose = false, howTouched = false, dlAlerted = 0;
+function setBy(name, val) {
+  const p = group.find(x => x.n === name); if (!p) return;
+  p.by = val; p.paid = false;
+  if (live) live.patch({ [`people/${keyOf(name)}/by`]: val, [`people/${keyOf(name)}/paid`]: false }); else commit();
+  render();
+}
 function setPaid(name, val) {
   const p = group.find(x => x.n === name); if (!p) return;
   p.paid = val;
@@ -1438,7 +1472,7 @@ const BTN_SFX = [
   ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
   ["[data-c],[data-rmf],[data-f]", "chipLight"], ["[data-fav]", "fav"],
   ["[data-t],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
-  ["[data-paid]", "cash"], ["[data-payer],[data-paymode],#waBtn,.paybtn", "coin"],
+  ["[data-paid]", "cash"], ["[data-payer],[data-paymode],[data-cover],[data-unby],#waBtn,.paybtn", "coin"],
   ["#callBtn,#callBtn2", "ring"], ["[data-act=shareGroup],#share,#copyText,[data-act=createLive]", "whoosh"],
   ["#reset,#resReset,#emptyReset,#fReset", "shuffle"],
   ["[data-dl],[data-dlset],[data-dledit]", "tick"], ["#takeIt,#repeatLast,#lastQuickBtn,[data-copy],#addBtn", "chip"],
@@ -1608,7 +1642,7 @@ function openProfile() {
   const top = (arr, key, fmt, filt = () => true) => arr.filter(filt).sort((a, b) => b[key] - a[key]).slice(0, 3).map((x, i) => `<div class="rk"><span>${["🥇", "🥈", "🥉"][i]}</span><b>${x.n === me ? "Du" : esc(x.n)}</b><span>${fmt(x)}</span></div>`).join("") || `<div class="rk" style="color:var(--dim)">noch keine Daten</div>`;
   const gFav = (() => { const c = {}; for (const ppl of Object.values(groupHist || {})) for (const v of Object.values(ppl || {})) (v.i || []).forEach(([nr, q]) => { if (byNr[nr]) c[nr] = (c[nr] || 0) + q; }); const f = Object.entries(c).sort((a, b) => b[1] - a[1])[0]; return f ? byNr[f[0]] : null; })();
   $("#profBox").innerHTML = `<div class="grab"></div>
-    <div class="phead"><div class="avatar">${esc(me.slice(0, 1).toUpperCase())}</div><div style="flex:1;min-width:0"><h3>${esc(me)}</h3><div class="lvl">Level ${lv.idx} · ${lv.name}</div></div><button type="button" class="chip" id="profName">✏️ Name</button></div>
+    <div class="phead"><div class="avatar">${esc(me.slice(0, 1).toUpperCase())}</div><div style="flex:1;min-width:0"><h3>${esc(me)}</h3><div class="lvl">Level ${lv.idx} · ${lv.name}</div><div style="color:var(--muted);font-size:.78rem">${myPP() ? "💳 paypal.me/" + esc(myPP()) : "💳 kein PayPal hinterlegt"}</div></div><button type="button" class="chip" id="profName">✏️ Name & PayPal</button></div>
     <div class="chipbank"><span class="pchip"></span><div><b>${fmtChips(s.chips)}</b><small>Chips</small></div></div>
     <div class="bar"><i style="width:${prog}%"></i></div>
     <div class="barlbl">${lv.next ? `Noch ${lv.next - s.visits} ${lv.next - s.visits === 1 ? "Besuch" : "Besuche"} bis <b>${lv.nextName}</b>` : "Höchstes Level. Das Haus verneigt sich. 👑"}</div>
@@ -1818,7 +1852,7 @@ function show(v, push = true) {
 
 // ---------- Events ----------
 document.addEventListener("click", e => {
-  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-act],[data-wheel],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
+  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-act],[data-wheel],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-cover],[data-unby],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
   if (!t) return;
   const d = t.dataset;
   if (d.add) { lastAddEl = t.getBoundingClientRect(); const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
@@ -1836,6 +1870,9 @@ document.addEventListener("click", e => {
   else if (d.dl !== undefined) { dlEdit = false;  const v = d.dl; patchRound({ host: round.host || me, deadline: v === "0" ? 0 : v === "+5" ? Math.max(round.deadline, Date.now()) + 5 * 60e3 : Date.now() + (+v) * 60e3 }); }
   else if (d.paymode) { if (d.paymode === "self") { payChoose = false; patchRound({ payer: "" }); } else { payChoose = true; if (round.payer) patchRound({ payer: "" }); else renderPay(); } }
   else if (d.payer) { payChoose = false; if (d.payer === me) bumpFlag("payer", true); if (d.payer === me && myPP()) { const p = myP(); if (p) p.pp = myPP(); } patchRound({ payer: d.payer }); if (live && d.payer === me) pushMine(); }
+  else if (d.cover) { needName(() => { setBy(d.cover, me); toast(`🙋 Du legst für ${d.cover} aus${myPP() ? "" : ". Tipp: PayPal im Profil eintragen"}`); }); }
+  else if (d.unby) setBy(d.unby, "");
+  else if (d.act === "editProfile") openName();
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
   else if (d.mode) { patchRound({ mode: d.mode }); }
   else if (d.filter !== undefined) openFilters();
