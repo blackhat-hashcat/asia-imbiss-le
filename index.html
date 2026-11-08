@@ -429,6 +429,7 @@ body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infin
 .sc-lbl{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
 .sc-dish{font-weight:800;font-size:1.05rem}
 .sc-dish .nrc{color:var(--gold)}
+.sc-quote{color:var(--muted);font-style:italic;font-size:.82rem}
 .sc-meta{color:var(--muted);font-weight:700}
 .sc-under .btn{margin-top:4px}
 .sc-cover{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;transition:opacity .4s}
@@ -1786,6 +1787,7 @@ function renderScratch() {
     <div class="sc-under"><div class="sc-lbl">🎟️ Tagesempfehlung des Hauses</div>
       <div class="sc-dish"><span class="nrc">${m.sayName ? "🥡" : esc(m.nr)}</span> ${esc(m.name)}</div>
       <div class="sc-meta">${eur(m.price)} ${hotHTML(m.hot)}</div>
+      <div class="sc-quote">„Buy the ticket, take the ride.“</div>
       <button class="btn sm gold" data-add="${esc(m.nr)}">Setzen</button></div>
     ${done ? "" : `<canvas class="sc-cover" id="scCanvas"></canvas>`}</div>`;
   if (!done) setupScratch();
@@ -1809,7 +1811,7 @@ function setupScratch() {
   const check = () => {
     const d = g.getImageData(0, 0, cv.width, cv.height).data; let clear = 0, tot = 0;
     for (let i = 3; i < d.length; i += 4 * 40) { tot++; if (d[i] < 40) clear++; }
-    if (clear / tot > .5) { store.set("scratched", today()); cv.classList.add("gone"); buzz(); sfx("win"); setTimeout(() => { $("#scratchWrap").dataset.day = ""; renderScratch(); toast("🎟️ Tagesempfehlung des Hauses: " + (dishOfDay().sayName ? dishOfDay().name : dishOfDay().nr), 4000); confetti(); }, 450); }
+    if (clear / tot > .5) { store.set("scratched", today()); cv.classList.add("gone"); buzz(); sfx("win"); setTimeout(() => { $("#scratchWrap").dataset.day = ""; renderScratch(); toast("🎟️ Buy the ticket, take the ride: " + (dishOfDay().sayName ? dishOfDay().name : dishOfDay().nr), 4500); confetti(); }, 450); }
   };
   cv.addEventListener("pointerdown", e => { down = true; last = null; cv.setPointerCapture(e.pointerId); scratch(...pos(e)); });
   cv.addEventListener("pointermove", e => { if (down) scratch(...pos(e)); });
