@@ -831,7 +831,16 @@ let CASINO = store.get("casinoEgg", false);   // verstecktes Easter Egg, standar
 const C = (normal, casino) => CASINO ? casino : normal;
 const pickOne = a => a[Math.floor(Math.random() * a.length)];
 const QUIP_ADD = ["🪙 {x} gesetzt", "♠️ {x} liegt auf dem Tisch", "🃏 {x} ist im Spiel", "♦️ {x} – gute Karte", "🎲 Gesetzt auf {x}", "♣️ {x} notiert"];
-const QUIP_JACK = ["Das Haus empfiehlt.", "Glückwunsch! Bezahlen musst du trotzdem.", "Die Walzen haben gesprochen.", "Kein Zurück. (Doch, eigentlich schon.)", "Fortuna hat Hunger.", "Heute ist dein Glückstag. Vermutlich."];
+const QUIP_JACK = ["Das Haus empfiehlt.", "Glückwunsch! Bezahlen musst du trotzdem.", "Die Walzen haben gesprochen.", "Kein Zurück. (Doch, eigentlich schon.)", "Fortuna hat Hunger.", "Heute ist dein Glückstag. Vermutlich.",
+  "Drei gleiche – das Schicksal ist eindeutig.", "Die Bank gewinnt immer. Heute gewinnt dein Magen.", "Einsatz: Hunger. Gewinn: Essen.",
+  "Nicht nachdenken. Bestellen.", "Der Automat lügt nie. Fast nie.", "Volltreffer! Die Küche ist informiert. (Nein, ist sie nicht.)",
+  "Alles auf eine Nummer – und gewonnen.", "Die Walzen kennen dich besser als du dich selbst.", "Glück im Spiel, Glück beim Essen.",
+  "Das Haus lädt nicht ein, aber es empfiehlt.", "Ein Gewinner isst nicht allein. Außer er will.", "Rien ne va plus – das Gericht steht fest.",
+  "Noch mal drehen bringt nichts. Das hier ist es.", "Statistisch gesehen war das unvermeidlich.", "Die Maschine hat Geschmack."];
+const QUIP_HOT = ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig.", "Das Haus übernimmt keine Haftung. 🌶️",
+  "All in – auch für deine Geschmacksnerven.", "Feuer frei! Wasser steht bereit?", "Wer das bestellt, hat schon gewonnen. Respekt."];
+const QUIP_VEG = ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!", "Die Null ist grün – und dein Essen auch.", "Grün gewinnt. Heute jedenfalls.",
+  "Gemüse-Jackpot! 🥦", "Das Haus setzt auf Grünzeug."];
 
 // ---------- Filters ----------
 const SPICE = [["any", "Egal"], ["mild", "😌 Mild"], ["hot", "🌶️ Scharf"], ["fire", "🔥 Sehr scharf"]];
@@ -1992,6 +2001,14 @@ const COOKIE_SAYS = [
   "Ein guter Tag beginnt mit einem guten Mittagessen.", "Das Universum hat Hunger – und du auch.", "Hör auf deinen Bauch.",
   "Große Taten brauchen große Portionen.", "Du triffst heute eine weise Entscheidung.", "Glück ist, wenn das Essen schon fertig ist.",
   "Teile dein Essen – oder lieber nicht.", "Heute ist ein guter Tag für Neues.", "Deine Zukunft riecht köstlich.",
+  "Wer Stäbchen hat, braucht keine Gabel.", "Die beste Entscheidung des Tages liegt vor dir.", "Ein voller Bauch studiert nicht gern – aber zufrieden.",
+  "Geduld ist eine Tugend. Hunger nicht.", "Du wirst bald etwas Leckeres essen. Sehr bald.", "Der Weg ist das Ziel. Das Ziel ist der Imbiss.",
+  "Wer nicht wagt, der nicht isst.", "Heute schmeckt alles ein bisschen besser.", "Ein Freund teilt sein Essen. Ein echter Freund fragt vorher.",
+  "In der Ruhe liegt die Würze.", "Glück kommt selten allein – oft mit Reis.", "Dein Bauch weiß, was gut für dich ist.",
+  "Kleine Freuden machen große Laune.", "Zufall ist nur ein anderes Wort für Schicksal.", "Heute ist kein Tag für halbe Portionen.",
+  "Auch der längste Mittag beginnt mit dem ersten Bissen.", "Wer lächelt, dem schmeckt es doppelt.", "Neues probieren macht klug. Und satt.",
+  "Ein Keks hat gesprochen. Widerspruch zwecklos.", "Deine Glückszahl steht auf dem Zettel.", "Das Beste kommt zum Schluss – oder jetzt.",
+  "Wer früh bestellt, isst früher.", "Gutes Essen ist die halbe Miete.", "Vertrau dem Keks.",
 ];
 function shakeCup() {
   if (cupBusy) return;
@@ -2074,7 +2091,7 @@ function spin() {
       setTimeout(() => setCasino(true), 1400); return;
     }
     if (batJack) { batSwarm(); sfx("flutter"); }
-    $("#dice").innerHTML = `<div class="jack${batJack ? " batj" : ""}">${batJack ? "🦇 Fledermaus-Jackpot 🦇" : "JACKPOT!"}</div>${batJack ? `<div class="quip">„Wir können hier nicht anhalten. Das ist Fledermausland!“</div>` : ""}${CASINO && !batJack ? `<div class="quip">„${pickOne(pick.hot >= 6 ? ["Hoher Einsatz! Hoffentlich hast du Milch dabei. 🔥", "Sechs Chilis. Mutig. Sehr mutig."] : pick.veg ? ["Grüne Zahl! 🟢", "Rot oder Schwarz? Grün!"] : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    $("#dice").innerHTML = `<div class="jack${batJack ? " batj" : ""}">${batJack ? "🦇 Fledermaus-Jackpot 🦇" : "JACKPOT!"}</div>${batJack ? `<div class="quip">„Wir können hier nicht anhalten. Das ist Fledermausland!“</div>` : ""}${CASINO && !batJack ? `<div class="quip">„${pickOne(pick.hot >= 6 ? QUIP_HOT : pick.veg ? QUIP_VEG : QUIP_JACK)}“</div>` : ""}<div class="pname">${pick.sayName ? "" : `<span class="nrc">${esc(pick.nr)}</span> · `}${esc(pick.name)}</div>${pick.desc ? `<div class="pdesc">${esc(pick.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(pick.price)}</b>${hotHTML(pick.hot)}${pick.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#takeIt").classList.remove("hidden");
     if (CASINO) { sfx("jackpot"); slot.classList.add("shake"); setTimeout(() => slot.classList.remove("shake"), 700); }
     try { navigator.vibrate && navigator.vibrate([40, 60, 40, 60, 120]); } catch {}
