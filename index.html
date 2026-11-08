@@ -1563,7 +1563,7 @@ function spin() {
   $("#dice").innerHTML = `<div class="rhint">🎰 Rien ne va plus …</div>`;
   const rnd = a => a[Math.floor(Math.random() * a.length)];
   const icons = CATS.map(c => c.icon), nrs = MENU.map(m => m.sayName ? "🥡" : m.nr), prices = MENU.map(m => eur(m.price));
-  const lucky = !CASINO && (Math.random() < 1 / 50 || (MOCK && QS.has("777")));
+  const lucky = !CASINO && (Math.random() < 1 / 100 || (MOCK && QS.has("777")));
   const finals = lucky ? ["7️⃣", "7️⃣", "7️⃣"] : [catIcon[pick.cat], pick.sayName ? "🥡" : pick.nr, eur(pick.price)];
   const H = $("#reels .reel").offsetHeight || 92;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
