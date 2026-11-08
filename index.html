@@ -279,6 +279,7 @@ body.closed .qb,body.closed .mini:not(.del),body.closed [data-copy],body.closed 
 .reel:nth-child(1) .strip div{font-size:2.3rem}
 .reel:nth-child(2) .strip div{color:#b81d2a;font-size:1.75rem;font-family:var(--num);font-weight:700;letter-spacing:-1px}
 .reel:nth-child(3) .strip div{font-size:1.05rem;font-family:var(--body);font-weight:800}
+.reel .strip div.sym{font-size:2.4rem!important;font-family:var(--body)}
 .rl{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(42,7,9,.45);pointer-events:none}
 .payline{position:absolute;left:2px;right:2px;top:50%;height:2px;background:linear-gradient(90deg,transparent,#ff3b3b,transparent);opacity:.55;pointer-events:none}
 .lever{flex:none;width:34px;position:relative;padding:0}
@@ -1827,7 +1828,7 @@ function renderLast() {
   $("#lastList").innerHTML = last.map((x, i) => lineHTML(x, i, false)).join("");
 }
 let spinning = false, favOnly = false, newOnly = false;
-function reelHTML(items) { return items.map(x => `<div>${x}</div>`).join(""); }
+function reelHTML(items) { return items.map(x => `<div${x === "🦇" || x === "7️⃣" ? ' class="sym"' : ""}>${x}</div>`).join(""); }   // Symbole auf allen Walzen gleich groß
 let spinTicks = 0;
 function spin() {
   if (spinning) return;
