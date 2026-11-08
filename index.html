@@ -787,9 +787,9 @@ const MEAT = [
 MENU.forEach(m => { const t = norm(m.name + " " + m.desc); m.meat = MEAT.filter(x => x.re.test(t)).map(x => x.id); });
 const F0 = () => ({ fav: false, veg: false, untried: false, spice: "any", no: [], meat: [], max: 0 });
 function passes(m, F) {
-  if (F.meat && F.meat.length && !F.meat.some(id => (m.meat || []).includes(id))) return false;
+  // Zutaten-Gruppe (Fleischsorten + Veggie) = ODER; alles andere kommt mit UND dazu
+  if ((F.meat && F.meat.length) || F.veg) { if (!(F.meat || []).some(id => (m.meat || []).includes(id)) && !(F.veg && m.veg)) return false; }
   if (F.fav && !favs.has(m.nr)) return false;
-  if (F.veg && !m.veg) return false;
   if (F.spice === "mild" && m.hot) return false;
   if (F.spice === "hot" && m.hot < 1) return false;
   if (F.spice === "fire" && m.hot < 3) return false;
