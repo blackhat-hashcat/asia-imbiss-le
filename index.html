@@ -1081,12 +1081,12 @@ function itemHTML(m) {
 }
 
 let HAS_HIST = false;
-function dealAnim() {
+function dealAnim(withSound = true) {
   if (!CASINO || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const l = $("#list"); l.classList.remove("dealing"); void l.offsetWidth; l.classList.add("dealing");
   // für jede sichtbare Karte ein "Klatsch", im Takt der Animation (Verzögerung je Karte 0,05 s, Landung nach ~0,28 s)
   (dealAnim.ss || []).forEach(clearTimeout); dealAnim.ss = [];
-  requestAnimationFrame(() => requestAnimationFrame(() => {   // erst nach dem Scrollen zur Kategorie zählen
+  if (withSound) requestAnimationFrame(() => requestAnimationFrame(() => {   // erst nach dem Scrollen zur Kategorie zählen
   const all = [...l.querySelectorAll(".item")];
   let vis = all.filter(e => { const r = e.getBoundingClientRect(); return r.bottom > 60 && r.top < innerHeight - 80; });
   if (!vis.length) vis = all.slice(0, 5);
@@ -1878,7 +1878,7 @@ function show(v, push = true) {
   $$(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
   if (v === "infos" && !$("#map").src) $("#map").src = "https://www.google.com/maps?q=" + encodeURIComponent(SHOP.name + ", " + SHOP.address) + "&z=16&output=embed";
   if (v === "infos") renderInfos();
-  if (v === "karte") { dealAnim(); requestAnimationFrame(renderScratch); }
+  if (v === "karte") { dealAnim(false); requestAnimationFrame(renderScratch); }
   $("#toast").classList.remove("on"); store.set("tab", v); renderChrome(); window.scrollTo({ top: 0 }); requestAnimationFrame(layout);
 }
 
