@@ -307,6 +307,10 @@ body.closed .qb,body.closed .mini:not(.del),body.closed [data-copy],body.closed 
 @media (max-width:400px){.spinbtn{font-size:1rem}.favtog{font-size:.8rem;padding:10px 8px}.marquee b{font-size:.95rem;letter-spacing:1px}}
 .sndbtn{display:none;flex:none;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.4);border:1px solid #6b4a10;font-size:.9rem;line-height:1}
 body.casino .sndbtn{display:grid;place-items:center}
+body.casino .ncard{display:none}
+.nsub{color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:400px){.nsub{display:none}}
+#nSnd.on,#nMus.on{background:var(--jade);color:#05261d;border-color:var(--jade)}
 .sndbtn.off{opacity:.45}
 .marquee .sndbtn+.sndbtn{margin-left:-2px}
 .slot.shake{animation:shake .6s cubic-bezier(.36,.07,.19,.97)}
@@ -655,6 +659,8 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
   <section class="view" id="v-infos">
     <h2 class="title">Asia Imbiss Le</h2>
     <p class="sub" id="infoStatus"></p>
+    <div class="card slim ncard"><div class="live" style="gap:10px"><span style="font-size:1.3rem">🎧</span><div style="flex:1;min-width:0"><b>Klänge</b><div class="nsub">ruhig &amp; dezent</div></div>
+      <button class="btn sm" id="nSnd" aria-pressed="true">🔊 Töne</button><button class="btn sm" id="nMus" aria-pressed="false">🎵 Musik</button></div></div>
     <div class="card">
       <h3>🕒 Öffnungszeiten</h3>
       <table class="hours" id="hours"></table>
@@ -1030,7 +1036,7 @@ function add(nr, note = "", n = 1) {
     const m = byNr[nr];
     const lbl = `${m.sayName ? m.nr : "Nr. " + nr}${n > 1 ? " ×" + n : ""}`;
     toast(CASINO ? pickOne(QUIP_ADD).replace("{x}", lbl) : `✓ ${lbl} hinzugefügt`);
-    if (CASINO) { sfx("chip"); chipFly(lastAddEl); } lastAddEl = null;
+    if (CASINO) { sfx("chip"); chipFly(lastAddEl); } else sfx("add"); lastAddEl = null;
   });
 }
 function sub(nr) {
@@ -1492,7 +1498,7 @@ function audio() {
   if (AC.state !== "running") AC.resume().catch(() => {});   // auch iOS-Zustand "interrupted"
   return AC;
 }
-addEventListener("pointerdown", () => { if (CASINO && SOUND) audio(); }, { passive: true });   // iOS: Ton erst nach erster Berührung
+addEventListener("pointerdown", () => { if (CASINO ? SOUND : NSOUND) audio(); }, { passive: true });   // iOS: Ton erst nach erster Berührung
 let OUT = null;   // Ziel des aktuell spielenden Effekts (eigener Pegel pro Sound)
 function tone(f, d = .12, type = "sine", vol = .25, at = 0, f2 = 0) {
   const a = audio(); if (!a) return; const t = a.currentTime + at;
@@ -1549,7 +1555,7 @@ const SFX_LEVEL = {"pick":1.6,"unpick":1.6,"flutter":2.138,"deal":3.981,"click":
 // Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
 const BTN_SFX = [
   ["[data-add],#spin,#lever,[data-wheel],.sndbtn,[data-soundrow],[data-musicrow],#casinoTog", null],
-  [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
+  ["[data-fav]", "fav"], [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
   ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
   ["[data-c],[data-rmf],[data-f],[data-all],[data-clring],[data-meatc],[data-vegc]", "pickT"], ["[data-fav]", "fav"],
   ["[data-t],[data-meat],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
@@ -1561,7 +1567,7 @@ const BTN_SFX = [
   ["button,a.btn,.chip", "click"],
 ];
 document.addEventListener("click", e => {
-  if (!CASINO || !SOUND) return;
+  if (!(CASINO ? SOUND : NSOUND)) return;
   for (const [sel, name] of BTN_SFX) {
     const el = e.target.closest(sel); if (!el) continue;
     if (!name) return;
@@ -1570,9 +1576,22 @@ document.addEventListener("click", e => {
     sfx(name); return;
   }
 }, true);
-function sfx(name, force) { if (!SOUND || (!CASINO && !force)) return; const a = audio(); if (!a) return; try { const g = a.createGain(); g.gain.value = SFX_LEVEL[name] || 1; g.connect(MASTER); OUT = g; SFX[name](); } catch {} finally { OUT = null; } }
+function sfx(name, force) {
+  const a = (CASINO ? SOUND : NSOUND) ? audio() : null; if (!a) return;
+  try {
+    const g = a.createGain(); OUT = g;
+    if (CASINO) { g.gain.value = SFX_LEVEL[name] || 1; g.connect(MASTER); SFX[name](); }
+    else { const n = CALM_SFX[name] ? name : CALM_MAP[name]; if (!n) return; g.gain.value = 1.1 * (CALM_LEVEL[n] || 1); g.connect(MASTER); CALM_SFX[n](); }
+  } catch {} finally { OUT = null; }
+}
 function setSound(v) { SOUND = v; store.set("sound", v); if (v) { audio(); sfx("click", true); } musicSync(); renderSoundBtns(); }
-function renderSoundBtns() { $$("[data-sound]").forEach(b => { b.textContent = SOUND ? "🔊" : "🔇"; b.setAttribute("aria-label", SOUND ? "Ton aus" : "Ton an"); }); $$("[data-music]").forEach(b => { b.textContent = "🎵"; b.classList.toggle("off", !(MUSIC && SOUND)); b.setAttribute("aria-label", MUSIC ? "Musik aus" : "Musik an"); }); }
+function renderCalmBtns() {
+  const s = $("#nSnd"), m = $("#nMus"); if (!s) return;
+  s.setAttribute("aria-pressed", NSOUND); s.textContent = NSOUND ? "🔊 Töne" : "🔇 Töne"; s.classList.toggle("on", NSOUND);
+  m.setAttribute("aria-pressed", NMUSIC); m.textContent = "🎵 Musik"; m.classList.toggle("on", NMUSIC);
+}
+function renderSoundBtns() {
+  renderCalmBtns(); $$("[data-sound]").forEach(b => { b.textContent = SOUND ? "🔊" : "🔇"; b.setAttribute("aria-label", SOUND ? "Ton aus" : "Ton an"); }); $$("[data-music]").forEach(b => { b.textContent = "🎵"; b.classList.toggle("off", !(MUSIC && SOUND)); b.setAttribute("aria-label", MUSIC ? "Musik aus" : "Musik an"); }); }
 
 // ---------- Casino-Lounge-Musik (generativ, Endlosschleife) ----------
 let MUSIC = store.get("music", true), MUS = null, musTimer = 0, musNext = 0, musStep = 0;
@@ -1594,7 +1613,24 @@ function mHat(t, vol) {
   const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); src.buffer = b; f.type = "highpass"; f.frequency.value = 7000; g.gain.value = vol;
   src.connect(f); f.connect(g); g.connect(MUS); src.start(t);
 }
+// ruhige Lo-Fi-Pentatonik für den normalen Modus: weiche Flächen, Kalimba, sanfter Bass, langsam
+const CALM_BPM = 68, CSTEP = 60 / CALM_BPM / 2;
+const CALM_CHORDS = [[57, 60, 64, 67], [53, 57, 60, 64], [48, 52, 55, 59], [55, 59, 62, 64]];   // Am9-artig, Fmaj7, Cmaj7, G6
+const CALM_ROOT = [45, 41, 36, 43];
+const CALM_MEL = [69, 72, 74, 76, 79, 81];
+function musScheduleCalm() {
+  if (!AC) return;
+  while (musNext < AC.currentTime + .3) {
+    const bar = Math.floor(musStep / 8) % 4, e = musStep % 8, t = musNext;
+    if (e === 0) { CALM_CHORDS[bar].forEach(m => mNote(m, t, CSTEP * 8.5, "sine", .035, 900)); mNote(CALM_ROOT[bar], t, CSTEP * 7, "sine", .16, 400); }
+    if (e === 4) mNote(CALM_ROOT[bar] + 7, t, CSTEP * 3.5, "sine", .08, 400);
+    if (Math.random() < .3 && e % 2 === 0) { const m = pickOne(CALM_MEL); mNote(m, t, CSTEP * 3, "sine", .05, 2500); mNote(m + 12, t, CSTEP * 1.2, "sine", .012, 3000); }
+    if (e === 2 || e === 6) mHat(t, .012);
+    musNext += CSTEP; musStep++;
+  }
+}
 function musSchedule() {
+  if (!CASINO) return musScheduleCalm();
   if (!AC) return;
   while (musNext < AC.currentTime + .25) {
     const bar = Math.floor(musStep / 8) % 4, e = musStep % 8, swing = e % 2 ? STEP * .32 : 0, t = musNext + swing;
@@ -1605,32 +1641,34 @@ function musSchedule() {
     musNext += STEP; musStep++;
   }
 }
+function wantMusic() { return !document.hidden && (CASINO ? SOUND && MUSIC : NMUSIC); }
 function musicOn() {
-  if (!CASINO || !SOUND || !MUSIC || document.hidden || musTimer) return;
+  if (!wantMusic() || musTimer) return;
   const a = audio(); if (!a) return;
   if (!MUS) { MUS = a.createGain(); MUS.connect(MASTER); }
-  MUS.gain.cancelScheduledValues(a.currentTime); MUS.gain.setValueAtTime(0, a.currentTime); MUS.gain.linearRampToValueAtTime(.5, a.currentTime + 2);
+  MUS.gain.cancelScheduledValues(a.currentTime); MUS.gain.setValueAtTime(0, a.currentTime); MUS.gain.linearRampToValueAtTime(CASINO ? .5 : .55, a.currentTime + 2.5);
   musNext = a.currentTime + .1; musTimer = setInterval(musSchedule, 60); musSchedule();
 }
 function musicOff() {
   if (!musTimer) return; clearInterval(musTimer); musTimer = 0;
   if (MUS && AC) { MUS.gain.cancelScheduledValues(AC.currentTime); MUS.gain.setValueAtTime(MUS.gain.value, AC.currentTime); MUS.gain.linearRampToValueAtTime(0, AC.currentTime + .6); }
 }
-function musicSync() { CASINO && SOUND && MUSIC && !document.hidden ? musicOn() : musicOff(); }
+let musMode = null;
+function musicSync() { if (musMode !== CASINO) { musicOff(); musMode = CASINO; musStep = 0; } wantMusic() ? musicOn() : musicOff(); }
 function setMusic(v) { MUSIC = v; store.set("music", v); musicSync(); renderSoundBtns(); }
 // Beim Zurückkehren in den Browser Musik sofort wieder starten (mit Wiederholungen, falls das System
 // den Ton noch kurz blockiert); jede Art von Berührung/Taste startet sie spätestens.
 let resumeTries = 0;
 function resumeAudio() {
   musicSync();
-  if (!CASINO || !SOUND || !MUSIC || document.hidden || !AC) return;
+  if (!wantMusic() || !AC) return;
   if (AC.state !== "running" && resumeTries < 12) { resumeTries++; AC.resume().catch(() => {}); setTimeout(resumeAudio, 400); }
   else resumeTries = 0;
 }
 document.addEventListener("visibilitychange", () => { resumeTries = 0; resumeAudio(); });
 addEventListener("pageshow", () => { resumeTries = 0; resumeAudio(); });
 addEventListener("focus", () => { resumeTries = 0; resumeAudio(); });
-["pointerdown", "touchstart", "touchend", "click", "keydown"].forEach(ev => addEventListener(ev, () => { if (CASINO && SOUND) { audio(); musicSync(); } }, { passive: true, capture: true }));
+["pointerdown", "touchstart", "touchend", "click", "keydown"].forEach(ev => addEventListener(ev, () => { if (CASINO ? SOUND : (NSOUND || NMUSIC)) { audio(); musicSync(); } }, { passive: true, capture: true }));
 
 // Fledermausschwarm mit Flügelschlag (fliegt komplett aus dem Bild)
 function batSwarm(n = 18) {
@@ -1647,6 +1685,45 @@ function sparkle(x, y, n = 10) {
   box.innerHTML = Array.from({ length: n }, (_, i) => { const a = i / n * Math.PI * 2, r = 30 + Math.random() * 30; return `<i style="left:${x}px;top:${y}px;--dx:${Math.cos(a) * r}px;--dy:${Math.sin(a) * r}px">${["✨", "⭐", "🪙"][i % 3]}</i>`; }).join("");
   document.body.appendChild(box); setTimeout(() => box.remove(), 900);
 }
+
+
+// ---------- Normaler Modus: ruhiger, warmer Klangstil (Holz, Glöckchen, Pentatonik) ----------
+let NSOUND = store.get("nsound", true), NMUSIC = store.get("nmusic", false);
+const PENTA = [0, 2, 4, 7, 9];   // Dur-Pentatonik
+function pluck(f, d = .35, vol = .2, at = 0) {   // weich gezupft (Kalimba-artig)
+  tone(f, d, "sine", vol, at); tone(f * 2, d * .4, "sine", vol * .25, at); tone(f * 3.01, d * .15, "triangle", vol * .08, at);
+}
+function wood(f = 900, vol = .25, at = 0) { tone(f, .06, "sine", vol, at, f * .7); noise(.02, vol * .5, at, f * 1.6, 3); }   // Holzklopfen
+const CALM_SFX = {
+  tap() { wood(1100, .18); },
+  add() { pluck(784, .4, .2); pluck(1047, .5, .16, .07); },                 // zwei aufsteigende Töne
+  remove() { pluck(659, .35, .16); },
+  pick() { pluck(988, .3, .16); },
+  unpick() { pluck(740, .28, .14); },
+  open() { pluck(587, .3, .12); pluck(880, .35, .1, .05); },
+  close() { pluck(880, .25, .1); pluck(587, .3, .09, .05); },
+  card() { wood(950, .16); },
+  toggle() { wood(1300, .16); },
+  fav() { pluck(1175, .4, .14); pluck(1568, .5, .1, .06); },
+  unfav() { pluck(880, .3, .1); },
+  success() { [523, 659, 784, 1047].forEach((f, i) => pluck(f, .6, .15, i * .09)); },
+  coin() { pluck(1319, .45, .13); pluck(1760, .5, .1, .06); },
+  ring() { for (let i = 0; i < 2; i++) { pluck(1047, .2, .12, i * .25); pluck(1319, .2, .1, i * .25 + .09); } },
+  whoosh() { noise(.3, .16, 0, 800, .6); },
+  bell() { pluck(523, 2, .22); pluck(784, 1.8, .12, .02); pluck(1047, 1.6, .06, .04); },   // sanfter Gong
+  denied() { tone(196, .25, "sine", .22); },
+  lever() { wood(400, .2); },
+  tick() { wood(1600, .06); },
+  stop() { wood(500, .22); },
+  win() { [659, 784, 988].forEach((f, i) => pluck(f, .5, .15, i * .08)); },
+  jackpot() { [523, 587, 659, 784, 880, 1047].forEach((f, i) => pluck(f, .7, .14, i * .08)); },
+  scratch() { noise(.05, .1, 0, 1500, .8); },
+  shuffle() { noise(.2, .14, 0, 1400, .7); },
+  click() { wood(1200, .14); },
+};
+const CALM_LEVEL = {"tap": 1.972, "add": 0.767, "remove": 1.23, "pick": 1.334, "unpick": 1.531, "open": 1.0, "close": 1.148, "card": 2.163, "toggle": 2.163, "fav": 1.109, "unfav": 1.928, "success": 0.767, "coin": 1.096, "ring": 1.148, "whoosh": 4.266, "bell": 0.733, "denied": 1.148, "lever": 2.291, "tick": 3.589, "stop": 2.113, "win": 0.861, "jackpot": 0.871, "scratch": 6.683, "shuffle": 4.955, "click": 2.427};   // je Klang kalibriert
+// Casino-Namen → ruhige Gegenstücke
+const CALM_MAP = { chip: "add", chipLight: "tap", chipOff: "remove", star: "fav", unstar: "unfav", cash: "coin", deal: "card", flip: "card", intro: "success", flutter: "whoosh" };
 
 // ---------- Casino-Gamification: Verlauf, Chips, Trophäen, Rangliste ----------
 const today = () => new Date().toLocaleDateString("sv-SE");          // YYYY-MM-DD
@@ -2014,6 +2091,8 @@ $("#share").onclick = async () => {
 $("#waBtn").addEventListener("click", () => { const p = myP(); if (p && p.i.length) store.set("last", p.i); });
 $("#reset").onclick = () => { if (confirm("Runde beenden und neu anfangen? Die aktuelle Bestellung wird für alle geleert.")) { newRound(); toast("Neue Runde ✓"); } };
 $("#spin").onclick = () => spin();
+$("#nSnd").onclick = () => { NSOUND = !NSOUND; store.set("nsound", NSOUND); if (NSOUND) { audio(); sfx("pick"); } renderCalmBtns(); };
+$("#nMus").onclick = () => { NMUSIC = !NMUSIC; store.set("nmusic", NMUSIC); audio(); musicSync(); renderCalmBtns(); };
 $(".sndbtn[data-sound]").onclick = e => { e.stopPropagation(); setSound(!SOUND); };
 $(".sndbtn[data-music]").onclick = e => { e.stopPropagation(); if (!SOUND) setSound(true); setMusic(!(MUSIC && SOUND)); };
 musicSync();
