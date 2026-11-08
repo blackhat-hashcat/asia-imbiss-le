@@ -136,6 +136,9 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .live .dotl.off{background:#ff9f43;box-shadow:0 0 10px #ff9f43}
 @keyframes pulse{50%{opacity:.4}}
 .dlrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dlby{color:var(--muted);font-size:.82rem}
+.dllock{margin-top:8px;padding:8px 10px;border-radius:12px;background:rgba(239,51,64,.12);color:#ff9aa2;font-size:.86rem;font-weight:600}
+body.closed .qb,body.closed .mini:not(.del),body.closed [data-copy],body.closed #takeIt,body.closed #lastQuickBtn,body.closed #addBtn{opacity:.35;filter:grayscale(1)}
 .dlcustom{margin-top:10px;max-width:280px}
 .dlf{display:flex;flex-direction:column;gap:4px;font-size:.78rem;color:var(--muted);font-weight:600;min-width:0}
 .dlin{display:flex;gap:6px}
@@ -777,7 +780,7 @@ function saveF() { store.set("filters", F); }
 // ---------- State ----------
 let me = store.get("name", "");
 let favs = new Set(store.get("favs", []));
-function R0() { return { payer: "", mode: "hier", deadline: 0, started: 0 }; }
+function R0() { return { payer: "", mode: "hier", deadline: 0, started: 0, host: "" }; }
 const fromHash = readHash();
 let group = fromHash ? fromHash.p : store.get("group", []);
 let round = Object.assign(R0(), fromHash ? fromHash.r : store.get("round", {}));
@@ -790,7 +793,7 @@ function cleanPeople(arr) {
   return (Array.isArray(arr) ? arr : []).filter(p => p && typeof p.n === "string" && p.n.trim())
     .map(p => ({ n: p.n.slice(0, 20), i: (Array.isArray(p.i) ? p.i : []).filter(x => Array.isArray(x) && byNr[x[0]] && x[1] > 0).map(x => [x[0], Math.min(+x[1] || 1, 99), String(x[2] || "").slice(0, 60)]), paid: !!p.paid, pp: cleanPP(p.pp), ts: +p.ts || 0 }));
 }
-function cleanRound(r) { r = r || {}; return { caller: String(r.caller || "").slice(0, 20), payer: String(r.payer || "").slice(0, 20), mode: r.mode === "mit" ? "mit" : "hier", deadline: +r.deadline || 0, started: +r.started || 0 }; }
+function cleanRound(r) { r = r || {}; return { caller: String(r.caller || "").slice(0, 20), payer: String(r.payer || "").slice(0, 20), mode: r.mode === "mit" ? "mit" : "hier", host: String(r.host || "").slice(0, 20), deadline: +r.deadline || 0, started: +r.started || 0 }; }
 function readHash() {
   const m = location.hash.match(/^#o=(.+)$/); if (!m) return null;
   try {
@@ -824,7 +827,7 @@ async function firebaseAdapter(cfg, g) {
     putHist: (d, k, v) => D.set(P(`hist/${d}/${k}`), v),
     put: (k, v) => D.set(P(`round/people/${k}`), v),
     patch: o => D.update(P("round"), o),
-    newRound: prev => D.update(P(""), Object.assign({ round: { started: Date.now() } }, prev ? { last: prev } : {})),
+    newRound: (prev, host) => D.update(P(""), Object.assign({ round: { started: Date.now(), host: host || "" } }, prev ? { last: prev } : {})),
   };
 }
 function mockAdapter(g) {   // Testmodus (?mock): simuliert die Datenbank im localStorage
@@ -839,7 +842,7 @@ function mockAdapter(g) {   // Testmodus (?mock): simuliert die Datenbank im loc
     putHist(d, k, v) { const x = read(); setPath(x, `hist/${d}/${k}`, v); localStorage.setItem(K, JSON.stringify(x)); groupHist = x.hist || {}; },
     put(k, v) { const d = read(); setPath(d, `round/people/${k}`, v); write(d); },
     patch(o) { const d = read(); d.round = d.round || {}; for (const k in o) setPath(d.round, k, o[k]); write(d); },
-    newRound(prev) { const d = read(); if (prev) d.last = prev; d.round = { started: Date.now() }; write(d); },
+    newRound(prev, host) { const d = read(); if (prev) d.last = prev; d.round = { started: Date.now(), host: host || "" }; write(d); },
   };
 }
 function setOnline(v) { liveOnline = v; renderLiveBox(); }
@@ -863,7 +866,7 @@ function createLiveGroup() {
   const mineNow = myP();
   gid = "le-" + Math.random().toString(36).slice(2, 8) + Math.random().toString(36).slice(2, 6);
   history.replaceState(null, "", baseUrl() + "?g=" + gid + (MOCK ? "&mock" : ""));
-  connectLive().then(() => { if (live && mineNow && mineNow.i.length) { group = [mineNow]; pushMine(); } shareGroup(); });
+  connectLive().then(() => { if (live) live.patch({ host: me }); round.host = me; if (live && mineNow && mineNow.i.length) { group = [mineNow]; pushMine(); } shareGroup(); });
 }
 function pushMine() {
   if (!live || !me) return;
@@ -877,8 +880,8 @@ function patchRound(o) {
   render();
 }
 function newRound() {
-  if (live) { live.newRound(lastRaw && lastRaw.people ? lastRaw : null); }
-  else { group = []; round = R0(); commit(); }
+  if (live) { live.newRound(lastRaw && lastRaw.people ? lastRaw : null, round.host); }
+  else { const h = round.host; group = []; round = Object.assign(R0(), { host: h }); commit(); }
   done.clear(); store.set("done", []);
 }
 
@@ -921,6 +924,7 @@ function openName(then, preset) {
   d.returnValue = ""; d.showModal(); setTimeout(() => $("#nameIn").focus(), 50);
 }
 function rename(v) {
+  if (round.host && round.host === me) patchRound({ host: v });
   if (live && me) live.put(keyOf(me), null);
   if (round.payer && round.payer === me) round.payer = v;
   const old = myP(), clash = group.find(p => p.n === v);
@@ -946,8 +950,17 @@ function chipFly(from) {
   });
 }
 const MAXQ = 99;
+const isClosed = () => !!round.deadline && Date.now() >= round.deadline;
+const canTimer = () => !round.host || round.host === me;
+function locked() {   // nach Bestellschluss keine Änderungen mehr
+  if (!isClosed()) return false;
+  toast(C(`⏱ Bestellschluss vorbei. Änderungen nur, wenn ${round.host && round.host !== me ? round.host : "der Timer"} verlängert.`, `🎰 Rien ne va plus! Nichts geht mehr.`));
+  try { navigator.vibrate && navigator.vibrate([60, 40, 60]); } catch {}
+  return true;
+}
 const capLines = p => { p.i.forEach(x => { x[1] = Math.min(MAXQ, x[1]); }); };
 function add(nr, note = "", n = 1) {
+  if (locked()) return;
   needName(() => {
     if (live && isStale()) { newRound(); group = []; round = Object.assign(R0(), { started: Date.now() }); }
     const p = mine(), ex = p.i.find(x => x[0] === nr && x[2] === note);
@@ -961,6 +974,7 @@ function add(nr, note = "", n = 1) {
   });
 }
 function sub(nr) {
+  if (locked()) return;
   const p = myP(); if (!p) return;
   let idx = -1; p.i.forEach((x, i) => { if (x[0] === nr) idx = i; });
   if (idx < 0) return;
@@ -1262,13 +1276,16 @@ function renderDeadline() {
   if (document.activeElement && document.activeElement.id === "dlTime") return;   // nicht beim Tippen überschreiben
   const el = $("#dlBox"); const d = round.deadline, left = d - Date.now();
   el.classList.toggle("slim", !d && !dlEdit);
-  if (!d) {
+  const can = canTimer(), by = round.host && round.host !== me ? `<span class="dlby">gesetzt von ${esc(round.host)}</span>` : "";
+  if (!d && !can) { el.classList.add("slim"); el.innerHTML = `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><span class="dlby">legt ${esc(round.host)} fest</span></div>`; }
+  else if (!d) {
     el.innerHTML = dlEdit ? `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><button class="chip" data-dledit="0">✕</button></div>${dlPickerHTML()}`
       : `<div class="dlrow"><span class="lbl">⏱ Bestellschluss</span><button class="chip" data-dledit="1">setzen</button></div>`;
   } else {
-    el.innerHTML = `<div class="dlrow"><span class="lbl">${C(`⏱ Bestellschluss ${hhmm(d)} Uhr`, `⏱ Rien ne va plus um ${hhmm(d)}`)}</span><button class="chip" data-dl="+5">+5 Min</button><button class="chip" data-dledit="1">ändern</button><button class="chip" data-dl="0">aus</button></div>
+    el.innerHTML = `<div class="dlrow"><span class="lbl">${C(`⏱ Bestellschluss ${hhmm(d)} Uhr`, `⏱ Rien ne va plus um ${hhmm(d)}`)}</span>${can ? `<button class="chip" data-dl="+5">+5 Min</button><button class="chip" data-dledit="1">ändern</button><button class="chip" data-dl="0">aus</button>` : by}</div>
       <div class="dlbig ${left <= 0 ? "over" : ""}" id="dlLeft">${left > 0 ? "noch " + fmtLeft(left) : C("Jetzt bestellen!", "Nichts geht mehr!")}</div>
-      ${dlEdit ? dlPickerHTML() : ""}
+      ${dlEdit && can ? dlPickerHTML() : ""}
+      ${left <= 0 ? `<div class="dllock">🔒 Bestellung ist geschlossen${can ? " · mit „+5 Min“ wieder öffnen" : ""}</div>` : ""}
       ${left <= 0 ? `<button class="btn gold block" data-go="anrufen" style="margin-top:8px">📞 Zum Anrufen</button>` : ""}`;
   }
   const ti = $("#dlTime");
@@ -1283,12 +1300,12 @@ function setDlCustom(kind) {
     if (dt.getTime() - Date.now() > 12 * 3600e3) return toast("Bitte eine Uhrzeit innerhalb der nächsten 12 Stunden");
     t = dt.getTime();
   }
-  dlEdit = false; patchRound({ deadline: t }); toast(`⏱ Bestellschluss ${hhmm(t)} Uhr`);
+  dlEdit = false; patchRound({ host: round.host || me, deadline: t }); toast(`⏱ Bestellschluss ${hhmm(t)} Uhr`);
 }
 function tickDeadline() {
   const d = round.deadline; if (!d) return;
   const left = d - Date.now(), el = $("#dlLeft");
-  if (el) { if (left > 0) el.textContent = "noch " + fmtLeft(left); else if (!el.classList.contains("over")) renderDeadline(); }
+  if (el) { if (left > 0) el.textContent = "noch " + fmtLeft(left); else if (!el.classList.contains("over")) { renderDeadline(); render(); } }
   if (left <= 0 && left > -5000 && dlAlerted !== d) { dlAlerted = d; toast(C("⏱ Bestellschluss! Jetzt anrufen 📞", "🎰 Rien ne va plus! Ab ans Telefon 📞")); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} }
   renderChrome();
 }
@@ -1631,7 +1648,8 @@ document.addEventListener("focusout", () => setTimeout(kbCheck, 100));
 new MutationObserver(() => document.body.classList.toggle("dlg", !!document.querySelector("dialog[open]")))
   .observe(document.body, { subtree: true, attributes: true, attributeFilter: ["open"] });
 
-function render() { renderChips(); renderMenu(); renderHits(); renderOrder(); renderCall(); renderLast(); renderChrome(); }
+function render() {
+  document.body.classList.toggle("closed", isClosed()); renderChips(); renderMenu(); renderHits(); renderOrder(); renderCall(); renderLast(); renderChrome(); }
 
 // ---------- Navigation ----------
 function show(v, push = true) {
@@ -1657,15 +1675,17 @@ document.addEventListener("click", e => {
   else if (d.wheel) spinWheel(d.wheel);
   else if (d.act === "shareGroup") shareGroup();
   else if (d.act === "createLive") createLiveGroup();
+  else if ((d.dlset || d.dledit !== undefined || d.dl !== undefined) && !canTimer()) toast(`⏱ Nur ${round.host} kann den Bestellschluss ändern.`);
   else if (d.dlset) setDlCustom(d.dlset);
   else if (d.dledit !== undefined) { dlEdit = d.dledit === "1"; renderDeadline(); }
-  else if (d.dl !== undefined) { dlEdit = false;  const v = d.dl; patchRound({ deadline: v === "0" ? 0 : v === "+5" ? Math.max(round.deadline, Date.now()) + 5 * 60e3 : Date.now() + (+v) * 60e3 }); }
+  else if (d.dl !== undefined) { dlEdit = false;  const v = d.dl; patchRound({ host: round.host || me, deadline: v === "0" ? 0 : v === "+5" ? Math.max(round.deadline, Date.now()) + 5 * 60e3 : Date.now() + (+v) * 60e3 }); }
   else if (d.paymode) { if (d.paymode === "self") { payChoose = false; patchRound({ payer: "" }); } else { payChoose = true; if (round.payer) patchRound({ payer: "" }); else renderPay(); } }
   else if (d.payer) { payChoose = false; if (d.payer === me) bumpFlag("payer", true); if (d.payer === me && myPP()) { const p = myP(); if (p) p.pp = myPP(); } patchRound({ payer: d.payer }); if (live && d.payer === me) pushMine(); }
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
   else if (d.mode) { patchRound({ mode: d.mode }); }
   else if (d.filter !== undefined) openFilters();
   else if (d.c !== undefined) { cat = cat === d.c ? "" : d.c; renderChips(); renderMenu(); dealAnim(); if ($("#v-karte").classList.contains("on")) { const l = $("#list"); const top = l.getBoundingClientRect().top + scrollY - (56 + $(".searchbar").offsetHeight) - 4; if (scrollY > top) window.scrollTo({ top }); } }
+  else if ((d.note !== undefined || d.inc !== undefined || d.dec !== undefined || d.copy) && locked()) {}
   else if (d.note !== undefined) { const p = myP(); const x = p.i[+d.note]; const v = prompt(`Sonderwunsch für ${byNr[x[0]].sayName ? byNr[x[0]].name : "Nr. " + x[0]}:`, x[2]); if (v !== null) { x[2] = v.trim().slice(0, 60); mergeDupes(p); commit(); } }
   else if (d.inc !== undefined) { const p = myP(), x = p.i[+d.inc]; if (x[1] >= MAXQ) { toast(`Maximal ${MAXQ}× pro Gericht`); return; } x[1]++; buzz(); commit(); }
   else if (d.dec !== undefined) { const p = myP(); const x = p.i[+d.dec]; if (--x[1] <= 0) p.i.splice(+d.dec, 1); buzz(); commit(); }
@@ -1713,8 +1733,8 @@ function casinoIntro() {
 }
 $("#lever").onclick = () => spin();
 $("#spinFav").onclick = e => { favOnly = !favOnly; e.currentTarget.setAttribute("aria-pressed", favOnly); };
-$("#takeIt").onclick = () => { if (pick) { bumpFlag("dice"); pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
-$("#repeatLast").onclick = () => needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); capLines(mine()); commit(); toast("Wie letztes Mal ✓"); });
+$("#takeIt").onclick = () => { if (pick && !locked()) { bumpFlag("dice"); pick.opts ? openItem(pick.nr) : add(pick.nr); $("#takeIt").classList.add("hidden"); } };
+$("#repeatLast").onclick = () => !locked() && needName(() => { mine().i = store.get("last", []).filter(x => byNr[x[0]]).map(x => [...x]); capLines(mine()); commit(); toast("Wie letztes Mal ✓"); });
 $("#copyText").onclick = () => copy(orderText(), "Bestellung kopiert ✓");
 $("#pickupName").value = store.get("pickup", "");
 $("#pickupName").oninput = e => { store.set("pickup", e.target.value); renderCall(); };
