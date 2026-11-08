@@ -1591,8 +1591,8 @@ const SFX = {
   coin() { bell(1175, .35, .14); bell(1568, .45, .1, .06); },
   scratch() { noise(.06, .18, 0, 1000, .8); },
   crackle() { noise(.012, .35, 0, 1900, 2.2); noise(.01, .22, .05, 1700, 2.2); },   // Keks knistert unter Druck
-  crack() {   // Keks bricht: mehrere trockene Splitter-Knacks + kurzer Körper + Krümel
-    noise(.016, .6, 0, 2000, 1.8); noise(.04, .35, 0, 900, 1.1); tone(190, .045, "sine", .22, 0, 120);
+  crack() {   // Keks bricht: mehrere trockene Splitter-Knacks + Krümel (ohne dumpfen Schlag)
+    noise(.016, .6, 0, 2000, 1.8);
     noise(.012, .45, .018, 2400, 2.2); noise(.014, .4, .034, 1700, 2);
     [.07, .095, .13, .16].forEach((t, i) => noise(.008, .14 - i * .025, t, 2100 + i * 150, 3));
   },
@@ -1614,7 +1614,7 @@ const SFX = {
   toggle() { noise(.012, .3, 0, 1600, 2); tone(900, .04, "triangle", .06, .004); },
 };
 // Pegel je Sound (aus Messung kalibriert, siehe Tests): Bedien-Klicks leise, Belohnungen lauter
-const SFX_LEVEL = {"pick":2.367,"unpick":3.973,"flutter":2.019,"deal":3.891,"click":6.026,"toggle":8.128,"tick":5.013,"flip":9.44,"open":1.819,"close":1.884,"card":5.69,"chipLight":8.127,"chipOff":8.511,"chip":4.027,"scratch":14.29,"coin":1.759,"star":1.698,"unstar":3.311,"cash":1.496,"ring":1.82,"whoosh":4.518,"shuffle":2.291,"lever":4.898,"stop":1.995,"denied":1.319,"win":1.318,"jackpot":1.84,"intro":1.972,"bell":1.274,"tab":5.307,"crack":3.89,"crackle":2.427};
+const SFX_LEVEL = {"pick":2.367,"unpick":3.973,"flutter":2.114,"deal":4.169,"click":8.811,"toggle":8.81,"tick":4.316,"flip":9.999,"open":1.819,"close":1.884,"card":5.497,"chipLight":7.851,"chipOff":8.128,"chip":3.199,"scratch":12.446,"coin":1.759,"star":1.698,"unstar":3.311,"cash":1.496,"ring":1.82,"whoosh":4.365,"shuffle":2.455,"lever":4.955,"stop":1.995,"denied":1.319,"win":1.318,"jackpot":1.819,"intro":1.972,"bell":1.274,"tab":5.752,"crack":3.199,"crackle":2.345};
 
 // Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
 const BTN_SFX = [
@@ -1783,8 +1783,8 @@ const CALM_SFX = {
   win() { [330, 392, 494].forEach((f, i) => pluck(f, .5, .15, i * .08)); },
   jackpot() { [262, 294, 330, 392, 440, 523].forEach((f, i) => pluck(f, .7, .14, i * .08)); },
   crackle() { noise(.012, .35, 0, 1900, 2.2); noise(.01, .22, .05, 1700, 2.2); },   // Keks knistert unter Druck
-  crack() {   // Keks bricht: mehrere trockene Splitter-Knacks + kurzer Körper + Krümel
-    noise(.016, .6, 0, 2000, 1.8); noise(.04, .35, 0, 900, 1.1); tone(190, .045, "sine", .22, 0, 120);
+  crack() {   // Keks bricht: mehrere trockene Splitter-Knacks + Krümel (ohne dumpfen Schlag)
+    noise(.016, .6, 0, 2000, 1.8);
     noise(.012, .45, .018, 2400, 2.2); noise(.014, .4, .034, 1700, 2);
     [.07, .095, .13, .16].forEach((t, i) => noise(.008, .14 - i * .025, t, 2100 + i * 150, 3));
   },
@@ -1792,7 +1792,7 @@ const CALM_SFX = {
   shuffle() { noise(.2, .14, 0, 900, .7); },
   click() { wood(700, .14); },
 };
-const CALM_LEVEL = {"tap":2.018,"add":0.684,"remove":1.175,"pick":1.274,"unpick":1.513,"open":0.923,"close":1.096,"card":2.265,"toggle":2.239,"fav":1.035,"unfav":1.95,"success":0.684,"coin":1.011,"ring":1.071,"whoosh":6.096,"bell":0.646,"denied":1.072,"lever":2.372,"tick":4.416,"stop":2.162,"win":0.767,"jackpot":0.785,"scratch":16.98,"shuffle":7.763,"click":2.57,"tab":1.396,"crack":2.692,"crackle":1.217};   // je Klang kalibriert
+const CALM_LEVEL = {"tap":2.018,"add":0.684,"remove":1.175,"pick":1.274,"unpick":1.513,"open":0.923,"close":1.096,"card":2.265,"toggle":2.239,"fav":1.035,"unfav":1.95,"success":0.684,"coin":1.011,"ring":1.071,"whoosh":6.026,"bell":0.646,"denied":1.072,"lever":2.372,"tick":4.416,"stop":2.162,"win":0.767,"jackpot":0.785,"scratch":17.376,"shuffle":8.512,"click":2.57,"tab":1.396,"crack":1.95,"crackle":1.719};   // je Klang kalibriert
 // Casino-Namen → ruhige Gegenstücke
 const CALM_MAP = { chip: "add", chipLight: "tap", chipOff: "remove", star: "fav", unstar: "unfav", cash: "coin", deal: "card", flip: "card", intro: "success", flutter: "whoosh" };
 
