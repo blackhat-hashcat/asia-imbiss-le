@@ -331,25 +331,27 @@ body.casino .cart .in.bump{box-shadow:0 0 24px rgba(255,182,39,.55),0 10px 30px 
 body.casino #cupBox{display:none}
 body:not(.casino) #slot{display:none}
 .cupbox{margin:12px 0;padding:14px;border-radius:24px;background:radial-gradient(120% 90% at 50% 0%,#3a1410,#1f0c0a 70%);border:1px solid rgba(255,182,39,.3);box-shadow:inset 0 0 40px rgba(0,0,0,.5)}
-.cupstage{position:relative;height:200px;display:grid;place-items:end center;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cup{position:relative;width:104px;height:176px;transform-origin:50% 90%}
-.cup.shake{animation:cupshake .2s ease-in-out infinite alternate}
-@keyframes cupshake{from{transform:rotate(-11deg) translateX(-4px)}to{transform:rotate(11deg) translateX(4px)}}
-.cupbody{position:absolute;left:0;right:0;bottom:0;height:120px;border-radius:10px 10px 18px 18px;background:repeating-linear-gradient(180deg,transparent 0 34px,rgba(0,0,0,.18) 34px 37px),linear-gradient(90deg,#8a4b16,#d08a3c 40%,#b06a26 70%,#7a3e10);box-shadow:inset 0 6px 10px rgba(0,0,0,.35),0 8px 16px rgba(0,0,0,.5);display:grid;place-items:center}
-.cupbody b{font-size:2rem;color:#c8102e;background:#f6e3b4;border-radius:8px;padding:2px 8px;font-family:serif;box-shadow:0 2px 4px rgba(0,0,0,.4)}
-.cupbody::before{content:"";position:absolute;top:-6px;left:-3px;right:-3px;height:14px;border-radius:50%;background:radial-gradient(ellipse,#3a1d08 55%,#a8641f 60%)}
-.stk{position:absolute;bottom:96px;width:7px;height:78px;border-radius:4px;background:linear-gradient(180deg,#c8102e 0 14px,#e8c98a 14px);box-shadow:0 1px 2px rgba(0,0,0,.4)}
-.stk:nth-child(1){left:20px;transform:rotate(-9deg)}.stk:nth-child(2){left:31px;height:86px;transform:rotate(-4deg)}.stk:nth-child(3){left:42px;height:72px}.stk:nth-child(4){left:52px;height:90px;transform:rotate(3deg)}.stk:nth-child(5){left:62px;height:76px;transform:rotate(6deg)}.stk:nth-child(6){left:72px;height:84px;transform:rotate(10deg)}.stk:nth-child(7){left:47px;height:66px;transform:rotate(-2deg)}
-.flystick{position:absolute;left:calc(50% - 6px);bottom:96px;width:12px;height:110px;border-radius:5px;background:linear-gradient(180deg,#c8102e 0 18px,#f1d9a0 18px);box-shadow:0 2px 6px rgba(0,0,0,.5);opacity:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px}
-.flystick span{writing-mode:vertical-rl;font-family:var(--num);font-weight:700;font-size:.7rem;color:#5a2a08}
-.flystick.out{animation:stickout 1.6s cubic-bezier(.2,.8,.3,1) forwards}
-.flystick.gold{background:linear-gradient(180deg,#ffe08a,#ffb627 50%,#d98a00);box-shadow:0 0 18px rgba(255,182,39,.8)}
-@keyframes stickout{0%{opacity:1;transform:translateY(40px)}35%{opacity:1;transform:translateY(-70px) rotate(0)}60%{transform:translate(70px,-20px) rotate(70deg)}100%{opacity:1;transform:translate(96px,40px) rotate(90deg)}}
+.cupstage{position:relative;height:200px;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cookie{position:relative;width:170px;height:140px;display:grid;place-items:center}
+.cookie .ck{position:absolute;font-size:7.5rem;line-height:1;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5));transition:transform .5s cubic-bezier(.2,1.4,.4,1),opacity .5s}
+.cookie .ck.l{clip-path:inset(0 50% 0 0)}
+.cookie .ck.r{clip-path:inset(0 0 0 50%)}
+.cookie.wobble{animation:wobble .14s ease-in-out infinite alternate}
+@keyframes wobble{from{transform:rotate(-7deg) scale(1)}to{transform:rotate(7deg) scale(1.04)}}
+.cookie.open .ck.l{transform:translate(-34px,8px) rotate(-24deg)}
+.cookie.open .ck.r{transform:translate(34px,8px) rotate(24deg)}
+.cookie.gold .ck{filter:drop-shadow(0 0 16px rgba(255,182,39,.9)) saturate(1.6) brightness(1.15) sepia(.4)}
+.crumbs i{position:absolute;left:50%;top:55%;width:6px;height:6px;border-radius:2px;background:#d9a441;animation:crumb .7s ease-out forwards}
+@keyframes crumb{to{transform:translate(var(--dx),var(--dy)) rotate(200deg);opacity:0}}
+.slip{position:absolute;left:50%;top:50%;width:150px;height:30px;margin:-15px 0 0 -75px;border-radius:3px;background:#fffaf0;box-shadow:0 3px 8px rgba(0,0,0,.4);display:grid;place-items:center;opacity:0;transform:scaleX(.1)}
+.slip span{font-family:var(--num);font-weight:700;color:#b81d2a;font-size:1rem;letter-spacing:.5px}
+.slip.gold{background:linear-gradient(180deg,#fff3c4,#ffd35a)}
+.slip.out{animation:slip .6s cubic-bezier(.2,1.3,.4,1) forwards}
+@keyframes slip{0%{opacity:1;transform:translateY(0) scaleX(.1)}100%{opacity:1;transform:translateY(-58px) scaleX(1) rotate(-3deg)}}
 .cupres{height:150px;margin-top:10px;border-radius:16px;background:rgba(0,0,0,.3);border:1px dashed rgba(255,182,39,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;overflow:hidden}
 .cupres .rhint{color:#e8c98a;font-weight:600}
 .cupres .pname{font-weight:800;font-size:1.05rem;color:#fff;margin:2px 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .cupres .pdesc{color:#d8bfa0;font-size:.85rem;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
-.cupsign{font-family:serif;color:#c8102e;background:#f6e3b4;border-radius:8px;padding:2px 12px;font-weight:700;font-size:.95rem;box-shadow:0 2px 6px rgba(0,0,0,.4);animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
 .cupj{font-family:var(--display);font-size:1.6rem;background:linear-gradient(180deg,#fff3c4,#ffb627 55%,#b86e00);-webkit-background-clip:text;background-clip:text;color:transparent}
 .cupbtn{flex:1.4;background:linear-gradient(180deg,#e0283a,#a50d1e);color:#fff;border:0;font-weight:800;font-size:1.05rem;box-shadow:0 5px 0 #5e0610;border-radius:16px}
 .cupbtn:active{transform:translateY(4px);box-shadow:0 1px 0 #5e0610}
@@ -606,13 +608,13 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <h2 class="title">Was esse ich heute?</h2>
     <p class="sub" id="zufallSub">Hebel ziehen und das Glück entscheiden lassen. Der Automat hält sich an deine Filter.</p>
     <div class="cupbox" id="cupBox">
-      <div class="cupstage" id="cupStage" role="button" aria-label="Becher schütteln">
-        <div class="cup" id="cup"><span class="stk"></span><span class="stk"></span><span class="stk"></span><span class="stk"></span><span class="stk"></span><span class="stk"></span><span class="stk"></span><div class="cupbody"><b>籤</b></div></div>
-        <div class="flystick" id="flyStick"><span id="flyNr"></span></div>
+      <div class="cupstage" id="cupStage" role="button" aria-label="Glückskeks knacken">
+        <div class="cookie" id="cookie"><span class="ck l">🥠</span><span class="ck r">🥠</span><div class="crumbs" id="crumbs"></div></div>
+        <div class="slip" id="slip"><span id="slipNr"></span></div>
       </div>
-      <div class="cupres" id="cupRes"><div class="rhint">Tipp auf den Becher und lass ein Glücksstäbchen fallen 🎋</div></div>
+      <div class="cupres" id="cupRes"><div class="rhint">Tipp auf den Glückskeks und knack ihn 🥠</div></div>
       <div class="slotbtns">
-        <button class="btn cupbtn" id="cupShake">🥢 Becher schütteln</button>
+        <button class="btn cupbtn" id="cupShake">🥠 Keks knacken</button>
         <button class="btn favtog" id="cupFav" aria-pressed="false">⭐ Nur Favoriten</button>
       </div>
       <button class="btn jade block hidden" id="cupTake">✅ Nehm ich</button>
@@ -1957,6 +1959,12 @@ function reelHTML(items) { return items.map(x => `<div${x === "🦇" || x === "7
 
 // ---------- Glücksstäbchen (Kau Cim): Zufall im normalen Modus ----------
 let cupBusy = false, cupFav = false, cupPick = null;
+const COOKIE_SAYS = [
+  "Dein Glück liegt in einer Schüssel.", "Wer zögert, isst später.", "Heute wartet etwas Knuspriges auf dich.",
+  "Ein guter Tag beginnt mit einem guten Mittagessen.", "Das Universum hat Hunger – und du auch.", "Hör auf deinen Bauch.",
+  "Große Taten brauchen große Portionen.", "Du triffst heute eine weise Entscheidung.", "Glück ist, wenn das Essen schon fertig ist.",
+  "Teile dein Essen – oder lieber nicht.", "Heute ist ein guter Tag für Neues.", "Deine Zukunft riecht köstlich.",
+];
 function shakeCup() {
   if (cupBusy) return;
   let pool = filtered({ q: "" });
@@ -1967,23 +1975,27 @@ function shakeCup() {
   const golden = Math.random() < 1 / 100 || (MOCK && QS.has("777"));   // geheimer Weg ins Casino
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   cupBusy = true; $("#cupShake").disabled = true; $("#cupTake").classList.add("hidden");
-  const cup = $("#cup"), st = $("#flyStick");
-  st.className = "flystick"; $("#flyNr").textContent = golden ? "7·7·7" : (cupPick.sayName ? "🥡" : cupPick.nr);
-  $("#cupRes").innerHTML = `<div class="rhint">🎋 Das Schicksal wird befragt …</div>`;
-  cup.classList.remove("shake"); void cup.offsetWidth; if (!reduce) cup.classList.add("shake");
-  let n = 0; const rattle = setInterval(() => { sfx("tick"); if (++n > 12) clearInterval(rattle); }, 95);
-  setTimeout(() => {
-    clearInterval(rattle); cup.classList.remove("shake");
-    st.classList.add("out"); if (golden) st.classList.add("gold"); sfx("stop");
-    try { navigator.vibrate && navigator.vibrate(golden ? [80, 60, 80, 60, 300] : 30); } catch {}
-  }, reduce ? 50 : 1350);
+  const ck = $("#cookie"), sl = $("#slip");
+  ck.className = "cookie" + (golden ? " gold" : ""); sl.className = "slip" + (golden ? " gold" : "");
+  $("#slipNr").textContent = golden ? "7 · 7 · 7" : (cupPick.sayName ? "🥡 Nudelbox" : cupPick.nr);
+  $("#crumbs").innerHTML = "";
+  $("#cupRes").innerHTML = `<div class="rhint">🥠 Knack …</div>`;
+  void ck.offsetWidth; if (!reduce) ck.classList.add("wobble");
+  sfx("tap");
+  setTimeout(() => {   // knacken
+    ck.classList.remove("wobble"); ck.classList.add("open");
+    $("#crumbs").innerHTML = Array.from({ length: 9 }, () => `<i style="--dx:${(Math.random() * 120 - 60).toFixed(0)}px;--dy:${(Math.random() * 60 + 20).toFixed(0)}px"></i>`).join("");
+    sfx("stop"); sfx("scratch");
+    try { navigator.vibrate && navigator.vibrate(golden ? [80, 60, 80, 60, 300] : 35); } catch {}
+  }, reduce ? 50 : 850);
+  setTimeout(() => { sl.classList.add("out"); sfx("whoosh"); }, reduce ? 80 : 1050);
   setTimeout(() => {
     cupBusy = false; $("#cupShake").disabled = false;
-    if (golden) { $("#cupRes").innerHTML = `<div class="jack cupj">7 · 7 · 7</div><div class="quip">„Ein goldenes Stäbchen … das Haus hat dich bemerkt.“</div>`; setTimeout(() => setCasino(true), 1500); return; }
+    if (golden) { $("#cupRes").innerHTML = `<div class="jack cupj">7 · 7 · 7</div><div class="quip">„Ein goldener Keks … das Haus hat dich bemerkt.“</div>`; setTimeout(() => setCasino(true), 1500); return; }
     const m = cupPick; sfx("win");
-    $("#cupRes").innerHTML = `<div class="cupsign">第 ${m.sayName ? "🥡" : esc(m.nr)} 籤</div><div class="pname">${m.sayName ? "" : `<span class="nrc">${esc(m.nr)}</span> · `}${esc(m.name)}</div>${m.desc ? `<div class="pdesc">${esc(m.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(m.price)}</b>${hotHTML(m.hot)}${m.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
+    $("#cupRes").innerHTML = `<div class="quip">„${pickOne(COOKIE_SAYS)}“</div><div class="pname">${m.sayName ? "" : `<span class="nrc">${esc(m.nr)}</span> · `}${esc(m.name)}</div>${m.desc ? `<div class="pdesc">${esc(m.desc)}</div>` : ""}<div class="meta" style="justify-content:center;margin-top:4px"><b style="color:var(--gold)">${eur(m.price)}</b>${hotHTML(m.hot)}${m.veg ? '<span class="badge-s veg">veggie</span>' : ""}</div>`;
     $("#cupTake").classList.remove("hidden");
-  }, reduce ? 300 : 2100);
+  }, reduce ? 300 : 1900);
 }
 let spinTicks = 0;
 function spin() {
@@ -2054,9 +2066,9 @@ function renderCasinoStatic() {
   const tb = $('.tabs [data-v="bestellung"]'); if (tb) tb.childNodes[1].nodeValue = C("Bestellung", "Spieltisch");
   const tk = $('.tabs [data-v="karte"] .e'); if (tk) tk.textContent = C("🍜", "🃏");
   const to = $('.tabs [data-v="bestellung"] .e'); if (to) to.textContent = C("🧾", "♠️");
-  const tz = $('.tabs [data-v="wuerfeln"] .e'); if (tz) tz.textContent = C("🎋", "🎰");
-  $("#zufallSub").textContent = C("Schüttel den Bambusbecher, bis ein Glücksstäbchen herausfällt. Es hält sich an deine Filter.", "Hebel ziehen und das Glück entscheiden lassen. Der Automat hält sich an deine Filter.");
-  const hb = $('.hero [data-go="wuerfeln"]'); if (hb) hb.textContent = C("🎋 Ich weiß nicht, was ich will", "🎰 Ich weiß nicht, was ich will");
+  const tz = $('.tabs [data-v="wuerfeln"] .e'); if (tz) tz.textContent = C("🥠", "🎰");
+  $("#zufallSub").textContent = C("Knack einen Glückskeks – auf dem Zettel steht dein Gericht. Er hält sich an deine Filter.", "Hebel ziehen und das Glück entscheiden lassen. Der Automat hält sich an deine Filter.");
+  const hb = $('.hero [data-go="wuerfeln"]'); if (hb) hb.textContent = C("🥠 Ich weiß nicht, was ich will", "🎰 Ich weiß nicht, was ich will");
 }
 function renderChrome() {
   renderCasinoStatic();
