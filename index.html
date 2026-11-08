@@ -1308,7 +1308,7 @@ function renderLiveBox() {
       <button class="btn sm red" data-act="shareGroup" aria-label="Gruppe einladen">📤 Einladen</button></div>
       ${isStale() && people().length ? `<div class="warn" style="margin:6px 0 0">🕓 <span>Das ist noch die Runde von ${new Date(round.started).toLocaleDateString("de-DE", { weekday: "long" })}. Sobald jemand etwas hinzufügt, startet automatisch eine neue.</span></div>` : ""}</div>`;
   } else if (liveCapable) {
-    el.innerHTML = `<div class="card"><h3>⚡ Live-Gruppe</h3><p style="color:var(--muted);margin:-4px 0 10px;font-size:.92rem">Ein fester Link für eure Gruppe. Jeder trägt sich ein, alle sehen es sofort. Kein Link-Weiterschicken mehr.</p><button class="btn red block" data-act="createLive">Live-Gruppe erstellen</button></div>`;
+    el.innerHTML = `<div class="card"><h3>⚡ Live-Gruppe</h3><p style="color:var(--muted);margin:-4px 0 10px;font-size:.92rem">Ein fester Link für eure Gruppe. Jeder trägt sich ein, alle sehen es sofort.</p><button class="btn red block" data-act="createLive">Live-Gruppe erstellen</button></div>`;
   } else el.innerHTML = "";
 }
 function fmtLeft(ms) { const s = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
