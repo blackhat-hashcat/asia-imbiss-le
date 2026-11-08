@@ -798,8 +798,8 @@ const MAXP = Math.ceil(Math.max(...MENU.map(m => m.price)));
 // Zutaten-Filter: sucht in der ganzen Karte (Name + Beschreibung), mehrere = "oder"
 const MEAT = [
   { id: "huhn", label: "🐔 Huhn", re: /huhn|huhner|hahnchen/ },
-  { id: "rind", label: "🐄 Rind", re: /rind/ },
   { id: "ente", label: "🦆 Ente", re: /\bente|entenfleisch|entfleisch/ },
+  { id: "rind", label: "🐄 Rind", re: /rind/ },
   { id: "schwein", label: "🐖 Schwein", re: /schwein/ },
   { id: "meer", label: "🦐 Garnelen", re: /garnele|krabbe|hummer/ },
   { id: "fisch", label: "🐟 Fisch", re: /fisch/ },
@@ -1136,7 +1136,8 @@ function chipsHTML(sel, list, attr, onCls = "") {
   return list.map(x => `<button class="chip ${onCls} ${sel(x.id) ? "on" : ""}" data-${attr}="${esc(x.id)}">${x.label}</button>`).join("");
 }
 // Gerichtsarten in der Leiste: ohne die Fleisch-/Veggie-Kategorien (die laufen über die Zutaten-Chips)
-const TYPE_CATS = CATS.filter(c => !["Hühnerfleisch", "Rindfleisch", "Ente", "Schweinefleisch", "Meeresfrüchte", "Vegetarisch"].includes(c.id));
+const TYPE_ORDER = ["Gebratener Reis", "Gebratene Nudeln", "Spezialitäten", "Nudelbox", "Suppen", "Vorspeisen", "Beilagen", "Desserts"];   // Hauptgerichte → Kleines → Extras
+const TYPE_CATS = TYPE_ORDER.map(id => CATS.find(c => c.id === id)).filter(Boolean);
 const TYPE_SHORT = { "Gebratener Reis": "Reis", "Gebratene Nudeln": "Nudeln" };
 let stripResort = true, stripOrd = { ing: null, typ: null };
 function ordered(key, items) {   // Ausgewähltes nach vorne – aber nur beim Öffnen/Tab-Wechsel, nie während man tippt
