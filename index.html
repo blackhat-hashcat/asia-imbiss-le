@@ -1433,52 +1433,60 @@ function orderText() {
 // ---------- Casino-Sound (wird im Browser erzeugt, keine Dateien) ----------
 let SOUND = store.get("sound", true), AC = null, MASTER = null;
 function audio() {
-  if (!AC) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; AC = new A(); MASTER = AC.createGain(); MASTER.gain.value = .85; MASTER.connect(AC.destination); }
+  if (!AC) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; AC = new A(); MASTER = AC.createGain(); MASTER.gain.value = .85; const LIM = AC.createDynamicsCompressor(); LIM.threshold.value = -3; LIM.knee.value = 3; LIM.ratio.value = 20; LIM.attack.value = .001; LIM.release.value = .1; MASTER.connect(LIM); LIM.connect(AC.destination); }
   if (AC.state === "suspended") AC.resume();
   return AC;
 }
 addEventListener("pointerdown", () => { if (CASINO && SOUND) audio(); }, { passive: true });   // iOS: Ton erst nach erster Berührung
+let OUT = null;   // Ziel des aktuell spielenden Effekts (eigener Pegel pro Sound)
 function tone(f, d = .12, type = "sine", vol = .25, at = 0, f2 = 0) {
   const a = audio(); if (!a) return; const t = a.currentTime + at;
   const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f, t);
   if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
-  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .005); g.gain.exponentialRampToValueAtTime(.0001, t + d);
-  o.connect(g); g.connect(MASTER); o.start(t); o.stop(t + d + .02);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .006); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  o.connect(g); g.connect(OUT || MASTER); o.start(t); o.stop(t + d + .03);
 }
-function noise(d = .06, vol = .2, at = 0, hp = 2000) {
+// Glocke/Münze: Grundton + leise Obertöne, klingt weich statt "8-Bit"
+function bell(f, d = .4, vol = .2, at = 0) { tone(f, d, "sine", vol, at); tone(f * 2.76, d * .5, "sine", vol * .28, at); tone(f * 5.4, d * .25, "sine", vol * .12, at); }
+// gefiltertes Rauschen mit weichem Einsatz (kein Knacken)
+function noise(d = .06, vol = .2, at = 0, freq = 2500, q = 1.2) {
   const a = audio(); if (!a) return; const t = a.currentTime + at;
-  const b = a.createBuffer(1, Math.ceil(a.sampleRate * d), a.sampleRate), ch = b.getChannelData(0);
-  for (let i = 0; i < ch.length; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / ch.length);
-  const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); src.buffer = b; f.type = "highpass"; f.frequency.value = hp;
-  g.gain.value = vol; src.connect(f); f.connect(g); g.connect(MASTER); src.start(t);
+  const len = Math.ceil(a.sampleRate * d), b = a.createBuffer(1, len, a.sampleRate), ch = b.getChannelData(0);
+  for (let i = 0; i < len; i++) ch[i] = Math.random() * 2 - 1;
+  const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); src.buffer = b; f.type = "bandpass"; f.frequency.value = freq; f.Q.value = q;
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .004); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  src.connect(f); f.connect(g); g.connect(OUT || MASTER); src.start(t); src.stop(t + d + .02);
 }
 const SFX = {
-  chip() { noise(.04, .35, 0, 3000); tone(2400, .05, "triangle", .12, .01); noise(.03, .25, .06, 3500); },
-  lever() { tone(180, .25, "sawtooth", .12, 0, 60); noise(.12, .15, 0, 800); },
-  tick() { tone(1500, .025, "square", .05); },
-  stop() { tone(130, .12, "sine", .35, 0, 70); noise(.05, .2, 0, 1500); },
-  win() { [523, 659, 784].forEach((f, i) => tone(f, .18, "triangle", .2, i * .09)); },
-  jackpot() { [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => tone(f, .22, "square", .1, i * .1)); for (let i = 0; i < 10; i++) tone(2000 + Math.random() * 2500, .08, "sine", .06, .5 + i * .07); },
-  coin() { tone(1800, .06, "square", .07); tone(2700, .12, "square", .06, .05); },
-  scratch() { noise(.05, .08, 0, 1200); },
-  intro() { [262, 330, 392, 523, 659, 784, 1047].forEach((f, i) => tone(f, .25, "triangle", .16, i * .08)); tone(1047, .9, "sine", .12, .6); },
-  bell() { tone(880, 1.2, "sine", .25); tone(1320, 1, "sine", .1, .01); tone(660, 1.3, "sine", .2, .45); },
-  denied() { tone(160, .18, "square", .12); tone(120, .25, "square", .12, .16); },
-  click() { tone(900, .03, "square", .05); },
-  card() { noise(.07, .22, 0, 2500); tone(700, .04, "triangle", .05, .02); },                     // Karte umdrehen
-  flip() { noise(.05, .18, 0, 3500); },                                                             // leises Kartenwischen
-  chipLight() { noise(.025, .25, 0, 3500); tone(2900, .03, "triangle", .07); },                   // einzelner Chip
-  chipOff() { noise(.03, .25, 0, 2000); tone(1300, .05, "triangle", .08); },                       // Chip wegnehmen
-  star() { tone(1568, .1, "sine", .12); tone(2093, .18, "sine", .1, .07); },                        // Favorit
-  unstar() { tone(1046, .12, "sine", .08); },
-  cash() { noise(.05, .2, 0, 2500); [1319, 1760, 2637].forEach((f, i) => tone(f, .12, "square", .06, .05 + i * .06)); },  // Kasse
-  ring() { for (let i = 0; i < 2; i++) { tone(1200, .09, "square", .06, i * .2); tone(1500, .09, "square", .06, i * .2 + .1); } },
-  whoosh() { noise(.25, .12, 0, 600); tone(300, .25, "sine", .05, 0, 900); },
-  shuffle() { for (let i = 0; i < 6; i++) noise(.03, .2, i * .045, 3000); },
-  open() { tone(520, .08, "triangle", .07); tone(780, .1, "triangle", .06, .05); },
-  close() { tone(780, .07, "triangle", .06); tone(520, .09, "triangle", .05, .05); },
-  toggle() { tone(1200, .04, "square", .05); tone(1600, .04, "square", .04, .04); },
+  chip() { noise(.035, .5, 0, 3200, 2.5); tone(2600, .04, "triangle", .1, .004); noise(.03, .35, .055, 3600, 2.5); },
+  chipLight() { noise(.03, .45, 0, 3400, 2.5); tone(2900, .035, "triangle", .08, .004); },
+  chipOff() { noise(.035, .45, 0, 2200, 2); tone(1500, .05, "triangle", .08, .004); },
+  card() { noise(.08, .35, 0, 1800, .9); noise(.05, .2, .03, 3200, 1.5); },
+  flip() { noise(.06, .3, 0, 2600, 1.1); },
+  lever() { noise(.14, .3, 0, 700, 1); tone(220, .2, "triangle", .12, 0, 90); },
+  tick() { noise(.012, .4, 0, 4000, 4); },
+  stop() { tone(150, .14, "sine", .4, 0, 80); noise(.04, .25, 0, 1200, 1.5); },
+  win() { [659, 784, 988].forEach((f, i) => bell(f, .45, .16, i * .09)); },
+  jackpot() { [523, 659, 784, 1047, 1319].forEach((f, i) => bell(f, .55, .14, i * .09)); bell(1568, 1, .12, .5); for (let i = 0; i < 8; i++) bell(2200 + Math.random() * 1600, .2, .035, .55 + i * .08); },
+  coin() { bell(1760, .35, .14); bell(2637, .45, .1, .06); },
+  scratch() { noise(.06, .18, 0, 1600, .8); },
+  intro() { [392, 523, 659, 784, 1047].forEach((f, i) => bell(f, .5, .12, i * .1)); bell(1568, 1.3, .1, .55); },
+  bell() { bell(880, 1.4, .22); bell(660, 1.4, .18, .45); },
+  denied() { tone(220, .16, "triangle", .2); tone(165, .24, "triangle", .2, .14); },
+  click() { noise(.015, .35, 0, 3000, 3); },
+  star() { bell(1568, .3, .12); bell(2093, .45, .1, .07); },
+  unstar() { bell(1175, .25, .1); },
+  cash() { noise(.04, .25, 0, 2500, 2); bell(1319, .3, .1, .05); bell(1760, .3, .1, .11); bell(2637, .5, .1, .17); },
+  ring() { for (let i = 0; i < 2; i++) { bell(1320, .12, .1, i * .22); bell(1660, .12, .1, i * .22 + .08); } },
+  whoosh() { const a = audio(); if (!a) return; noise(.3, .25, 0, 900, .7); tone(320, .28, "sine", .06, 0, 880); },
+  shuffle() { for (let i = 0; i < 6; i++) noise(.035, .3, i * .045, 2400 + i * 150, 1.3); },
+  open() { bell(660, .16, .09); bell(990, .2, .08, .05); },
+  close() { bell(990, .14, .08); bell(660, .18, .07, .05); },
+  toggle() { noise(.012, .3, 0, 3200, 3); tone(1400, .04, "triangle", .06, .004); },
 };
+// Pegel je Sound (aus Messung kalibriert, siehe Tests): Bedien-Klicks leise, Belohnungen lauter
+const SFX_LEVEL = {"click": 6.84, "toggle": 8.709, "tick": 5.624, "flip": 7.328, "open": 1.819, "close": 1.884, "card": 5.012, "chipLight": 8.222, "chipOff": 8.036, "chip": 3.758, "scratch": 11.75, "coin": 1.884, "star": 1.778, "unstar": 3.349, "cash": 1.567, "ring": 1.862, "whoosh": 4.365, "shuffle": 1.928, "lever": 5.012, "stop": 2.018, "denied": 1.319, "win": 1.318, "jackpot": 1.778, "intro": 1.972, "bell": 1.259};
+
 // Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
 const BTN_SFX = [
   ["[data-add],#spin,#lever,[data-wheel],.sndbtn,[data-soundrow],[data-musicrow],#casinoTog", null],
@@ -1502,7 +1510,7 @@ document.addEventListener("click", e => {
     sfx(name); return;
   }
 }, true);
-function sfx(name, force) { if (!SOUND || (!CASINO && !force)) return; try { SFX[name](); } catch {} }
+function sfx(name, force) { if (!SOUND || (!CASINO && !force)) return; const a = audio(); if (!a) return; try { const g = a.createGain(); g.gain.value = SFX_LEVEL[name] || 1; g.connect(MASTER); OUT = g; SFX[name](); } catch {} finally { OUT = null; } }
 function setSound(v) { SOUND = v; store.set("sound", v); if (v) { audio(); sfx("click", true); } musicSync(); renderSoundBtns(); }
 function renderSoundBtns() { $$("[data-sound]").forEach(b => { b.textContent = SOUND ? "🔊" : "🔇"; b.setAttribute("aria-label", SOUND ? "Ton aus" : "Ton an"); }); $$("[data-music]").forEach(b => { b.textContent = "🎵"; b.classList.toggle("off", !(MUSIC && SOUND)); b.setAttribute("aria-label", MUSIC ? "Musik aus" : "Musik an"); }); }
 
