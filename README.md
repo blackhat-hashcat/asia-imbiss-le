@@ -68,3 +68,6 @@ Testen ohne Firebase: `index.html?mock` simuliert die Live-Gruppe lokal im Brows
 2. Jeder Push veröffentlicht automatisch über `.github/workflows/pages.yml`.
 
 Lokal testen: `python3 -m http.server` und dann http://localhost:8000 öffnen.
+
+
+Glückskeks-Bild (`img/keks.webp`): aus [Noto Emoji](https://github.com/googlefonts/noto-emoji) von Google, Lizenz Apache 2.0.

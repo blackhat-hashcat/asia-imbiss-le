@@ -337,6 +337,7 @@ body:not(.casino) #slot{display:none}
 .cookie .ck.l,.cookie .ck.r{opacity:0}
 .cookie.open .ck.l,.cookie.open .ck.r{opacity:1}
 .cookie.open .ck.w{opacity:0}
+.cookie .ck img{display:block;width:170px;height:150px;-webkit-user-select:none;user-select:none;pointer-events:none}
 .cookie .ck b{position:absolute;inset:0;display:grid;place-items:center;font-weight:normal}
 .cookie .ck.l{transform-origin:35% 70%}
 .cookie .ck.l b{clip-path:polygon(-35.3% -40.0%, 60.0% -40.0%, 60.0% 4.0%, 58.2% 10.7%, 61.2% 16.7%, 57.1% 22.7%, 59.4% 28.7%, 54.7% 34.0%, 56.5% 40.0%, 51.2% 44.7%, 52.4% 50.7%, 47.1% 54.7%, 47.6% 59.3%, 40.6% 64.7%, 40.6% 140.0%, -35.3% 140.0%)}
@@ -622,7 +623,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <p class="sub" id="zufallSub">Hebel ziehen und das Glück entscheiden lassen. Der Automat hält sich an deine Filter.</p>
     <div class="cupbox" id="cupBox">
       <div class="cupstage" id="cupStage" role="button" aria-label="Glückskeks knacken">
-        <div class="cookie" id="cookie"><span class="ck w">🥠</span><span class="ck l"><b>🥠</b></span><span class="ck r"><b>🥠</b></span><svg class="crack" viewBox="0 0 170 150" aria-hidden="true"><polyline points="102,6 99,16 104,25 97,34 101,43 93,51 96,60 87,67 89,76 80,82 81,89 69,97"/></svg><div class="crumbs" id="crumbs"></div></div>
+        <div class="cookie" id="cookie"><span class="ck w"><img src="img/keks.webp" alt="" width="170" height="150" draggable="false"></span><span class="ck l"><b><img src="img/keks.webp" alt="" width="170" height="150" draggable="false"></b></span><span class="ck r"><b><img src="img/keks.webp" alt="" width="170" height="150" draggable="false"></b></span><svg class="crack" viewBox="0 0 170 150" aria-hidden="true"><polyline points="102,6 99,16 104,25 97,34 101,43 93,51 96,60 87,67 89,76 80,82 81,89 69,97"/></svg><div class="crumbs" id="crumbs"></div></div>
         <div class="slip" id="slip"><span id="slipNr"></span></div>
       </div>
       <div class="cupres" id="cupRes"><div class="rhint">Tipp auf den Glückskeks und knack ihn 🥠</div></div>
