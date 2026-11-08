@@ -796,12 +796,12 @@ const NO = NO_ALL.filter(n => n.g === "al").filter(n => MENU.some(m => hasAl(m, 
   .map(n => ({ ...n, test: m => !hasAl(m, n.codes) && optOk(m, n.codes) }));
 const MAXP = Math.ceil(Math.max(...MENU.map(m => m.price)));
 // Zutaten-Filter: sucht in der ganzen Karte (Name + Beschreibung), mehrere = "oder"
-const MEAT = [
+const MEAT = [   // Reihenfolge: typische Beliebtheit am Asia-Imbiss
   { id: "huhn", label: "🐔 Huhn", re: /huhn|huhner|hahnchen/ },
   { id: "ente", label: "🦆 Ente", re: /\bente|entenfleisch|entfleisch/ },
   { id: "rind", label: "🐄 Rind", re: /rind/ },
-  { id: "schwein", label: "🐖 Schwein", re: /schwein/ },
   { id: "meer", label: "🦐 Garnelen", re: /garnele|krabbe|hummer/ },
+  { id: "schwein", label: "🐖 Schwein", re: /schwein/ },
   { id: "fisch", label: "🐟 Fisch", re: /fisch/ },
 ];
 MENU.forEach(m => { const t = norm(m.name + " " + m.desc); m.meat = MEAT.filter(x => x.re.test(t)).map(x => x.id); });
