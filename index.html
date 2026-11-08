@@ -2022,7 +2022,7 @@ function shakeCup() {
     sfx("crack");
     try { navigator.vibrate && navigator.vibrate(golden ? [80, 60, 80, 60, 300] : 35); } catch {}
   }, reduce ? 50 : 980);
-  setTimeout(() => { sl.classList.add("out"); sfx("whoosh"); }, reduce ? 80 : 1180);
+  setTimeout(() => { sl.classList.add("out"); }, reduce ? 80 : 1180);
   setTimeout(() => {
     cupBusy = false; $("#cupShake").disabled = false;
     if (golden) { $("#cupRes").innerHTML = `<div class="jack cupj">7 · 7 · 7</div><div class="quip">„Ein goldener Keks … das Haus hat dich bemerkt.“</div>`; setTimeout(() => setCasino(true), 1500); return; }
