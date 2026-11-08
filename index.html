@@ -1281,7 +1281,7 @@ function spinWheel(kind) {
   const w = $("#wheel"); w.style.transition = reduce ? "none" : "transform 4.6s cubic-bezier(.12,.75,.12,1)"; w.style.transform = `rotate(${wheelRot}deg)`;
   $("#rres").innerHTML = `🎡 ${kind === "caller" ? "Wer muss telefonieren …" : "Wer übernimmt die Bank …"}`;
   $$("[data-wheel]").forEach(b => b.disabled = true);
-  sfx("whoosh"); let tick = 0;
+  let ticks = 0, iv = 60; const tickFn = () => { buzz(); sfx("tick"); if (++ticks < 40 && wheelSpinning) { iv *= 1.075; tick = setTimeout(tickFn, iv); } }; let tick = setTimeout(tickFn, iv);
   setTimeout(() => {
     wheelSpinning = false; clearTimeout(tick);
     if (kind === "payer") { payChoose = false; if (winner === me) bumpFlag("payer", true); patchRound({ payer: winner }); }
@@ -1534,10 +1534,10 @@ const SFX = {
   cash() { noise(.04, .25, 0, 2500, 2); bell(1319, .3, .1, .05); bell(1760, .3, .1, .11); bell(2637, .5, .1, .17); },
   ring() { for (let i = 0; i < 2; i++) { bell(1320, .12, .1, i * .22); bell(1660, .12, .1, i * .22 + .08); } },
   whoosh() { const a = audio(); if (!a) return; noise(.3, .25, 0, 900, .7); tone(320, .28, "sine", .06, 0, 880); },
-  shuffle() { noise(.22, .32, 0, 1800, .7); },
+  shuffle() { for (let i = 0; i < 6; i++) noise(.035, .3, i * .045, 2400 + i * 150, 1.3); },
   open() { bell(660, .16, .09); bell(990, .2, .08, .05); },
   close() { bell(990, .14, .08); bell(660, .18, .07, .05); },
-  flutter() { noise(.7, .22, 0, 900, .6); },
+  flutter() { for (let i = 0; i < 14; i++) noise(.03, .3, i * .055 + Math.random() * .02, 1100 + Math.random() * 500, 1.2); },
   pick() { tone(880, .09, "sine", .16); tone(1320, .12, "sine", .07, .03); },
   unpick() { tone(660, .09, "sine", .14); },
   toggle() { noise(.012, .3, 0, 3200, 3); tone(1400, .04, "triangle", .06, .004); },
@@ -1551,11 +1551,11 @@ const BTN_SFX = [
   [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
   ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
   ["[data-c],[data-rmf],[data-f],[data-all],[data-clring],[data-meatc],[data-vegc]", "pickT"], ["[data-fav]", "fav"],
-  ["[data-t],[data-meat],[data-sp],[data-no]", "pickT"], ["[data-opt],[data-qn],[data-mode]", "toggle"],
+  ["[data-t],[data-meat],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
   ["[data-paid]", "cash"], ["[data-payer],[data-paymode],[data-cover],[data-unby],#waBtn,.paybtn", "coin"],
   ["#callBtn,#callBtn2", "ring"], ["[data-act=shareGroup],#share,#copyText,[data-act=createLive]", "whoosh"],
   ["#reset,#resReset,#emptyReset,#fReset", "shuffle"],
-  ["[data-dl],[data-dlset],[data-dledit]", "toggle"], ["#takeIt,#repeatLast,#lastQuickBtn,[data-copy],#addBtn", "chip"],
+  ["[data-dl],[data-dlset],[data-dledit]", "tick"], ["#takeIt,#repeatLast,#lastQuickBtn,[data-copy],#addBtn", "chip"],
   ["[data-filter],#whoBtn,[data-go],summary", "open"], ["#lbClose,#qClr,[value=cancel]", "close"],
   ["button,a.btn,.chip", "click"],
 ];
@@ -1845,7 +1845,7 @@ function spin() {
   pick = pool[Math.floor(Math.random() * pool.length)];
   spinning = true; $("#spin").disabled = true; $("#takeIt").classList.add("hidden");
   const slot = $("#slot"); slot.classList.remove("win"); slot.classList.add("spinning");
-  sfx("lever");
+  sfx("lever"); spinTicks = setInterval(() => sfx("tick"), 90);
   const lev = $("#lever"); lev.classList.add("pulled"); setTimeout(() => lev.classList.remove("pulled"), 350);
   $("#dice").innerHTML = `<div class="rhint">🎰 Rien ne va plus …</div>`;
   const rnd = a => a[Math.floor(Math.random() * a.length)];
