@@ -346,7 +346,7 @@ label.lb{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margi
 .qsel{display:flex;align-items:center;gap:14px;justify-content:center;margin:14px 0}
 .qsel .qn{font-size:1.6rem;min-width:30px}
 .quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.quick button{font-size:.8rem;padding:5px 10px;border-radius:999px;background:var(--s3);color:var(--muted);font-weight:600}
+.quick button{font-size:.82rem;padding:8px 12px;min-height:34px;border-radius:999px;background:var(--s3);color:var(--muted);font-weight:600}
 #lightbox{width:100vw;height:100dvh}
 #lightbox .lb-in{width:100vw;height:100dvh;overflow:auto;overscroll-behavior:contain;background:#000}
 #lightbox img{display:block;width:100%;max-width:720px;margin:0 auto;transition:width .2s}
@@ -392,6 +392,8 @@ body.casino .sech h3{background-size:200% 100%;animation:shimmer 4s linear infin
 .rres{text-align:center;color:var(--muted);margin:8px 0 2px;min-height:1.4em}
 .rres b{color:var(--gold)}
 [data-wheel]:disabled{opacity:.55}
+[data-wheel]{white-space:nowrap}
+@media (max-width:400px){[data-wheel]{font-size:.9rem;padding:12px 8px}.seg.two button{font-size:.8rem;white-space:nowrap;padding:11px 2px}}
 /* Rubbellos */
 .scratch{position:relative;margin:12px 0 0;border-radius:18px;overflow:hidden;border:2px dashed rgba(255,182,39,.6);background:linear-gradient(135deg,#123622,#0b2417);min-height:120px}
 .sc-under{padding:14px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
@@ -458,10 +460,10 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
 .bar.thin{height:6px;margin-top:12px}
 .bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--gold),var(--red));transition:width .6s}
 .barlbl{color:var(--muted);font-size:.82rem}
-.linkb{color:var(--gold);font-weight:700;font-size:.82rem;padding:0}
+.linkb{color:var(--gold);font-weight:700;font-size:.82rem;padding:7px 12px;margin-top:6px;border:1px solid rgba(255,182,39,.45);border-radius:999px;background:rgba(255,182,39,.08);min-height:34px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
 .stats div{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:10px 4px;text-align:center}
-.stats b{display:block;font-family:var(--display);font-size:1.2rem;color:var(--ink);font-weight:400}
+.stats b{display:block;font-family:var(--num);font-size:1.15rem;color:var(--ink);font-weight:700}
 .stats b small{font-size:.7rem;color:var(--dim)}
 .stats span{font-size:.68rem;color:var(--muted)}
 .favline{margin-top:12px;font-size:.92rem;color:var(--muted)}
@@ -1185,7 +1187,7 @@ function renderRoulette() {
         <i class="hub">🎲</i>
       </div></div>
     <div class="rres" id="rres">${round.caller ? `📞 <b>${esc(round.caller)}</b> ruft an` : ""}${round.caller && round.payer ? " · " : ""}${round.payer ? `🏦 <b>${esc(round.payer)}</b> ist die Bank` : ""}${!round.caller && !round.payer ? "Lass das Rad entscheiden." : ""}</div>
-    <div class="btns"><button class="btn red" data-wheel="caller">📞 Wer ruft an?</button><button class="btn gold" data-wheel="payer">🏦 Wer ist die Bank?</button></div>`;
+    <div class="btns"><button class="btn red" data-wheel="caller">📞 Wer ruft an?</button><button class="btn gold" data-wheel="payer">🏦 Wer zahlt?</button></div>`;
 }
 function spinWheel(kind) {
   if (wheelSpinning) return;
@@ -1415,7 +1417,43 @@ const SFX = {
   bell() { tone(880, 1.2, "sine", .25); tone(1320, 1, "sine", .1, .01); tone(660, 1.3, "sine", .2, .45); },
   denied() { tone(160, .18, "square", .12); tone(120, .25, "square", .12, .16); },
   click() { tone(900, .03, "square", .05); },
+  card() { noise(.07, .22, 0, 2500); tone(700, .04, "triangle", .05, .02); },                     // Karte umdrehen
+  flip() { noise(.05, .18, 0, 3500); },                                                             // leises Kartenwischen
+  chipLight() { noise(.025, .25, 0, 3500); tone(2900, .03, "triangle", .07); },                   // einzelner Chip
+  chipOff() { noise(.03, .25, 0, 2000); tone(1300, .05, "triangle", .08); },                       // Chip wegnehmen
+  star() { tone(1568, .1, "sine", .12); tone(2093, .18, "sine", .1, .07); },                        // Favorit
+  unstar() { tone(1046, .12, "sine", .08); },
+  cash() { noise(.05, .2, 0, 2500); [1319, 1760, 2637].forEach((f, i) => tone(f, .12, "square", .06, .05 + i * .06)); },  // Kasse
+  ring() { for (let i = 0; i < 2; i++) { tone(1200, .09, "square", .06, i * .2); tone(1500, .09, "square", .06, i * .2 + .1); } },
+  whoosh() { noise(.25, .12, 0, 600); tone(300, .25, "sine", .05, 0, 900); },
+  shuffle() { for (let i = 0; i < 6; i++) noise(.03, .2, i * .045, 3000); },
+  open() { tone(520, .08, "triangle", .07); tone(780, .1, "triangle", .06, .05); },
+  close() { tone(780, .07, "triangle", .06); tone(520, .09, "triangle", .05, .05); },
+  toggle() { tone(1200, .04, "square", .05); tone(1600, .04, "square", .04, .04); },
 };
+// Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
+const BTN_SFX = [
+  ["[data-add],#spin,#lever,[data-wheel],.sndbtn,[data-soundrow],[data-musicrow],#casinoTog", null],
+  [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
+  ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
+  ["[data-c],[data-rmf],[data-f]", "chipLight"], ["[data-fav]", "fav"],
+  ["[data-t],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
+  ["[data-paid]", "cash"], ["[data-payer],[data-paymode],#waBtn,.paybtn", "coin"],
+  ["#callBtn,#callBtn2", "ring"], ["[data-act=shareGroup],#share,#copyText,[data-act=createLive]", "whoosh"],
+  ["#reset,#resReset,#emptyReset,#fReset", "shuffle"],
+  ["[data-dl],[data-dlset],[data-dledit]", "tick"], ["#takeIt,#repeatLast,#lastQuickBtn,[data-copy],#addBtn", "chip"],
+  ["[data-filter],#whoBtn,[data-go],summary", "open"], ["#lbClose,#qClr,[value=cancel]", "close"],
+  ["button,a.btn,.chip", "click"],
+];
+document.addEventListener("click", e => {
+  if (!CASINO || !SOUND) return;
+  for (const [sel, name] of BTN_SFX) {
+    const el = e.target.closest(sel); if (!el) continue;
+    if (!name) return;
+    if (name === "fav") { sfx(favs.has(el.dataset.fav) ? "unstar" : "star"); return; }   // vor dem Umschalten: aktueller Zustand
+    sfx(name); return;
+  }
+}, true);
 function sfx(name, force) { if (!SOUND || (!CASINO && !force)) return; try { SFX[name](); } catch {} }
 function setSound(v) { SOUND = v; store.set("sound", v); if (v) { audio(); sfx("click", true); } musicSync(); renderSoundBtns(); }
 function renderSoundBtns() { $$("[data-sound]").forEach(b => { b.textContent = SOUND ? "🔊" : "🔇"; b.setAttribute("aria-label", SOUND ? "Ton aus" : "Ton an"); }); $$("[data-music]").forEach(b => { b.textContent = "🎵"; b.classList.toggle("off", !(MUSIC && SOUND)); b.setAttribute("aria-label", MUSIC ? "Musik aus" : "Musik an"); }); }
