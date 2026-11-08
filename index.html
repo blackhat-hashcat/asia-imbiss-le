@@ -92,6 +92,19 @@ h2.title{font-family:var(--display);font-size:1.5rem;margin:22px 0 4px;letter-sp
 .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .chip.cat.on{background:var(--gold);color:#2b1b00;border-color:var(--gold)}
 .chip.ing.on{background:var(--jade);color:#05261d;border-color:var(--jade)}
+.strip2{display:flex;flex-direction:column}
+.chips.srow2{padding:3px 16px 3px 0;gap:6px;align-items:center}
+.chips.srow2:first-child{padding-top:8px}
+.rlab{position:sticky;left:0;z-index:1;flex:none;width:80px;padding:0 4px 0 16px;align-self:stretch;display:flex;align-items:center;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);background:var(--rlbg,#100c0b)}
+.rlab::after{content:"";position:absolute;top:0;bottom:0;right:-14px;width:14px;background:linear-gradient(90deg,var(--rlbg,#100c0b),transparent);pointer-events:none}
+.rlab + .chip{margin-left:10px}
+#dCats .rlab{--rlbg:var(--s1)}
+body.casino #dCats .rlab{--rlbg:#0b2417}
+.srow2 .chip{padding:6px 11px;font-size:.84rem}
+.srow2 .chip.ing{border-radius:999px}
+.srow2 .chip.cat{border-radius:10px}
+.chip.clr2{padding:6px 10px;color:var(--muted)}
+#dCats .chips.srow2{margin:0 -16px}
 .srow{display:flex;gap:8px;align-items:stretch}
 .srow .sbox{flex:1;min-width:0}
 .fbtn{flex:none;display:flex;align-items:center;gap:6px;padding:0 14px;border-radius:14px;border:1px solid var(--line);background:var(--s1);font-weight:700;font-size:.92rem;position:relative}
@@ -533,7 +546,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
         </div>
         <button class="fbtn" data-filter aria-label="Filter">⚙️<span>Filter</span><span class="n hidden" id="fCount"></span></button>
       </div>
-      <div class="chips" id="cats"></div>
+      <div id="cats" class="strip2"></div>
     </div>
 
     <div id="scratchWrap"></div>
@@ -571,8 +584,7 @@ body.casino .who{border-color:rgba(255,182,39,.5);color:var(--gold);font-family:
     <div class="card">
       <h3><span>Worauf hast du Lust?</span><button class="btn sm" data-filter>⚙️ Filter <span class="n hidden" id="fCount2" style="background:var(--gold);color:#2b1b00;border-radius:999px;font-size:.72rem;padding:1px 7px"></span></button></h3>
       <div class="fsum" id="dSum">Keine Filter: alles ist möglich.</div>
-      <label class="lb">Kategorie</label>
-      <div class="chips" id="dCats" style="margin:0;padding:0"></div>
+      <div id="dCats" class="strip2" style="margin-top:8px"></div>
     </div>
     <div class="card hidden" id="lastCard">
       <h3>Dein letztes Mal</h3>
@@ -1119,18 +1131,22 @@ function chipsHTML(sel, list, attr, onCls = "") {
 // Gerichtsarten in der Leiste: ohne die Fleisch-/Veggie-Kategorien (die laufen über die Zutaten-Chips)
 const TYPE_CATS = CATS.filter(c => !["Hühnerfleisch", "Rindfleisch", "Ente", "Schweinefleisch", "Meeresfrüchte", "Vegetarisch"].includes(c.id));
 const TYPE_SHORT = { "Gebratener Reis": "Reis", "Gebratene Nudeln": "Nudeln" };
-function stripHTML() {
-  const none = !cat && !F.meat.length && !F.veg;
-  return `<button class="chip cat ${none ? "on" : ""}" data-all>Alle</button>`
-    + MEAT.map(x => `<button class="chip ing ${F.meat.includes(x.id) ? "on" : ""}" data-meatc="${x.id}">${x.label}</button>`).join("")
-    + `<button class="chip ing ${F.veg ? "on" : ""}" data-vegc>🌱 Veggie</button><span class="sep"></span>`
+function stripHTML(afHTML = "") {
+  const none = !cat;
+  const ing = MEAT.map(x => `<button class="chip ing ${F.meat.includes(x.id) ? "on" : ""}" data-meatc="${x.id}">${x.label}</button>`).join("")
+    + `<button class="chip ing ${F.veg ? "on" : ""}" data-vegc>🌱 Veggie</button>`;
+  const typ = `<button class="chip cat ${none ? "on" : ""}" data-c="">Alle</button>`
     + TYPE_CATS.map(c => `<button class="chip cat ${cat === c.id ? "on" : ""}" data-c="${esc(c.id)}">${c.icon} ${esc(TYPE_SHORT[c.id] || c.id)}</button>`).join("");
+  const anyIng = F.meat.length || F.veg;
+  return `<div class="chips srow2"><span class="rlab">Zutat</span>${ing}${anyIng ? `<button class="chip clr2" data-clring aria-label="Zutaten zurücksetzen">✕</button>` : ""}</div>`
+    + `<div class="chips srow2"><span class="rlab">Gericht</span>${typ}</div>`
+    + (afHTML ? `<div class="chips srow2"><span class="rlab">Filter</span>${afHTML}</div>` : "");
 }
 function renderChips() {
   const af = activeFilters(F).filter(([k]) => !k.startsWith("meat:") && k !== "veg");   // Zutaten/Veggie stehen schon als Chips in der Leiste
   if (cat && !TYPE_CATS.some(c => c.id === cat)) cat = "";
   const afHTML = af.map(([k, l]) => `<button class="chip af" data-rmf="${esc(k)}" aria-label="${esc(l)} entfernen">${esc(l)} <b>✕</b></button>`).join("");
-  $("#cats").innerHTML = (af.length ? afHTML + '<span class="sep"></span>' : "") + stripHTML();
+  $("#cats").innerHTML = stripHTML(afHTML);
   $("#dCats").innerHTML = stripHTML();
   for (const id of ["#fCount", "#fCount2"]) { $(id).textContent = af.length; $(id).classList.toggle("hidden", !af.length); }
   $$(".fbtn").forEach(b => b.classList.toggle("on", !!af.length));
@@ -1512,7 +1528,7 @@ const BTN_SFX = [
   ["[data-add],#spin,#lever,[data-wheel],.sndbtn,[data-soundrow],[data-musicrow],#casinoTog", null],
   [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
   ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
-  ["[data-c],[data-rmf],[data-f],[data-all],[data-meatc],[data-vegc]", "chipLight"], ["[data-fav]", "fav"],
+  ["[data-c],[data-rmf],[data-f],[data-all],[data-clring],[data-meatc],[data-vegc]", "chipLight"], ["[data-fav]", "fav"],
   ["[data-t],[data-meat],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
   ["[data-paid]", "cash"], ["[data-payer],[data-paymode],[data-cover],[data-unby],#waBtn,.paybtn", "coin"],
   ["#callBtn,#callBtn2", "ring"], ["[data-act=shareGroup],#share,#copyText,[data-act=createLive]", "whoosh"],
@@ -1894,7 +1910,7 @@ function show(v, push = true) {
 
 // ---------- Events ----------
 document.addEventListener("click", e => {
-  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-all],[data-meatc],[data-vegc],[data-act],[data-wheel],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-cover],[data-unby],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
+  const t = e.target.closest("[data-add],[data-sub],[data-fav],[data-open],[data-go],[data-rmf],[data-filter],[data-all],[data-clring],[data-meatc],[data-vegc],[data-act],[data-wheel],[data-dl],[data-dlset],[data-dledit],[data-paymode],[data-payer],[data-paid],[data-cover],[data-unby],[data-mode],[data-c],[data-inc],[data-dec],[data-note],[data-copy],[data-zoom],#emptyReset");
   if (!t) return;
   const d = t.dataset;
   if (d.add) { lastAddEl = t.getBoundingClientRect(); const m = byNr[d.add]; m.opts ? openItem(d.add) : add(d.add); }
@@ -1918,6 +1934,7 @@ document.addEventListener("click", e => {
   else if (d.paid) { const p = group.find(x => x.n === d.paid); if (p) setPaid(d.paid, !p.paid); }
   else if (d.mode) { patchRound({ mode: d.mode }); }
   else if (d.filter !== undefined) openFilters();
+  else if (d.clring !== undefined) { F.meat = []; F.veg = false; saveF(); renderChips(); renderMenu(); renderHits(); dealAnim(); }
   else if (d.all !== undefined) { cat = ""; F.meat = []; F.veg = false; saveF(); renderChips(); renderMenu(); renderHits(); dealAnim(); }
   else if (d.meatc) { const id = d.meatc; F.meat = F.meat.includes(id) ? F.meat.filter(x => x !== id) : [...F.meat, id]; saveF(); renderChips(); renderMenu(); renderHits(); dealAnim(); }
   else if (d.vegc !== undefined) { F.veg = !F.veg; saveF(); renderChips(); renderMenu(); renderHits(); dealAnim(); }
