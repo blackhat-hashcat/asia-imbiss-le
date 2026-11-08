@@ -774,8 +774,19 @@ const optOk = (m, codes) => !m.opts || !m.optAl || m.opts.some(o => !(m.optAl[o]
 const NO = NO_ALL.filter(n => n.g === "al").filter(n => MENU.some(m => hasAl(m, n.codes) || Object.values(m.optAl || {}).flat().some(c => n.codes.includes(c))))
   .map(n => ({ ...n, test: m => !hasAl(m, n.codes) && optOk(m, n.codes) }));
 const MAXP = Math.ceil(Math.max(...MENU.map(m => m.price)));
-const F0 = () => ({ fav: false, veg: false, untried: false, spice: "any", no: [], max: 0 });
+// Zutaten-Filter: sucht in der ganzen Karte (Name + Beschreibung), mehrere = "oder"
+const MEAT = [
+  { id: "huhn", label: "🐔 Huhn", re: /huhn|huhner|hahnchen/ },
+  { id: "rind", label: "🐄 Rind", re: /rind/ },
+  { id: "ente", label: "🦆 Ente", re: /\bente|entenfleisch|entfleisch/ },
+  { id: "schwein", label: "🐖 Schwein", re: /schwein/ },
+  { id: "meer", label: "🦐 Garnelen & Krabben", re: /garnele|krabbe|hummer/ },
+  { id: "fisch", label: "🐟 Fisch", re: /fisch/ },
+];
+MENU.forEach(m => { const t = norm(m.name + " " + m.desc); m.meat = MEAT.filter(x => x.re.test(t)).map(x => x.id); });
+const F0 = () => ({ fav: false, veg: false, untried: false, spice: "any", no: [], meat: [], max: 0 });
 function passes(m, F) {
+  if (F.meat && F.meat.length && !F.meat.some(id => (m.meat || []).includes(id))) return false;
   if (F.fav && !favs.has(m.nr)) return false;
   if (F.veg && !m.veg) return false;
   if (F.spice === "mild" && m.hot) return false;
@@ -788,6 +799,7 @@ function passes(m, F) {
 function activeFilters(F) {
   const a = [];
   if (F.fav) a.push(["fav", "⭐ Favoriten"]);
+  for (const id of F.meat || []) { const x = MEAT.find(y => y.id === id); if (x) a.push(["meat:" + id, x.label]); }
   if (F.veg) a.push(["veg", "🌱 Vegetarisch"]);
   if (F.spice !== "any") a.push(["spice", SPICE.find(x => x[0] === F.spice)[1]]);
   for (const id of F.no) { const n = NO.find(x => x.id === id); if (n) a.push(["no:" + id, "ohne " + n.label.split(" / ")[0]]); }
@@ -795,7 +807,7 @@ function activeFilters(F) {
   return a;
 }
 function removeFilter(key) {
-  if (key === "untried") F.untried = false; else if (key === "fav") F.fav = false; else if (key === "veg") F.veg = false; else if (key === "spice") F.spice = "any";
+  if (key.startsWith("meat:")) F.meat = F.meat.filter(x => x !== key.slice(5)); else if (key === "untried") F.untried = false; else if (key === "fav") F.fav = false; else if (key === "veg") F.veg = false; else if (key === "spice") F.spice = "any";
   else if (key === "max") F.max = 0; else if (key.startsWith("no:")) F.no = F.no.filter(x => x !== key.slice(3));
   saveF(); renderChips(); renderMenu(); renderHits();
 }
@@ -809,7 +821,7 @@ const fromHash = readHash();
 let group = fromHash ? fromHash.p : store.get("group", []);
 let round = Object.assign(R0(), fromHash ? fromHash.r : store.get("round", {}));
 let F = Object.assign(F0(), store.get("filters", {})), cat = "", query = "", pick = null;
-F.no = (F.no || []).filter(id => NO.some(n => n.id === id)); F.max = 0;
+F.no = (F.no || []).filter(id => NO.some(n => n.id === id)); F.meat = (F.meat || []).filter(id => MEAT.some(x => x.id === id)); F.max = 0;
 let done = new Set(store.get("done", []));
 
 function cleanPP(v) { return String(v || "").replace(/^.*paypal\.me\//i, "").replace(/[^A-Za-z0-9]/g, "").slice(0, 30); }
@@ -1114,12 +1126,14 @@ function openFilters() {
         <button type="button" class="tog ${F.veg ? "on" : ""}" data-t="veg">🌱 Vegetarisch</button>
         <button type="button" class="tog ${F.fav ? "on" : ""}" data-t="fav">⭐ Meine Favoriten</button>
         ${CASINO && visitDays().length ? `<button type="button" class="tog ${F.untried ? "on" : ""}" data-t="untried">✨ Noch nie probiert</button>` : ""}</div></div>
+      <div class="fsec"><h4>Was soll rein? <span style="text-transform:none;letter-spacing:0;color:var(--dim);font-weight:500">· mehrere möglich</span></h4><div class="fgrid">${MEAT.map(x => `<button type="button" class="tog ${F.meat.includes(x.id) ? "on" : ""}" data-meat="${x.id}">${x.label}</button>`).join("")}</div></div>
       <div class="fsec"><h4>Schärfe</h4><div class="seg">${SPICE.map(([k, l]) => `<button type="button" class="${F.spice === k ? "on" : ""}" data-sp="${k}">${l}</button>`).join("")}</div></div>
       <div class="fsec"><h4>Allergien &amp; Unverträglichkeiten: ohne …</h4><div class="fgrid">${NO.filter(x => x.g === "al").map(x => `<button type="button" class="tog ${F.no.includes(x.id) ? "on" : ""}" data-no="${x.id}">${x.label}</button>`).join("")}</div></div>
       <button type="button" class="btn red block" id="fApply" style="margin-top:18px">${n ? `${n} ${n === 1 ? "Gericht" : "Gerichte"} anzeigen` : "Keine Treffer – Filter lockern"}</button>`;
     const upd = () => { saveF(); renderChips(); renderMenu(); renderHits(); draw(); };
     box.querySelectorAll("[data-t]").forEach(b => b.onclick = () => { F[b.dataset.t] = !F[b.dataset.t]; upd(); });
     box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { F.spice = b.dataset.sp; upd(); });
+    box.querySelectorAll("[data-meat]").forEach(b => b.onclick = () => { const id = b.dataset.meat; F.meat = F.meat.includes(id) ? F.meat.filter(x => x !== id) : [...F.meat, id]; upd(); });
     box.querySelectorAll("[data-no]").forEach(b => b.onclick = () => { const id = b.dataset.no; F.no = F.no.includes(id) ? F.no.filter(x => x !== id) : [...F.no, id]; upd(); });
     $("#fReset").onclick = () => { F = F0(); upd(); };
     $("#fApply").onclick = () => $("#filterDlg").close();
@@ -1471,7 +1485,7 @@ const BTN_SFX = [
   [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
   ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
   ["[data-c],[data-rmf],[data-f]", "chipLight"], ["[data-fav]", "fav"],
-  ["[data-t],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
+  ["[data-t],[data-meat],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
   ["[data-paid]", "cash"], ["[data-payer],[data-paymode],[data-cover],[data-unby],#waBtn,.paybtn", "coin"],
   ["#callBtn,#callBtn2", "ring"], ["[data-act=shareGroup],#share,#copyText,[data-act=createLive]", "whoosh"],
   ["#reset,#resReset,#emptyReset,#fReset", "shuffle"],
@@ -1527,7 +1541,7 @@ function musicOn() {
   if (!CASINO || !SOUND || !MUSIC || document.hidden || musTimer) return;
   const a = audio(); if (!a) return;
   if (!MUS) { MUS = a.createGain(); MUS.connect(MASTER); }
-  MUS.gain.cancelScheduledValues(a.currentTime); MUS.gain.setValueAtTime(0, a.currentTime); MUS.gain.linearRampToValueAtTime(.32, a.currentTime + 2);
+  MUS.gain.cancelScheduledValues(a.currentTime); MUS.gain.setValueAtTime(0, a.currentTime); MUS.gain.linearRampToValueAtTime(.5, a.currentTime + 2);
   musNext = a.currentTime + .1; musTimer = setInterval(musSchedule, 60); musSchedule();
 }
 function musicOff() {
