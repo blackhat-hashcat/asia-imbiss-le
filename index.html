@@ -1567,6 +1567,7 @@ const SFX = {
   chipLight() { noise(.03, .45, 0, 1900, 2); tone(1600, .035, "triangle", .08, .004); },
   chipOff() { noise(.035, .45, 0, 1400, 1.8); tone(1000, .05, "triangle", .08, .004); },
   deal() { const j = .9 + Math.random() * .2; noise(.022, .55, 0, 2000 * j, 1.4); noise(.05, .35, .006, 800 * j, .9); tone(160 * j, .05, "sine", .12, .004, 100); },
+  tab() { noise(.025, .2, 0, 1400, 1.2); },   // leiser Tab-Wechsel
   card() { noise(.08, .35, 0, 1200, .9); noise(.05, .2, .03, 1800, 1.3); },
   flip() { noise(.06, .3, 0, 1500, 1); },
   lever() { noise(.14, .3, 0, 600, 1); tone(200, .2, "triangle", .12, 0, 80); },
@@ -1594,12 +1595,12 @@ const SFX = {
   toggle() { noise(.012, .3, 0, 1600, 2); tone(900, .04, "triangle", .06, .004); },
 };
 // Pegel je Sound (aus Messung kalibriert, siehe Tests): Bedien-Klicks leise, Belohnungen lauter
-const SFX_LEVEL = {"pick":2.367,"unpick":3.973,"flutter":2.114,"deal":4.217,"click":7.763,"toggle":7.852,"tick":5.013,"flip":10.715,"open":1.819,"close":1.884,"card":5.249,"chipLight":7.673,"chipOff":7.943,"chip":4.365,"scratch":13.336,"coin":1.759,"star":1.698,"unstar":3.311,"cash":1.496,"ring":1.82,"whoosh":4.415,"shuffle":2.138,"lever":5.012,"stop":1.995,"denied":1.319,"win":1.318,"jackpot":1.819,"intro":1.972,"bell":1.274};
+const SFX_LEVEL = {"pick":2.367,"unpick":3.973,"flutter":2.066,"deal":3.936,"click":9.226,"toggle":8.317,"tick":4.572,"flip":7.943,"open":1.819,"close":1.884,"card":5.071,"chipLight":7.243,"chipOff":8.709,"chip":4.217,"scratch":14.622,"coin":1.759,"star":1.698,"unstar":3.311,"cash":1.496,"ring":1.82,"whoosh":4.415,"shuffle":2.138,"lever":5.012,"stop":1.995,"denied":1.319,"win":1.318,"jackpot":1.819,"intro":1.972,"bell":1.274,"tab":5.308};
 
 // Passender Sound für jeden Knopf (nur Casino). Knöpfe mit eigener Logik (+, Drehen, Roulette …) machen ihren Ton selbst.
 const BTN_SFX = [
   ["[data-add],#spin,#lever,#cupShake,#cupStage,#cupTake,[data-wheel],.sndbtn,[data-soundrow],[data-musicrow],#casinoTog", null],
-  ["[data-fav]", "fav"], [".tabs button", "card"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
+  ["[data-fav]", "fav"], [".tabs button", "tab"], ["[data-open],.hit", "card"], ["[data-zoom],#lbPrev,#lbNext", "flip"],
   ["[data-sub],[data-dec]", "chipOff"], ["[data-inc]", "chipLight"],
   ["[data-c],[data-rmf],[data-f],[data-all],[data-clring],[data-meatc],[data-vegc]", "pickT"], ["[data-fav]", "fav"],
   ["[data-t],[data-meat],[data-sp],[data-no],[data-opt],[data-qn],[data-mode]", "toggle"],
@@ -1746,6 +1747,7 @@ const CALM_SFX = {
   unpick() { pluck(370, .28, .14); },
   open() { pluck(294, .3, .12); pluck(440, .35, .1, .05); },
   close() { pluck(440, .25, .1); pluck(294, .3, .09, .05); },
+  tab() { wood(620, .1); },
   card() { wood(560, .16); },
   toggle() { wood(750, .16); },
   fav() { pluck(587, .4, .14); pluck(784, .5, .1, .06); },
@@ -1765,7 +1767,7 @@ const CALM_SFX = {
   shuffle() { noise(.2, .14, 0, 900, .7); },
   click() { wood(700, .14); },
 };
-const CALM_LEVEL = {"tap":2.018,"add":0.684,"remove":1.175,"pick":1.274,"unpick":1.513,"open":0.923,"close":1.096,"card":2.265,"toggle":2.239,"fav":1.035,"unfav":1.95,"success":0.684,"coin":1.011,"ring":1.071,"whoosh":5.821,"bell":0.646,"denied":1.072,"lever":2.372,"tick":4.365,"stop":2.162,"win":0.767,"jackpot":0.785,"scratch":16.981,"shuffle":7.586,"click":2.57};   // je Klang kalibriert
+const CALM_LEVEL = {"tap":2.018,"add":0.684,"remove":1.175,"pick":1.274,"unpick":1.513,"open":0.923,"close":1.096,"card":2.265,"toggle":2.239,"fav":1.035,"unfav":1.95,"success":0.684,"coin":1.011,"ring":1.071,"whoosh":6.096,"bell":0.646,"denied":1.072,"lever":2.372,"tick":4.416,"stop":2.162,"win":0.767,"jackpot":0.785,"scratch":20.652,"shuffle":7.5,"click":2.541,"tab":1.38};   // je Klang kalibriert
 // Casino-Namen → ruhige Gegenstücke
 const CALM_MAP = { chip: "add", chipLight: "tap", chipOff: "remove", star: "fav", unstar: "unfav", cash: "coin", deal: "card", flip: "card", intro: "success", flutter: "whoosh" };
 
