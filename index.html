@@ -1640,14 +1640,14 @@ function spin() {
     const dur = reduce ? 0 : 1100 + i * 550;
     st.style.transition = `transform ${dur}ms cubic-bezier(.12,.68,.2,1.02)`;
     st.style.transform = `translateY(${-(items.length - 1) * H}px)`;
-    setTimeout(() => { buzz(); sfx("stop", lucky); if (i === 2) clearInterval(spinTicks); }, dur);
+    setTimeout(() => { buzz(); sfx("stop"); if (i === 2) clearInterval(spinTicks); }, dur);
   });
   const total = reduce ? 50 : 1100 + 2 * 550 + 150;
   setTimeout(() => {
     spinning = false; $("#spin").disabled = false; slot.classList.remove("spinning"); slot.classList.add("win");
     clearInterval(spinTicks);
     if (lucky) {
-      sfx("jackpot", true); slot.classList.add("shake"); setTimeout(() => slot.classList.remove("shake"), 700);
+      sfx("jackpot"); slot.classList.add("shake"); setTimeout(() => slot.classList.remove("shake"), 700);
       $("#dice").innerHTML = `<div class="jack">7 · 7 · 7</div><div class="quip">„Das Haus hat dich bemerkt …“</div>`;
       try { navigator.vibrate && navigator.vibrate([80, 60, 80, 60, 300]); } catch {}
       setTimeout(() => setCasino(true), 1400); return;
