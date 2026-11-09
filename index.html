@@ -100,6 +100,17 @@ body.casino .srow2 .chip.on,body.casino .srow2 .chip.cat.on{box-shadow:none!impo
 .chips.srow2.faded{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px);mask-image:linear-gradient(90deg,transparent 0,#000 14px)}
 #dCats .srw{margin:0 -16px}
 .srow2 .chip{padding:6px 11px;font-size:.84rem}
+.srw{position:relative}
+.sarr{display:none}
+@media (hover:hover) and (pointer:fine){
+  .chips,.hits{cursor:grab}
+  .chips.dragging,.hits.dragging{cursor:grabbing;user-select:none}
+  .chips.dragging *,.hits.dragging *{pointer-events:none}
+  .sarr{position:absolute;top:50%;z-index:2;width:28px;height:28px;margin-top:-14px;border-radius:50%;border:1px solid var(--line,rgba(255,255,255,.15));background:var(--s3);color:inherit;font-size:1.1rem;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .15s;display:grid;place-items:center;padding:0 0 2px}
+  .sarr.l{left:80px}.sarr.r{right:6px}
+  .srw.canL .sarr.l,.srw.canR .sarr.r{opacity:.92;pointer-events:auto}
+  .sarr:hover{opacity:1}
+}
 .srow2 .chip.ing{border-radius:999px}
 .srow2 .chip.cat{border-radius:10px}
 .chip.clr2{padding:6px 10px;color:var(--muted)}
@@ -1227,9 +1238,38 @@ function stripHTML(afHTML = "") {
   const typItems = TYPE_CATS.map(c => ({ id: c.id, on: cat === c.id, html: on => `<button class="chip cat ${on ? "on" : ""}" data-c="${esc(c.id)}">${c.icon} ${esc(TYPE_SHORT[c.id] || c.id)}</button>` }));
   const typ = `<button class="chip cat ${cat ? "" : "on"}" data-c="">Alle</button>`
     + ordered("typ", typItems).map(x => x.html(x.on)).join("");
-  const row = (key, lab, html) => `<div class="srw"><span class="rlab">${lab}</span><div class="chips srow2" data-row="${key}">${html}</div></div>`;
+  const row = (key, lab, html) => `<div class="srw"><span class="rlab">${lab}</span><div class="chips srow2" data-row="${key}">${html}</div><button class="sarr l" data-sarr="-1" tabindex="-1" aria-label="Nach links">‹</button><button class="sarr r" data-sarr="1" tabindex="-1" aria-label="Nach rechts">›</button></div>`;
   return row("ing", "Zutat", ing) + row("typ", "Gericht", typ) + (afHTML ? row("flt", "Filter", afHTML) : "");
 }
+// Desktop/Maus: waagrechte Leisten per Mausrad, Ziehen und Pfeilen bedienbar
+(() => {
+  const HSEL = ".chips,.hits";
+  const scroller = el => { const r = el && el.closest && el.closest(HSEL); return r && r.scrollWidth > r.clientWidth + 2 ? r : null; };
+  addEventListener("wheel", e => {
+    if (e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;   // echtes Seitwärts-Scrollen (Touchpad) läuft normal
+    const r = scroller(e.target); if (!r) return;
+    const max = r.scrollWidth - r.clientWidth, d = e.deltaY * (e.deltaMode === 1 ? 32 : 1);
+    if ((d < 0 && r.scrollLeft <= 0) || (d > 0 && r.scrollLeft >= max - 1)) return;   // am Ende: Seite scrollt weiter
+    e.preventDefault(); r.scrollLeft += d;
+  }, { passive: false });
+  let drag = null, justDragged = false;
+  addEventListener("pointerdown", e => {
+    if (e.pointerType !== "mouse" || e.button !== 0 || e.target.closest(".sarr")) return;
+    const r = scroller(e.target); if (r) drag = { r, x: e.clientX, left: r.scrollLeft, moved: false };
+  });
+  addEventListener("pointermove", e => {
+    if (!drag) return; const dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) > 5) { drag.moved = true; drag.r.classList.add("dragging"); }
+    if (drag.moved) drag.r.scrollLeft = drag.left - dx;
+  });
+  addEventListener("pointerup", () => { if (drag && drag.moved) { justDragged = true; setTimeout(() => justDragged = false, 0); drag.r.classList.remove("dragging"); } drag = null; });
+  addEventListener("click", e => {   // nach dem Ziehen keinen Chip auslösen
+    if (justDragged) { e.preventDefault(); e.stopPropagation(); justDragged = false; return; }
+    const a = e.target.closest("[data-sarr]"); if (!a) return;
+    e.preventDefault(); e.stopPropagation();
+    const r = a.parentElement.querySelector(".srow2"); r.scrollBy({ left: +a.dataset.sarr * r.clientWidth * .7, behavior: "smooth" });
+  }, true);
+})();
 function renderChips() {
   const af = activeFilters(F).filter(([k]) => !k.startsWith("meat:") && k !== "veg");   // Zutaten/Veggie stehen schon als Chips in der Leiste
   if (cat && !TYPE_CATS.some(c => c.id === cat)) cat = "";
@@ -1239,7 +1279,7 @@ function renderChips() {
   $("#cats").innerHTML = stripHTML(afHTML);
   $("#dCats").innerHTML = stripHTML();
   $$(".srow2").forEach(r => r.scrollLeft = resort ? 0 : (keep[r.closest(".strip2").id + r.dataset.row] || 0));
-  $$(".srow2").forEach(r => { const f = () => r.classList.toggle("faded", r.scrollLeft > 2); f(); r.addEventListener("scroll", f, { passive: true }); });   // Übergang nur, wenn gescrollt
+  $$(".srow2").forEach(r => { const w = r.parentElement, f = () => { r.classList.toggle("faded", r.scrollLeft > 2); w.classList.toggle("canL", r.scrollLeft > 2); w.classList.toggle("canR", r.scrollLeft < r.scrollWidth - r.clientWidth - 2); }; f(); requestAnimationFrame(f); r.addEventListener("scroll", f, { passive: true }); });   // Übergang nur, wenn gescrollt
   stripResort = false;
   for (const id of ["#fCount", "#fCount2"]) { $(id).textContent = af.length; $(id).classList.toggle("hidden", !af.length); }
   $$(".fbtn").forEach(b => b.classList.toggle("on", !!af.length));
