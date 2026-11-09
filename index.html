@@ -1249,8 +1249,7 @@ function stripHTML(afHTML = "") {
     if (e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;   // echtes Seitwärts-Scrollen (Touchpad) läuft normal
     const r = scroller(e.target); if (!r) return;
     const max = r.scrollWidth - r.clientWidth, d = e.deltaY * (e.deltaMode === 1 ? 32 : 1);
-    if ((d < 0 && r.scrollLeft <= 0) || (d > 0 && r.scrollLeft >= max - 1)) return;   // am Ende: Seite scrollt weiter
-    e.preventDefault(); r.scrollLeft += d;
+    e.preventDefault(); r.scrollLeft = Math.max(0, Math.min(max, r.scrollLeft + d));   // auch am Ende: Seite bleibt stehen
   }, { passive: false });
   let drag = null, justDragged = false;
   addEventListener("pointerdown", e => {
